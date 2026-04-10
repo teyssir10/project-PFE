@@ -1,4 +1,4 @@
-import Hero from './components/Hero/Hero'
+import Hero  from './Hero/page'
 import Deco from './components/Decoration/Deco'
 import Login from './login/page'
 import Navbar from './components/Navbar/Navbar'
