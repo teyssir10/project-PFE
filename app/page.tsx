@@ -7,7 +7,7 @@ export default function Home() {
     <div className="w-full relative z-10">
       <Deco />
         <div className="relative z-10">
-          <Navbar></Navbar>
+          <Navbar />
       <div className="relative z-10">
         <Hero />
       </div>

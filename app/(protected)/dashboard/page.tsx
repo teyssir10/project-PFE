@@ -6,7 +6,7 @@ import { LogoutOutlined, PlusOutlined, RiseOutlined, ShareAltOutlined } from '@a
 import Image from 'next/image'
 import logo from '@/app/assets/panda-logo.png';
 import Link from 'next/link';
-import { Deco } from '../components/Decoration/Deco';
+ import { Deco } from '@/app/components/Decoration/Deco';
   
 const menuItems = [
   { key: 'home', label: <Link href="/">Home</Link> },

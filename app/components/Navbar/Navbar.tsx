@@ -1,10 +1,11 @@
 "use client";
 import { Button, Menu } from 'antd';
-import { MenuUnfoldOutlined, MenuFoldOutlined, LoginOutlined, UserAddOutlined } from '@ant-design/icons';
+import { MenuUnfoldOutlined, MenuFoldOutlined, LoginOutlined, UserAddOutlined, LogoutOutlined } from '@ant-design/icons';
 import Image from 'next/image';
 import Link from 'next/link';
 import React, { useState } from 'react';
 import logo from '@/app/assets/panda-logo.png';
+
 
 const menuItems = [
   { key: 'home', label: <Link href="/">Home</Link> },
@@ -16,6 +17,7 @@ const menuItems = [
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
+    
 
 
   return (
@@ -26,10 +28,10 @@ const Navbar = () => {
       {/* Logo */}
       <div className="flex items-center gap-3 cursor-pointer transition-transform duration-200 hover:scale-105">
         <div className="w-10 h-10 flex items-center justify-center rounded-xl bg-gradient-to-r   font-extrabold shadow-md">
-          <Image src={logo} alt="PandoMind AI logo" width={100} height={100} />
+          <Image src={logo} alt="PandaBrain AI logo" width={100} height={100} />
         </div>
         <h1 className="text-xl font-extrabold text-gray-900 dark:text-white tracking-tight">
-          PandoMind  <span className="text-cyan-500">AI</span>
+          PandoMind <span className="text-cyan-500">AI</span>
         </h1>
       </div>
 
@@ -45,31 +47,31 @@ const Navbar = () => {
        
 
           <div className='hidden md:flex items-center gap-2'>
-            <Link href='/login'>
            
-              <Button
-               icon={<LoginOutlined />}
-                type='text'
-                className='px-6 py-2 rounded-full font-semibold !text-[#00D4D0] bg-gradient-to-r from-cyan-500 via-cyan-400 to-sky-500 shadow-md
+                <Link href='/login'>
+                  <Button
+                    icon={<LoginOutlined />}
+                    type='text'
+                    className='px-6 py-2 rounded-full font-semibold !text-cyan-500 bg-gradient-to-r from-cyan-500 via-cyan-400 to-sky-500 shadow-md
 hover:shadow-lg hover:scale-105 transition-all duration-300 shadow-cyan-400/40 hover:shadow-cyan-500/60'
-              >
-                Login
-              </Button>
-            </Link>
-            <Link href='/login?mode=signup'>
-              <Button
-              icon={<UserAddOutlined />}
-              
-                type='primary'
-                className='px-6 py-2 rounded-full font-semibold 
+                  >
+                    Login
+                  </Button>
+                </Link>
+                <Link href='/login?mode=signup'>
+                  <Button
+                    icon={<UserAddOutlined />}
+                    type='primary'
+                    className='px-6 py-2 rounded-full font-semibold 
     !bg-gradient-to-r !from-cyan-500 !to-[#00D4D0] 
     !border-0 text-white shadow-md 
     hover:shadow-lg hover:scale-105 
     transition-all duration-300 shadow-cyan-300/50 hover:shadow-cyan-400/70'
-              >
-                Sign Up
-              </Button>
-            </Link>
+                  >
+                    Sign Up
+                  </Button>
+                </Link>
+             
           </div>
 
           <button className='md:hidden text-2xl' onClick={() => setMenuOpen(!menuOpen)}>
@@ -86,6 +88,7 @@ hover:shadow-lg hover:scale-105 transition-all duration-300 shadow-cyan-400/40 h
               style={{ background: 'transparent' }}
             />
             <div className='flex flex-col gap-2 mt-4'>
+    
               <Link href='/login'>
                 <Button
                   block
@@ -109,9 +112,11 @@ hover:shadow-lg hover:scale-105 transition-all duration-300 shadow-cyan-400/40 h
                   Sign Up
                 </Button>
               </Link>
+             
             </div>
           </div>
         )}
+        
       </div>
   
     </nav>

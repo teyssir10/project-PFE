@@ -157,11 +157,11 @@ const Hero: React.FC = () => {
                   <div className="w-full max-w-sm space-y-4 p-6 rounded-2xl bg-white dark:bg-slate-900 shadow-xl border border-cyan-500/10">
                     <div className="space-y-2">
                       <p className="text-sm font-semibold text-[#00D4D0]">Question 1 of 10</p>
-                      <h3 className="text-lg font-bold text-foreground">What is the capital of France?</h3>
+                      <h3 className="text-lg font-bold text-foreground">Où vivent la plupart des pandas dans le monde ?</h3>
                     </div>
 
                     <div className="space-y-2">
-                      {['Paris', 'Lyon', 'Marseille', 'Nice'].map((option, i) => (
+                      {['Chine', 'Afrique', 'Amérique', 'Europe'].map((option, i) => (
                         <button
                           key={i}
                           className={`w-full p-3 rounded-lg text-left font-medium transition-all ${i === 0
