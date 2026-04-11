@@ -58,7 +58,7 @@ hover:shadow-lg hover:scale-105 transition-all duration-300 shadow-cyan-400/40 h
                     Login
                   </Button>
                 </Link>
-                <Link href='/login?mode=signup'>
+                <Link href='/register'>
                   <Button
                     icon={<UserAddOutlined />}
                     type='primary'
@@ -99,7 +99,7 @@ hover:shadow-lg hover:scale-105 transition-all duration-300 shadow-cyan-400/40 h
                   Login
                 </Button>
               </Link>
-              <Link href='/login?mode=signup'>
+              <Link href='/register'>
                 <Button
                   block
                   type='primary'
