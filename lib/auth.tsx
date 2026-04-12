@@ -43,7 +43,13 @@ export function AuthProvider({children}:{children:React.ReactNode}){
             return{error}
         }
           const signUp=async(email:string,password:string)=>{
-            const{data,error}=await supabase.auth.signUp({email,password})
+            const{data,error}=await supabase.auth.signUp({
+                email,
+                password,
+                options:{
+                    emailRedirectTo: 'http://localhost:3000/login'}
+                })
+
             return{data,error}}
             const signOut=async()=>{
                 await supabase.auth.signOut()

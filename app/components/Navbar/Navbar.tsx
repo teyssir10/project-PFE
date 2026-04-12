@@ -26,10 +26,10 @@ const Navbar = () => {
       {/* Logo */}
       <div className="flex items-center gap-3 cursor-pointer transition-transform duration-200 hover:scale-105">
         <div className="w-10 h-10 flex items-center justify-center rounded-xl bg-gradient-to-r   font-extrabold shadow-md">
-          <Image src={logo} alt="PandoMind AI logo" width={100} height={100} />
+          <Image src={logo} alt="PandaBrain AI logo" width={100} height={100} />
         </div>
         <h1 className="text-xl font-extrabold text-gray-900 dark:text-white tracking-tight">
-          PandoMind  <span className="text-cyan-500">AI</span>
+          PandoMind <span className="text-cyan-500">AI</span>
         </h1>
       </div>
 

@@ -2,11 +2,12 @@
 import React from 'react'
 import { useAuth } from "@/lib/auth"
 import { Button, Menu } from 'antd';
-import { LogoutOutlined, PlusOutlined, RiseOutlined, ShareAltOutlined } from '@ant-design/icons';
+import { LogoutOutlined,ThunderboltOutlined, CaretRightOutlined, PlusOutlined, RiseOutlined, ShareAltOutlined } from '@ant-design/icons';
 import Image from 'next/image'
 import logo from '@/app/assets/panda-logo.png';
 import Link from 'next/link';
-import { Deco } from '../components/Decoration/Deco';
+import { Card } from 'antd';
+ import { Deco } from '@/app/components/Decoration/Deco';
   
 const menuItems = [
   { key: 'home', label: <Link href="/">Home</Link> },
@@ -20,6 +21,15 @@ const menuItems = [
     { icon: RiseOutlined, label: 'View Analytics', color: 'from-secondary to-cyan-400' },
     { icon: ShareAltOutlined, label: 'Share Quiz', color: 'from-cyan-400 to-primary' },
   ]
+  const recentQuizzes = [
+    { id: 1, title: 'Biology Basics', questions: 15, responses: 24, created: '2 days ago' },
+    { id: 2, title: 'History Quiz', questions: 20, responses: 18, created: '5 days ago' },
+    { id: 3, title: 'Chemistry 101', questions: 12, responses: 31, created: '1 week ago' },
+  ]
+
+  const handleCreateQuiz = () => {
+    alert('Quiz creation feature coming soon!')
+  }
 export function Page() {
   const { user } = useAuth()
 
@@ -65,13 +75,14 @@ export function Page() {
     </nav>
     <div className='relative'> 
              <Deco />
-    <div className='relative overflow-hidden py-12 sm:py-20 lg:py-28 py-8 px-8 sm:px-16 lg:px-24'>
+    
+    <div className='relative overflow-hidden !py-4 !sm:py-2 !lg:py-10 px-8 sm:px-16 lg:px-24 mb-12'>
 
-      <h1><span className='text-3xl font-extrabold text-[#0e92b6] '>welcome back,</span>  <span className='text-3xl font-extrabold text-gray-900 dark:text-white tracking-tight '>{user?.user_metadata?.firstName || user?.email?.split('@')[0]} !</span></h1>
+      <h1 className='lg:text-4xl'><span className='text-3xl font-extrabold text-[#0e92b6] '>welcome back,</span>  <span className='text-3xl font-extrabold text-gray-900 dark:text-white tracking-tight '>{user?.user_metadata?.firstName || user?.email?.split('@')[0]} !</span></h1>
       <p className='text-gray-700'>Ready to create your next amazing quiz? Let&apos;s get started.</p>
      
     </div>
-     <div  className=' relative flex flex-col md:flex-row gap-6 md:gap-12 px-8 sm:px-16 lg:px-24 py-8 grid grid-cols-1 md:grid-cols-3 gap-6 mb-12'>
+     <div  className=' relative flex flex-col md:flex-row gap-6 md:gap-12 px-8 sm:px-16 lg:px-24 py-4 grid grid-cols-1 md:grid-cols-3 gap-6 mb-12'>
               {quickActions.map((action, index) => (
                 <button
                   key={index}
@@ -82,8 +93,119 @@ export function Page() {
                   {action.label}
                 </button>
               ))}
+        </div>
+        <div className=' relative flex flex-col md:flex-row gap-6 md:gap-12 px-8 sm:px-16 lg:px-24 py-4 grid grid-cols-1 md:grid-cols-4 gap-6 mb-12 '>
+        <Card className="!rounded-2xl !shadow-md hover:!shadow-lg transition-all !border-0 !bg-white/30 !backdrop-blur-md ">
+              <div className="flex items-start justify-between">
+                <div>
+                  <p className="text-gray-500 text-sm font-medium">Total Quizzes</p>
+                  <p className="text-4xl font-bold text-gray-900 mt-2">3</p>
+                </div>
+                <div className="text-3xl">📊</div>
+              </div>
+            </Card>
+            <Card className="!rounded-2xl !shadow-md hover:!shadow-lg transition-all !border-0 !bg-white/30 !backdrop-blur-md ">
+              <div className="flex items-start justify-between">
+                <div>
+                  <p className="text-gray-500 text-sm font-medium">Total Responses</p>
+                  <p className="text-4xl font-bold text-gray-900 mt-2">0</p>
+                </div>
+                <div className="text-4xl">✅</div>
+              </div>
+            </Card>
+
+            <Card className="!rounded-2xl !shadow-md hover:!shadow-lg transition-all !border-0 !bg-white/30 !backdrop-blur-md ">
+              <div className="flex items-start justify-between">
+                <div>
+                  <p className="text-gray-500 text-sm font-medium">Avg. Score</p>
+                  <p className="text-4xl font-bold text-gray-900 mt-2">85%</p>
+                </div>
+                <div className="text-3xl">⭐</div>
+              </div>
+            </Card>
+
+            <Card className="!rounded-2xl !shadow-md hover:!shadow-lg transition-all !border-0 !bg-white/30 !backdrop-blur-md">
+              <div className="flex items-start justify-between">
+                <div>
+                  <p className="text-gray-500 text-sm font-medium">Active Users</p>
+                  <p className="text-4xl font-bold text-gray-900 mt-2">156</p>
+                </div>
+                <div className="text-3xl">👥</div>
+              </div>
+            </Card>
             </div>
+            <div className='relative overflow-hidden !py-2 !sm:py-4 !lg:py-10 px-8 sm:px-16 lg:px-24'>
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="!text-2xl font-bold text-gray-900">Your Recent Quizzes</h3>
+              <Button
+                onClick={handleCreateQuiz}
+                icon={<PlusOutlined />}
+                className="!bg-gradient-to-r !from-cyan-500 !to-teal-400 !text-white  hover:!opacity-90 transition-all size-35"
+              >
+                New Quiz
+              </Button>
             </div>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 relative overflow-hidden py-4 sm:py-6 lg:py-16 px-8 sm:px-16 lg:px-24">
+          {recentQuizzes.map((quiz) => (
+            <Card
+              key={quiz.id} 
+              className="!rounded-2xl !border-0 !shadow-md hover:!shadow-lg transition-all cursor-pointer !bg-white/30 !backdrop-blur-md relative !overflow-hidden"
+            >
+              <div className="relative z-10">
+                {/* Header */}
+                <div className="flex items-start justify-between mb-4">
+                  <h4 className="font-bold text-lg text-gray-900">{quiz.title}</h4>
+                  <span className="text-2xl">📋</span>
+                </div>
+
+                {/* Infos */}
+                <div className="space-y-2 text-sm text-gray-500 mb-4">
+                  <p>Questions: <span className="font-semibold text-gray-900">{quiz.questions}</span></p>
+                  <p>Responses: <span className="font-semibold text-gray-900">{quiz.responses}</span></p>
+                  <p>Created: <span className="font-semibold text-gray-900">{quiz.created}</span></p>
+                </div>
+
+                {/* Actions */}
+                <div className="flex gap-2 pt-4 border-t border-gray-100">
+                  <Button
+                    className="flex-1 !rounded-lg !border-gray-200 !text-gray-600 hover:!border-cyan-400 hover:!text-cyan-500 transition-all text-xs"
+                  >
+                    Edit
+                  </Button>
+                  <Button
+                    icon={<CaretRightOutlined/>}
+                    className="!flex-1 !bg-gradient-to-r !from-cyan-500 !to-teal-400 !text-white"
+                  >
+                    Play
+                  </Button>
+                </div>
+              </div>
+            </Card>
+          ))}
+        </div>
+        <div className="relative overflow-hidden py-4 sm:py-6 lg:py-16 px-8 sm:px-16 lg:px-24 grid grid-cols-1 md:grid-cols-3 gap-6 ">
+  
+          <Card className="!rounded-2xl !border-0 !shadow-md hover:!shadow-lg transition-all !bg-gradient-to-br !from-cyan-50 !to-teal-50">
+            <ThunderboltOutlined className="!text-3xl !text-cyan-500 mb-4 block" />
+            <h4 className="font-bold text-gray-900 mb-2">AI-Powered Generation</h4>
+            <p className="text-sm text-gray-500">Create intelligent quizzes in seconds with advanced AI technology</p>
+          </Card>
+
+          <Card className="!rounded-2xl !border-0 !shadow-md hover:!shadow-lg transition-all !bg-gradient-to-br !from-teal-50 !to-cyan-50">
+            <RiseOutlined className="!text-3xl !text-teal-500 !mb-4 block" />
+            <h4 className="font-bold text-gray-900 mb-2">Advanced Analytics</h4>
+            <p className="text-sm text-gray-500">Track performance metrics and engagement in real-time</p>
+          </Card>
+
+          <Card className="!rounded-2xl !border-0 !shadow-md hover:!shadow-lg transition-all !bg-gradient-to-br !from-cyan-50 !to-sky-50">
+            <ShareAltOutlined className="!text-3xl !text-cyan-500 !mb-4 block" />
+            <h4 className="font-bold text-gray-900 mb-2">Easy Sharing</h4>
+            <p className="text-sm text-gray-500">Share your quizzes with students or colleagues instantly</p>
+          </Card>
+
+      </div>
+     </div>
     </>
   )
   

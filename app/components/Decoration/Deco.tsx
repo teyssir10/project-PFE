@@ -61,7 +61,7 @@ export function Deco() {
       </div>
 
 
-      <div className="dark">
+      {/*<div className="dark">
         <div className="fixed inset-0 pointer-events-none overflow-hidden z-0 dark:opacity-75">
           <style>{`
             .dark .gradient-orb-primary {
@@ -75,7 +75,7 @@ export function Deco() {
             }
           `}</style>
         </div>
-      </div>
+      </div>*/}
     </>
  
   )
