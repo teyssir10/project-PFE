@@ -28,6 +28,7 @@ const registerSchema = yup.object({
 const RegisterPage = () => {
   const { message } = useAntdApp()
   const [loading, setLoading] = useState(false)
+  const [emailSent, setEmailSent] = useState(false) 
   const { signUp, signInWithGoogle } = useAuth()
   const router = useRouter()
 
@@ -42,8 +43,7 @@ const RegisterPage = () => {
       if (error) {
         message.error(error.message)
       } else {
-        message.success('Account created successfully! Please check your email to confirm your account.')
-        router.push('/login')
+        setEmailSent(true) 
       }
     } catch (error: unknown) {
       message.error((error as { message: string }).message || 'An error occurred. Please try again.')
@@ -126,125 +126,157 @@ const RegisterPage = () => {
               <Text className="text-slate-500">Sign up to create and take quizzes</Text>
             </div>
 
-            <Card className="border border-slate-200 shadow-lg shadow-cyan-400/30 rounded-xl">
-              <Form autoComplete="off" layout="vertical" className="space-y-2" onFinish={handleSubmit(onSubmit)}>
+            {emailSent ? (
 
-                <div className="flex gap-3">
-                  <Form.Item label="Prénom" className="flex-1" validateStatus={errors.firstName ? 'error' : undefined} help={errors.firstName?.message}>
-                    <Controller
-                      name="firstName"
-                      control={control}
-                      render={({ field }) => (
-                        <Input
-                          {...field}
-                          prefix={<UserOutlined className="text-slate-400" />}
-                          size="large"
-                          className="rounded-lg h-[56px] text-sm border-gray-200 focus:border-cyan-500 transition-all"
-                          placeholder="Prénom"
-                        />
-                      )}
-                    />
-                  </Form.Item>
-                  <Form.Item label="Nom" className="flex-1" validateStatus={errors.lastName ? 'error' : undefined} help={errors.lastName?.message}>
-                    <Controller
-                      name="lastName"
-                      control={control}
-                      render={({ field }) => (
-                        <Input
-                          {...field}
-                          prefix={<UserOutlined className="text-slate-400" />}
-                          size="large"
-                          className="rounded-lg h-[56px] text-sm border-gray-200 focus:border-cyan-500 transition-all"
-                          placeholder="Nom"
-                        />
-                      )}
-                    />
-                  </Form.Item>
+              <Card className="border border-slate-200 shadow-lg shadow-cyan-400/30 rounded-xl">
+                <div className="flex flex-col items-center text-center py-8 space-y-4">
+                  <div className="w-16 h-16 bg-cyan-100 rounded-full flex items-center justify-center">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none"
+                      stroke="#00D4D0" strokeWidth="2.5" strokeLinecap="round">
+                      <polyline points="20 6 9 17 4 12"/>
+                    </svg>
+                  </div>
+                  <Title level={3} className="!text-slate-800 !mb-0">Compte créé avec succès !</Title>
+                  <Text className="text-slate-500 text-base">
+                    Vérifiez votre email pour confirmer votre compte avant de vous connecter.
+                  </Text>
+                  <div className="flex items-center gap-2 bg-cyan-50 px-4 py-2 rounded-lg mt-2">
+                    <MailOutlined className="text-cyan-500" />
+                    <Text className="text-cyan-600 text-sm">Email de confirmation envoyé</Text>
+                  </div>
+                  <Button
+                    type="link"
+                    className="!text-[#00D4D0] font-semibold mt-4"
+                    onClick={() => router.push('/login')}
+                  >
+                    Aller à la page de connexion →
+                  </Button>
                 </div>
+              </Card>
 
-                <Form.Item label="Email" validateStatus={errors.email ? 'error' : undefined} help={errors.email?.message}>
-                  <Controller
-                    name="email"
-                    control={control}
-                    render={({ field }) => (
-                      <Input
-                        {...field}
-                        autoComplete="new-password"
-                        prefix={<MailOutlined className="text-slate-400" />}
-                        size="large"
-                        className="rounded-lg h-[56px] text-sm border-gray-200 focus:border-cyan-500 transition-all"
-                        placeholder="you@example.com"
-                      />
-                    )}
-                  />
-                </Form.Item>
+            ) : (
 
-                <Form.Item label="Password" validateStatus={errors.password ? 'error' : undefined} help={errors.password?.message}>
-                  <Controller
-                    name="password"
-                    control={control}
-                    render={({ field }) => (
-                      <Input.Password
-                        autoComplete="new-password"
-                        {...field}
-                        prefix={<LockOutlined className="text-slate-400" />}
-                        size="large"
-                        className="rounded-lg h-[56px] text-sm border-gray-200 focus:border-cyan-500 transition-all"
-                        placeholder="••••••••"
-                      />
-                    )}
-                  />
-                </Form.Item>
+              <Card className="border border-slate-200 shadow-lg shadow-cyan-400/30 rounded-xl">
+                <Form autoComplete="off" layout="vertical" className="space-y-2" onFinish={handleSubmit(onSubmit)}>
 
-                <Form.Item label="Confirm Password" validateStatus={errors.confirmPassword ? 'error' : undefined} help={errors.confirmPassword?.message}>
-                  <Controller
-                    name="confirmPassword"
-                    control={control}
-                    render={({ field }) => (
-                      <Input.Password
-                        {...field}
-                        prefix={<LockOutlined className="text-slate-400" />}
-                        size="large"
-                        className="rounded-lg h-[56px] text-sm border-gray-200 focus:border-cyan-500 transition-all"
-                        placeholder="••••••••"
+                  <div className="flex gap-3">
+                    <Form.Item label="Prénom" className="flex-1" validateStatus={errors.firstName ? 'error' : undefined} help={errors.firstName?.message}>
+                      <Controller
+                        name="firstName"
+                        control={control}
+                        render={({ field }) => (
+                          <Input
+                            {...field}
+                            prefix={<UserOutlined className="text-slate-400" />}
+                            size="large"
+                            className="rounded-lg h-[56px] text-sm border-gray-200 focus:border-cyan-500 transition-all"
+                            placeholder="Prénom"
+                          />
+                        )}
                       />
-                    )}
-                  />
-                </Form.Item>
+                    </Form.Item>
+                    <Form.Item label="Nom" className="flex-1" validateStatus={errors.lastName ? 'error' : undefined} help={errors.lastName?.message}>
+                      <Controller
+                        name="lastName"
+                        control={control}
+                        render={({ field }) => (
+                          <Input
+                            {...field}
+                            prefix={<UserOutlined className="text-slate-400" />}
+                            size="large"
+                            className="rounded-lg h-[56px] text-sm border-gray-200 focus:border-cyan-500 transition-all"
+                            placeholder="Nom"
+                          />
+                        )}
+                      />
+                    </Form.Item>
+                  </div>
+
+                  <Form.Item label="Email" validateStatus={errors.email ? 'error' : undefined} help={errors.email?.message}>
+                    <Controller
+                      name="email"
+                      control={control}
+                      render={({ field }) => (
+                        <Input
+                          {...field}
+                          autoComplete="new-password"
+                          prefix={<MailOutlined className="text-slate-400" />}
+                          size="large"
+                          className="rounded-lg h-[56px] text-sm border-gray-200 focus:border-cyan-500 transition-all"
+                          placeholder="you@example.com"
+                        />
+                      )}
+                    />
+                  </Form.Item>
+
+                  <Form.Item label="Password" validateStatus={errors.password ? 'error' : undefined} help={errors.password?.message}>
+                    <Controller
+                      name="password"
+                      control={control}
+                      render={({ field }) => (
+                        <Input.Password
+                          autoComplete="new-password"
+                          {...field}
+                          prefix={<LockOutlined className="text-slate-400" />}
+                          size="large"
+                          className="rounded-lg h-[56px] text-sm border-gray-200 focus:border-cyan-500 transition-all"
+                          placeholder="••••••••"
+                        />
+                      )}
+                    />
+                  </Form.Item>
+
+                  <Form.Item label="Confirm Password" validateStatus={errors.confirmPassword ? 'error' : undefined} help={errors.confirmPassword?.message}>
+                    <Controller
+                      name="confirmPassword"
+                      control={control}
+                      render={({ field }) => (
+                        <Input.Password
+                          {...field}
+                          prefix={<LockOutlined className="text-slate-400" />}
+                          size="large"
+                          className="rounded-lg h-[56px] text-sm border-gray-200 focus:border-cyan-500 transition-all"
+                          placeholder="••••••••"
+                        />
+                      )}
+                    />
+                  </Form.Item>
+
+                  <Button
+                    onClick={handleGoogleLogin}
+                    size="large"
+                    block
+                    className="!h-[58px] !rounded-[16px] font-bold text-[16px] border !border-slate-200 !hover:border-cyan-400 !hover:scale-[1.03] !transition-all !duration-300 mb-3 !text-[#00D4D0]"
+                  >
+                    <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="google" className="w-5 h-5 inline mr-2" />
+                    Continue with Google
+                  </Button>
+
+                  <Button
+                    type="primary"
+                    htmlType="submit"
+                    size="large"
+                    loading={loading}
+                    block
+                    className="h-[58px] rounded-[16px] font-bold text-[16px] !bg-gradient-to-r !from-cyan-500 !to-[#00D4D0] border-0 shadow-[0_10px_30px_rgba(6,182,212,0.4)] tracking-[0.02em] hover:scale-[1.03] transition-all duration-300"
+                  >
+                    Sign Up
+                  </Button>
+                </Form>
+
+                <Divider plain className="text-gray-400">Or</Divider>
 
                 <Button
-                  onClick={handleGoogleLogin}
-                  size="large"
+                  className="h-[58px] rounded-[16px] font-bold text-[16px] !bg-gradient-to-r !from-cyan-500 !to-[#00D4D0] border-0 shadow-[0_10px_30px_rgba(6,182,212,0.4)] !text-white tracking-[0.02em] hover:scale-[1.03] transition-all duration-300"
+                  type="link"
                   block
-                  className="!h-[58px] !rounded-[16px] font-bold text-[16px] border !border-slate-200 !hover:border-cyan-400 !hover:scale-[1.03] !transition-all !duration-300 mb-3 !text-[#00D4D0]"
+                  onClick={() => router.push('/login')}
                 >
-                  <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="google" className="w-5 h-5 inline mr-2" />
-                  Continue with Google
+                  Already have an account? Sign In
                 </Button>
+              </Card>
 
-                <Button
-                  type="primary"
-                  htmlType="submit"
-                  size="large"
-                  loading={loading}
-                  block
-                  className="h-[58px] rounded-[16px] font-bold text-[16px] !bg-gradient-to-r !from-cyan-500 !to-[#00D4D0] border-0 shadow-[0_10px_30px_rgba(6,182,212,0.4)] tracking-[0.02em] hover:scale-[1.03] transition-all duration-300"
-                >
-                  Sign Up
-                </Button>
-              </Form>
-
-              <Divider plain className="text-gray-400">Or</Divider>
-
-              <Button
-                className="h-[58px] rounded-[16px] font-bold text-[16px] !bg-gradient-to-r !from-cyan-500 !to-[#00D4D0] border-0 shadow-[0_10px_30px_rgba(6,182,212,0.4)] !text-white tracking-[0.02em] hover:scale-[1.03] transition-all duration-300"
-                type="link"
-                block
-                onClick={() => router.push('/login')}
-              >
-                Already have an account? Sign In
-              </Button>
-            </Card>
+            )}
           </div>
 
         </div>

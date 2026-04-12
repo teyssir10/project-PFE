@@ -113,14 +113,14 @@ const LoginPage = () => {
           {/* LOGIN CARD */}
           <div className="w-full max-w-md px-4  overflow-y-auto h-screen py-10" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' } as React.CSSProperties}>
             <div className="text-center mb-6 mt-6">
-              <div className="w-14 h-14 bg-[#00D4D0] rounded-xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-cyan-400/40">
+              <div className="w-14 h-14 bg-[#00D4D0]  rounded-xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-cyan-400/40">
                 <LockOutlined className="text-white text-2xl" />
               </div>
-              <Title level={1} className="text-slate-800 mb-1">Welcome Back 👋</Title>
-              <Text className="text-slate-500">Sign in to access your quizzes</Text>
+              <Title level={1} className="text-slate-800 dark:text-white mb-1">Welcome Back 👋</Title>
+              <Text className="text-slate-500 dark:text-slate-200">Sign in to access your quizzes</Text>
             </div>
 
-            <Card className="border border-slate-200 shadow-lg shadow-cyan-400/30 rounded-xl">
+            <Card className="border border-slate-200 shadow-lg shadow-cyan-400/30 rounded-xl dark:bg-slate-900/70">
               <Form autoComplete="off" layout="vertical" className="space-y-2" onFinish={handleSubmit(onSubmit)}>
 
                 <Form.Item label="Email" validateStatus={errors.email ? 'error' : undefined} help={errors.email?.message}>

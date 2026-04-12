@@ -1,10 +1,12 @@
 "use client";
 import { Button, Menu } from 'antd';
-import { MenuUnfoldOutlined, MenuFoldOutlined, LoginOutlined, UserAddOutlined, LogoutOutlined } from '@ant-design/icons';
+import { MenuUnfoldOutlined, MenuFoldOutlined, LoginOutlined, UserAddOutlined, LogoutOutlined, SunOutlined, MoonOutlined } from '@ant-design/icons';
 import Image from 'next/image';
 import Link from 'next/link';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import logo from '@/app/assets/panda-logo.png';
+import { useTheme } from "next-themes";
+
 
 
 const menuItems = [
@@ -13,14 +15,15 @@ const menuItems = [
   { key: 'quiz', label: <Link href="/quiz">Quiz</Link> },
   { key: 'leaderboard', label: <Link href="/leaderboard">Leaderboard</Link> },
   { key: 'contact', label: <Link href="/contact">Contact</Link> },
+
 ];
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
-    
-
+  const { resolvedTheme, setTheme } = useTheme();
 
   return (
+  
     <nav className="sticky top-0 z-50 backdrop-blur-xl bg-white/70 dark:bg-slate-900/70 border-b border-gray-200/60 dark:border-gray-800 shadow-sm transition-all duration-300">
   <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-10">
     <div className="flex justify-between items-center h-16">
@@ -40,13 +43,23 @@ const Navbar = () => {
         <Menu
           mode="horizontal"
           items={menuItems}
-          className="bg-transparent border-none text-sm font-medium text-gray-700 dark:text-gray-300 tracking-tight hover:text-cyan-500 transition-colors duration-200 [&_.ant-menu-item]:px-3"
+          className="bg-transparent border-none text-sm font-medium text-gray-700 dark:text-white tracking-tight hover:text-cyan-500 transition-colors duration-200 [&_.ant-menu-item]:px-3"
           style={{ background: 'transparent' }}
         />
       </div>
        
 
           <div className='hidden md:flex items-center gap-2'>
+             <Button
+  onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
+  className="rounded-full w-10 h-10 flex items-center justify-center transition hover:scale-110"
+>
+  {resolvedTheme === "dark" ? (
+    <SunOutlined className="text-yellow-400 text-lg" />
+  ) : (
+    <MoonOutlined className="text-gray-700 text-lg" />
+  )}
+</Button>
            
                 <Link href='/login'>
                   <Button

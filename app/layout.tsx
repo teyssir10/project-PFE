@@ -4,6 +4,8 @@ import "./globals.css";
 import Navbar from "@/components/Navbar/Navbar";
 import Footer from "@/components/Footer/Footer";
 import { AuthGuard, AuthProvider } from "@/lib/auth";
+import { ThemeProvider } from "@/components/ThemeProvider/page";
+import { AntdProvider } from "@/components/AntdProvider/page";
 
 
 const geistSans = Geist({
@@ -31,11 +33,13 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">
-        
+      <body className="min-h-full flex flex-col ">
         <AuthProvider>
-          
-          {children}
+          <ThemeProvider>
+            <AntdProvider>
+              {children}
+            </AntdProvider>
+          </ThemeProvider>
         </AuthProvider>
        
       </body>

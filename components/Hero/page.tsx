@@ -152,12 +152,12 @@ const Hero: React.FC = () => {
 
             {/* Visual */}
             <div className="relative h-96 sm:h-[500px] lg:h-[600px]">
-              <div className="absolute inset-0 rounded-3xl overflow-hidden bg-gradient-to-br from-[#D6EEF5] to-cyan-200 border border-cyan-100">
+              <div className="absolute inset-0 rounded-3xl overflow-hidden bg-gradient-to-br from-[#D6EEF5] to-cyan-200  dark:from-slate-800 dark:to-slate-900 border border-cyan-100">
                 <div className="absolute inset-0 flex flex-col items-center justify-center p-8">
                   <div className="w-full max-w-sm space-y-4 p-6 rounded-2xl bg-white dark:bg-slate-900 shadow-xl border border-cyan-500/10">
                     <div className="space-y-2">
-                      <p className="text-sm font-semibold text-[#00D4D0]">Question 1 of 10</p>
-                      <h3 className="text-lg font-bold text-foreground">Où vivent la plupart des pandas dans le monde ?</h3>
+                      <p className="text-sm font-semibold text-[#00D4D0] ">Question 1 of 10</p>
+                      <h3 className="text-lg font-bold text-foreground ">Où vivent la plupart des pandas dans le monde ?</h3>
                     </div>
 
                     <div className="space-y-2">
