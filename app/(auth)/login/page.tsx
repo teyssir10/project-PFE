@@ -3,10 +3,10 @@
 import { useState } from 'react'
 import Image from 'next/image'
 import * as yup from 'yup'
-import { useAntdApp } from '@/lib/useAntdApp'
+
 import Deco from '@/components/Decoration/Deco'
 import { MailOutlined, LockOutlined } from '@ant-design/icons'
-import { Button, Card, Divider, Form, Input } from 'antd'
+import { App, Button, Card, Divider, Form, Input } from 'antd'
 import Text from 'antd/es/typography/Text'
 import Title from 'antd/es/typography/Title'
 import { useForm, Controller } from 'react-hook-form'
@@ -21,11 +21,11 @@ const loginSchema = yup.object({
 })
 
 const LoginPage = () => {
-  const { message } = useAntdApp()
+ 
   const [loading, setLoading] = useState(false)
   const { signIn, signInWithGoogle } = useAuth()
   const router = useRouter()
-
+const { message } = App.useApp() 
   const { control, handleSubmit, formState: { errors } } = useForm({
     resolver: yupResolver(loginSchema),
   })

@@ -22,77 +22,47 @@ type AuthContextType = {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [session, setSession] = useState<Session | null>(null);
   const [user, setUser] = useState<User | null>(null);
+  const [session, setSession] = useState<Session | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
 
-  // ✅ 1. GET SESSION + LISTENER (IMPORTANT)
   useEffect(() => {
-    const getSession = async () => {
-      setIsLoading(true);
-
+    const getSessionData = async () => {
       const { data, error } = await supabase.auth.getSession();
-
-      if (!error) {
+      if (data?.session) {
         setSession(data.session);
-        setUser(data.session?.user ?? null);
+        setUser(data.session.user);
       }
-
       setIsLoading(false);
     };
-
-    getSession();
-
-    // 🔥 LISTENER SUPABASE (FIX PRINCIPAL)
-    const { data: listener } = supabase.auth.onAuthStateChange(
-      (_event, session) => {
-        setSession(session);
-        setUser(session?.user ?? null);
-      }
-    );
-
-    return () => {
-      listener.subscription.unsubscribe();
-    };
+    getSessionData();
   }, []);
 
-  // ✅ SIGN IN
   const signIn = async (email: string, password: string) => {
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
-
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
     if (!error) {
-      router.push("/dashboard");
+      router.push('/dashboard');
     }
-
     return { error };
   };
 
-  // ✅ SIGN UP
   const signUp = async (email: string, password: string) => {
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
+      options: {
+        emailRedirectTo: 'http://localhost:3000/login',
+      },
     });
 
     return { data, error };
   };
-
-  // ✅ SIGN OUT (FIX IMPORTANT)
-  const signOut = async () => {
-    await supabase.auth.signOut();
-
-    setUser(null);      // 🔥 IMPORTANT
-    setSession(null);   // 🔥 IMPORTANT
-
-    router.push("/login");
-  };
-
-  // ✅ GOOGLE
-  const signInWithGoogle = async () => {
+            const signOut = async () => {
+              await supabase.auth.signOut();
+              router.push('/login');
+            };
+            const signInWithGoogle = async () => {
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {

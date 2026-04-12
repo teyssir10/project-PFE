@@ -152,7 +152,9 @@ const Hero: React.FC = () => {
 
             {/* Visual */}
             <div className="relative h-96 sm:h-[500px] lg:h-[600px]">
+
               <div className="absolute inset-0 rounded-3xl overflow-hidden bg-gradient-to-br from-[#D6EEF5] to-cyan-200  dark:from-slate-800 dark:to-slate-900 border border-cyan-100">
+
                 <div className="absolute inset-0 flex flex-col items-center justify-center p-8">
                   <div className="w-full max-w-sm space-y-4 p-6 rounded-2xl bg-white dark:bg-slate-900 shadow-xl border border-cyan-500/10">
                     <div className="space-y-2">
@@ -165,7 +167,7 @@ const Hero: React.FC = () => {
                         <button
                           key={i}
                           className={`w-full p-3 rounded-lg text-left font-medium transition-all ${i === 0
-                            ? 'bg-cyan-500/20 text-[#00D4D0] border-2 border-[#00D4D0]'
+                            ? 'bg-cyan-500/20 text-[ #00D4D0] border-2 border-[ #00D4D0]'
                             : 'bg-muted text-foreground hover:bg-muted/80 border-2 border-transparent'
                             }`}
                         >
@@ -174,7 +176,7 @@ const Hero: React.FC = () => {
                       ))}
                     </div>
 
-                    <button className="!w-full !py-2 !rounded-lg !bg-[#0F596E] !text-white !font-semibold !hover:bg-secondary/90 !transition-colors">
+                    <button className="!w-full !py-2 !rounded-lg !bg-[ #0F596E] !text-white !font-semibold !hover:bg-secondary/90 !transition-colors">
                       Next Question
                     </button>
                   </div>

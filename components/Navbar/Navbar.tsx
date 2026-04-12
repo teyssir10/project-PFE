@@ -19,8 +19,13 @@ const menuItems = [
 ];
 
 const Navbar = () => {
+  const [mounted, setMounted] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const { resolvedTheme, setTheme } = useTheme();
+// eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   return (
   
@@ -50,16 +55,18 @@ const Navbar = () => {
        
 
           <div className='hidden md:flex items-center gap-2'>
-             <Button
-  onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
-  className="rounded-full w-10 h-10 flex items-center justify-center transition hover:scale-110"
->
-  {resolvedTheme === "dark" ? (
-    <SunOutlined className="text-yellow-400 text-lg" />
-  ) : (
-    <MoonOutlined className="text-gray-700 text-lg" />
-  )}
-</Button>
+      {mounted && (
+  <Button
+    onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
+    className="rounded-full w-10 h-10 flex items-center justify-center transition hover:scale-110"
+  >
+    {resolvedTheme === "dark" ? (
+      <SunOutlined className="text-yellow-400 text-lg" />
+    ) : (
+      <MoonOutlined className="text-gray-700 text-lg" />
+    )}
+  </Button>
+)}
            
                 <Link href='/login'>
                   <Button

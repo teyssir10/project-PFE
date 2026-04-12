@@ -6,6 +6,7 @@ import Footer from "@/components/Footer/Footer";
 import { AuthGuard, AuthProvider } from "@/lib/auth";
 import { ThemeProvider } from "@/components/ThemeProvider/page";
 import { AntdProvider } from "@/components/AntdProvider/page";
+import { App } from "antd";
 
 
 const geistSans = Geist({
@@ -31,13 +32,16 @@ export default function RootLayout({
   return (
     <html
       lang="en"
+      suppressHydrationWarning
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col ">
         <AuthProvider>
           <ThemeProvider>
             <AntdProvider>
-              {children}
+              <App>
+                {children}
+              </App>
             </AntdProvider>
           </ThemeProvider>
         </AuthProvider>
