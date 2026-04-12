@@ -34,44 +34,7 @@ export function Page() {
 
   return (
     <>
-    <nav className="sticky top-0 z-50 backdrop-blur-xl bg-white/70 dark:bg-slate-900/70 border-b border-gray-200/60 dark:border-gray-800 shadow-sm transition-all duration-300">
-    <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-10">
-    <div className="flex justify-between items-center h-16">
-
-      {/* Logo */}
-      <div className="flex items-center gap-3 cursor-pointer transition-transform duration-200 hover:scale-105">
-        <div className="w-10 h-10 flex items-center justify-center rounded-xl bg-gradient-to-r   font-extrabold shadow-md">
-          <Image src={logo} alt="PandaBrain AI logo" width={100} height={100} />
-        </div>
-        <h1 className="text-xl font-extrabold text-gray-900 dark:text-white tracking-tight">
-          PandoMind  <span className="text-cyan-500">AI</span>
-        </h1>
-      </div>
-       <div className="hidden md:flex items-center">
-        <Menu
-          mode="horizontal"
-          items={menuItems}
-          className="bg-transparent border-none text-sm font-medium text-gray-700 dark:text-gray-300 tracking-tight hover:text-cyan-500 transition-colors duration-200 [&_.ant-menu-item]:px-3"
-          style={{ background: 'transparent' }}
-        />
-      </div>
-       <div className='hidden md:flex items-center gap-2'>
-  <Link href='/login'>
-    <Button
-      icon={<LogoutOutlined />}
-      type='text'
-      className='px-6 py-2 rounded-full font-semibold !text-white 
-      !bg-gradient-to-r !from-cyan-500 !via-cyan-400 !to-[#00D4D0] shadow-md
-      hover:shadow-lg hover:scale-105 transition-all duration-300'
-    >
-      Logout
-    </Button>
-  </Link>
-</div>
-
-     </div>
-     </div>
-    </nav>
+   
     <div className='relative'> 
              <Deco />
     

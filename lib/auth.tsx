@@ -28,8 +28,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const router = useRouter();
 
   useEffect(() => {
+    // 1. Session initiale
     const getSessionData = async () => {
-      const { data, error } = await supabase.auth.getSession();
+      const { data } = await supabase.auth.getSession();
       if (data?.session) {
         setSession(data.session);
         setUser(data.session.user);
@@ -37,13 +38,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setIsLoading(false);
     };
     getSessionData();
+
+    
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (_event, session) => {
+        setSession(session);
+        setUser(session?.user ?? null);
+        setIsLoading(false);
+      }
+    );
+
+   
+    return () => subscription.unsubscribe();
   }, []);
 
+  
   const signIn = async (email: string, password: string) => {
-    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-    if (!error) {
-      router.push('/dashboard');
-    }
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
     return { error };
   };
 
@@ -55,21 +66,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         emailRedirectTo: 'http://localhost:3000/login',
       },
     });
-
     return { data, error };
   };
-            const signOut = async () => {
-              await supabase.auth.signOut();
-              router.push('/login');
-            };
-            const signInWithGoogle = async () => {
+
+  const signOut = async () => {
+    await supabase.auth.signOut();
+    router.push('/login');
+  };
+
+  const signInWithGoogle = async () => {
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
         redirectTo: `${window.location.origin}/dashboard`,
       },
     });
-
     return { error };
   };
 
@@ -86,14 +97,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
-// ✅ HOOK
+
 export function useAuth() {
   const context = useContext(AuthContext);
   if (!context) throw new Error("useAuth must be used within an AuthProvider");
   return context;
 }
 
-// ✅ AUTH GUARD (petite amélioration)
+//  AUTH GUARD
 export function AuthGuard({ children }: { children: React.ReactNode }) {
   const { user, isLoading } = useAuth();
   const pathname = usePathname();
@@ -104,10 +115,10 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
       const isPublicRoute =
         pathname === "/login" ||
         pathname === "/signup" ||
-        pathname === "/hero"; // 👈 optionnel
+        pathname === "/hero";
 
       if (!user && !isPublicRoute) {
-        router.replace("/login"); // 🔥 mieux que push
+        router.replace("/login");
       }
 
       if (user && isPublicRoute) {
