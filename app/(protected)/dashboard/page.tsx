@@ -1,213 +1,207 @@
 "use client"
-import React from 'react'
+import React, { useState } from 'react'
 import { useAuth } from "@/lib/auth"
-import { Button, Menu,Card } from 'antd';
-import { LogoutOutlined,ThunderboltOutlined, CaretRightOutlined, PlusOutlined, RiseOutlined, ShareAltOutlined } from '@ant-design/icons';
-import Image from 'next/image'
-import logo from '@/app/assets/panda-logo.png';
-import Link from 'next/link';
- import { Deco } from '@/components/Decoration/Deco';
-  
-const menuItems = [
-  { key: 'home', label: <Link href="/">Home</Link> },
-  { key: 'about', label: <Link href="/about">About</Link> },
-  { key: 'quiz', label: <Link href="/quiz">Quiz</Link> },
-  { key: 'leaderboard', label: <Link href="/leaderboard">Leaderboard</Link> },
-  { key: 'contact', label: <Link href="/contact">Contact</Link> },
-];
-  const quickActions = [
-    { icon: PlusOutlined, label: 'Create Quiz', color: 'from-primary to-secondary' },
-    { icon: RiseOutlined, label: 'View Analytics', color: 'from-secondary to-cyan-400' },
-    { icon: ShareAltOutlined, label: 'Share Quiz', color: 'from-cyan-400 to-primary' },
-  ]
-  const recentQuizzes = [
-    { id: 1, title: 'Biology Basics', questions: 15, responses: 24, created: '2 days ago' },
-    { id: 2, title: 'History Quiz', questions: 20, responses: 18, created: '5 days ago' },
-    { id: 3, title: 'Chemistry 101', questions: 12, responses: 31, created: '1 week ago' },
-  ]
+import { Button, Card, Progress, Tag } from 'antd';
+import {
+  PlusOutlined, CaretRightOutlined, RiseOutlined,
+  ShareAltOutlined, ThunderboltOutlined, TrophyOutlined,
+  FireOutlined, ClockCircleOutlined, StarOutlined,
+  TeamOutlined, RobotOutlined, GlobalOutlined
+} from '@ant-design/icons';
+import { Deco } from '@/components/Decoration/Deco';
+import { DashboardLayout } from '@/components/DashboardLayout/page';
 
-  const handleCreateQuiz = () => {
-    alert('Quiz creation feature coming soon!')
-  }
+
+const stats = [
+  { label: 'Quizzes Played', value: '24', trend: '+3 this week',
+    icon: <ThunderboltOutlined className="text-xl text-cyan-500" /> },
+  { label: 'Avg. Score', value: '85%', trend: '+5% vs last week',
+    icon: <RiseOutlined className="text-xl text-teal-500" /> },
+  { label: 'Total Points', value: '1,240', trend: '+120 today',
+    icon: <TrophyOutlined className="text-xl text-cyan-600" /> },
+  { label: 'Global Rank', value: '#42', trend: '↑ 8 positions',
+    icon: <GlobalOutlined className="text-xl text-teal-600" /> },
+]
+
+const recentActivity = [
+  { title: 'Biology Basics', score: 90, total: 15, date: '2 hours ago', status: 'completed' },
+  { title: 'History Quiz', score: 75, total: 20, date: 'Yesterday', status: 'completed' },
+  { title: 'Chemistry 101', score: 60, total: 12, date: '3 days ago', status: 'completed' },
+  { title: 'Math Challenge', score: 0, total: 10, date: '5 days ago', status: 'incomplete' },
+]
+
+const recommendedQuizzes = [
+  { title: 'Physics Advanced', difficulty: 'Hard', questions: 20, tag: '🔬 Science' },
+  { title: 'World Geography', difficulty: 'Medium', questions: 15, tag: '🌍 Geography' },
+  { title: 'AI & Technology', difficulty: 'Easy', questions: 10, tag: '🤖 Tech' },
+]
+
+const difficultyColor: Record<string, string> = {
+  Easy: '!bg-cyan-100 !text-cyan-500 !border-cyan-200',
+  Medium: '!bg-cyan-200 !text-cyan-600 !border-cyan-300',
+  Hard: '!bg-cyan-400 !text-cyan-900 !border-cyan-500',
+}
+
 export function Page() {
   const { user } = useAuth()
+  const username = user?.user_metadata?.firstName || user?.email?.split('@')[0]
 
   return (
-    <>
-    <nav className="sticky top-0 z-50 backdrop-blur-xl bg-white/70 dark:bg-slate-900/70 border-b border-gray-200/60 dark:border-gray-800 shadow-sm transition-all duration-300">
-    <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-10">
-    <div className="flex justify-between items-center h-16">
+    <DashboardLayout>
+      <div className="relative min-h-screen py-6">
+        <Deco />
 
-      {/* Logo */}
-      <div className="flex items-center gap-3 cursor-pointer transition-transform duration-200 hover:scale-105">
-        <div className="w-10 h-10 flex items-center justify-center rounded-xl bg-gradient-to-r   font-extrabold shadow-md">
-          <Image src={logo} alt="PandaBrain AI logo" width={100} height={100} />
-        </div>
-        <h1 className="text-xl font-extrabold text-gray-900 dark:text-white tracking-tight">
-          PandoMind  <span className="text-cyan-500">AI</span>
-        </h1>
-      </div>
-       <div className="hidden md:flex items-center">
-        <Menu
-          mode="horizontal"
-          items={menuItems}
-          className="bg-transparent border-none text-sm font-medium text-gray-700 dark:text-gray-300 tracking-tight hover:text-cyan-500 transition-colors duration-200 [&_.ant-menu-item]:px-3"
-          style={{ background: 'transparent' }}
-        />
-      </div>
-       <div className='hidden md:flex items-center gap-2'>
-  <Link href='/login'>
-    <Button
-      icon={<LogoutOutlined />}
-      type='text'
-      className='px-6 py-2 rounded-full font-semibold !text-white 
-      !bg-gradient-to-r !from-cyan-500 !via-cyan-400 !to-[#00D4D0] shadow-md
-      hover:shadow-lg hover:scale-105 transition-all duration-300'
-    >
-      Logout
-    </Button>
-  </Link>
-</div>
+        <div className="relative px-6 lg:px-10 py-8 space-y-10">
 
-     </div>
-     </div>
-    </nav>
-    <div className='relative'> 
-             <Deco />
-    
-    <div className='relative overflow-hidden !py-4 !sm:py-2 !lg:py-10 px-8 sm:px-16 lg:px-24 mb-12'>
+        {/* WELCOME  */}
+                  <div className="flex items-center justify-between ">
+                    <div>
+                      <h1 className="text-3xl font-extrabold">
+                        <span className="text-cyan-500">Welcome back, </span>
+                        <span className="text-gray-900">{username} !</span>
+                      </h1>
+                      <p className="text-gray-500 mt-1">Ready to challenge yourself today?</p>
+                    </div>
+                  </div> 
 
-      <h1 className='lg:text-4xl'><span className='text-3xl font-extrabold text-[#0e92b6] '>welcome back,</span>  <span className='text-3xl font-extrabold text-gray-900 dark:text-white tracking-tight '>{user?.user_metadata?.firstName || user?.email?.split('@')[0]} !</span></h1>
-      <p className='text-gray-700'>Ready to create your next amazing quiz? Let&apos;s get started.</p>
-     
-    </div>
-     <div  className=' relative flex flex-col md:flex-row gap-6 md:gap-12 px-8 sm:px-16 lg:px-24 py-4 grid grid-cols-1 md:grid-cols-3 gap-6 mb-12'>
-              {quickActions.map((action, index) => (
-                <button
-                  key={index}
-                  
-                  className={`p-6 rounded-xl !bg-gradient-to-br !from-cyan-500 !to-[#00D4D0] text-white font-semibold hover:shadow-lg transition-all !duration-200 transform hover:scale-105 flex items-center gap-3`}
-                >
-                  <action.icon className="w-6 h-6" />
-                  {action.label}
-                </button>
-              ))}
-        </div>
-        <div className=' relative flex flex-col md:flex-row gap-6 md:gap-12 px-8 sm:px-16 lg:px-24 py-4 grid grid-cols-1 md:grid-cols-4 gap-6 mb-12 '>
-        <Card className="!rounded-2xl !shadow-md hover:!shadow-lg transition-all !border-0 !bg-white/30 !backdrop-blur-md ">
-              <div className="flex items-start justify-between">
-                <div>
-                  <p className="text-gray-500 text-sm font-medium">Total Quizzes</p>
-                  <p className="text-4xl font-bold text-gray-900 mt-2">3</p>
-                </div>
-                <div className="text-3xl">📊</div>
-              </div>
-            </Card>
-            <Card className="!rounded-2xl !shadow-md hover:!shadow-lg transition-all !border-0 !bg-white/30 !backdrop-blur-md ">
-              <div className="flex items-start justify-between">
-                <div>
-                  <p className="text-gray-500 text-sm font-medium">Total Responses</p>
-                  <p className="text-4xl font-bold text-gray-900 mt-2">0</p>
-                </div>
-                <div className="text-4xl">✅</div>
-              </div>
-            </Card>
-
-            <Card className="!rounded-2xl !shadow-md hover:!shadow-lg transition-all !border-0 !bg-white/30 !backdrop-blur-md ">
-              <div className="flex items-start justify-between">
-                <div>
-                  <p className="text-gray-500 text-sm font-medium">Avg. Score</p>
-                  <p className="text-4xl font-bold text-gray-900 mt-2">85%</p>
-                </div>
-                <div className="text-3xl">⭐</div>
-              </div>
-            </Card>
-
-            <Card className="!rounded-2xl !shadow-md hover:!shadow-lg transition-all !border-0 !bg-white/30 !backdrop-blur-md">
-              <div className="flex items-start justify-between">
-                <div>
-                  <p className="text-gray-500 text-sm font-medium">Active Users</p>
-                  <p className="text-4xl font-bold text-gray-900 mt-2">156</p>
-                </div>
-                <div className="text-3xl">👥</div>
-              </div>
-            </Card>
-            </div>
-            <div className='relative overflow-hidden !py-2 !sm:py-4 !lg:py-10 px-8 sm:px-16 lg:px-24'>
-            <div className="flex items-center justify-between mb-6">
-              <h3 className="!text-2xl font-bold text-gray-900">Your Recent Quizzes</h3>
-              <Button
-                onClick={handleCreateQuiz}
-                icon={<PlusOutlined />}
-                className="!bg-gradient-to-r !from-cyan-500 !to-teal-400 !text-white  hover:!opacity-90 transition-all size-35"
-              >
-                New Quiz
-              </Button>
-            </div>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 relative overflow-hidden py-4 sm:py-6 lg:py-16 px-8 sm:px-16 lg:px-24">
-          {recentQuizzes.map((quiz) => (
+          {/* STATS CARDS */}
+         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {stats.map((stat, i) => (
             <Card
-              key={quiz.id} 
-              className="!rounded-2xl !border-0 !shadow-md hover:!shadow-lg transition-all cursor-pointer !bg-white/30 !backdrop-blur-md relative !overflow-hidden"
+              key={i}
+              className="!rounded-2xl !shadow-md !bg-gradient-to-br !from-[#D6EEF5] !to-cyan-200 !backdrop-blur-md hover:!shadow-xl hover:!-translate-y-1 transition-all duration-300"
             >
-              <div className="relative z-10">
-                {/* Header */}
-                <div className="flex items-start justify-between mb-4">
-                  <h4 className="font-bold text-lg text-gray-900">{quiz.title}</h4>
-                  <span className="text-2xl">📋</span>
-                </div>
-
-                {/* Infos */}
-                <div className="space-y-2 text-sm text-gray-500 mb-4">
-                  <p>Questions: <span className="font-semibold text-gray-900">{quiz.questions}</span></p>
-                  <p>Responses: <span className="font-semibold text-gray-900">{quiz.responses}</span></p>
-                  <p>Created: <span className="font-semibold text-gray-900">{quiz.created}</span></p>
-                </div>
-
-                {/* Actions */}
-                <div className="flex gap-2 pt-4 border-t border-gray-100">
-                  <Button
-                    className="flex-1 !rounded-lg !border-gray-200 !text-gray-600 hover:!border-cyan-400 hover:!text-cyan-500 transition-all text-xs"
-                  >
-                    Edit
-                  </Button>
-                  <Button
-                    icon={<CaretRightOutlined/>}
-                    className="!flex-1 !bg-gradient-to-r !from-cyan-500 !to-teal-400 !text-white"
-                  >
-                    Play
-                  </Button>
-                </div>
+              <div className="w-12 h-12 rounded-2xl bg-gradient-to-br !from-teal-400 !to-cyan-400 flex items-center justify-center mb-4 shadow-sm">
+                {stat.icon}
+              </div>
+              <p className="text-3xl font-extrabold text-gray-900">{stat.value}</p>
+              <p className="text-gray-500 text-sm font-medium mt-1">{stat.label}</p>
+              <div className="flex items-center gap-1 mt-3 !bg-white rounded-full px-3 py-1 w-fit">
+                <RiseOutlined className="text-cyan-400 text-xs" />
+                <p className="text-xs text-cyan-900 font-semibold">{stat.trend}</p>
               </div>
             </Card>
           ))}
         </div>
-        <div className="relative overflow-hidden py-4 sm:py-6 lg:py-16 px-8 sm:px-16 lg:px-24 grid grid-cols-1 md:grid-cols-3 gap-6 ">
-  
-          <Card className="!rounded-2xl !border-0 !shadow-md hover:!shadow-lg transition-all !bg-gradient-to-br !from-cyan-50 !to-teal-50">
-            <ThunderboltOutlined className="!text-3xl !text-cyan-500 mb-4 block" />
-            <h4 className="font-bold text-gray-900 mb-2">AI-Powered Generation</h4>
-            <p className="text-sm text-gray-500">Create intelligent quizzes in seconds with advanced AI technology</p>
-          </Card>
 
-          <Card className="!rounded-2xl !border-0 !shadow-md hover:!shadow-lg transition-all !bg-gradient-to-br !from-teal-50 !to-cyan-50">
-            <RiseOutlined className="!text-3xl !text-teal-500 !mb-4 block" />
-            <h4 className="font-bold text-gray-900 mb-2">Advanced Analytics</h4>
-            <p className="text-sm text-gray-500">Track performance metrics and engagement in real-time</p>
-          </Card>
 
-          <Card className="!rounded-2xl !border-0 !shadow-md hover:!shadow-lg transition-all !bg-gradient-to-br !from-cyan-50 !to-sky-50">
-            <ShareAltOutlined className="!text-3xl !text-cyan-500 !mb-4 block" />
-            <h4 className="font-bold text-gray-900 mb-2">Easy Sharing</h4>
-            <p className="text-sm text-gray-500">Share your quizzes with students or colleagues instantly</p>
-          </Card>
 
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+            <Card className="!rounded-2xl !border-0 !shadow-md !bg-white/60 !backdrop-blur-md !bg-gradient-to-br !from-[#D6EEF5] !to-cyan-170">
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-lg font-bold text-gray-900">Recent Activity</h2>
+                <ClockCircleOutlined className="text-gray-400 text-lg" />
+              </div>
+              <div className="space-y-4">
+                {recentActivity.map((quiz, i) => (
+                  <div key={i} className="flex items-center gap-4">
+                    <div className="w-10 h-10 rounded-xl bg-cyan-50 flex items-center justify-center flex-shrink-0">
+                      <TrophyOutlined className="text-cyan-500" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between mb-1">
+                        <p className="font-semibold text-gray-900 text-sm truncate">{quiz.title}</p>
+                        <span className="text-xs text-gray-400 ml-2 flex-shrink-0">{quiz.date}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Progress
+                          percent={Math.round((quiz.score / quiz.total) * 100)}
+                          size="small"
+                          strokeColor="#06b6d4"
+                          className="!mb-0 flex-1"
+                        />
+                        <span className="text-xs font-semibold text-cyan-500 flex-shrink-0">
+                          {quiz.score}/{quiz.total}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </Card>
+
+            <Card className="!rounded-2xl !border-0 !shadow-md !bg-white/60 !backdrop-blur-md !bg-gradient-to-br !from-[#D6EEF5] !to-cyan-170">
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-lg font-bold text-gray-900">Recommended for You</h2>
+                <RobotOutlined className="text-cyan-400 text-lg" />
+              </div>
+              <div className="space-y-4">
+                {recommendedQuizzes.map((quiz, i) => (
+                  <div key={i} className="flex items-center justify-between p-4 rounded-xl bg-gray-50 hover:bg-cyan-50 transition-all group">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-xl bg-white shadow-sm flex items-center justify-center text-lg">
+                        {quiz.tag.split(' ')[0]}
+                      </div>
+                      <div>
+                        <p className="font-semibold text-gray-900 text-sm">{quiz.title}</p>
+                        <p className="text-xs text-gray-400">{quiz.questions} questions</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Tag className={`!rounded-full !text-xs !font-semibold ${difficultyColor[quiz.difficulty]}`}>
+                        {quiz.difficulty}
+                      </Tag>
+                      <Button
+                        size="small"
+                        icon={<CaretRightOutlined />}
+                        className="!bg-gradient-to-r !from-cyan-500 !to-teal-400 !text-white !border-0 !rounded-lg opacity-0 group-hover:opacity-100 transition-all"
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <Button
+                block
+                icon={<ThunderboltOutlined />}
+                className="!mt-4 !bg-gradient-to-r !from-cyan-500 !to-teal-400 !text-white !border-0 !rounded-xl !font-semibold hover:!opacity-90"
+              >
+                Get More Recommendations
+              </Button>
+            </Card>
+
+          </div>
+                    {/*QUICK ACTIONS */}
+          <div>
+            <h2 className="text-xl font-bold text-gray-900 mb-4">Quick Actions</h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              
+              <button className="group p-6 rounded-2xl bg-gradient-to-br from-cyan-400 to-cyan-500 text-white font-semibold hover:shadow-xl hover:scale-105 transition-all duration-300 flex items-center gap-4">
+                <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                  <CaretRightOutlined className="text-2xl" />
+                </div>
+                <div className="text-left">
+                  <p className="font-bold text-lg">Start Quiz</p>
+                  <p className="text-white/80 text-sm">Jump into a quiz now</p>
+                </div>
+              </button>
+
+              <button className="group p-6 rounded-2xl bg-gradient-to-br from-cyan-500 to-teal-500 text-white font-semibold hover:shadow-xl hover:scale-105 transition-all duration-300 flex items-center gap-4">
+                <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                  <TeamOutlined className="text-2xl" />
+                </div>
+                <div className="text-left">
+                  <p className="font-bold text-lg">Play with Friends</p>
+                  <p className="text-white/80 text-sm">Challenge your friends</p>
+                </div>
+              </button>
+
+              <button className="group p-6 rounded-2xl bg-gradient-to-br from-teal-400 to-cyan-600 text-white font-semibold hover:shadow-xl hover:scale-105 transition-all duration-300 flex items-center gap-4">
+                <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                  <RobotOutlined className="text-2xl" />
+                </div>
+                <div className="text-left">
+                  <p className="font-bold text-lg">Generate AI Quiz</p>
+                  <p className="text-white/80 text-sm">Create with AI instantly</p>
+                </div>
+              </button>
+
+            </div>
+          </div>
+        </div>
       </div>
-     </div>
-    </>
+    </DashboardLayout>
   )
-  
 }
 
 export default Page
