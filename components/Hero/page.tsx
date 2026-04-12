@@ -176,7 +176,7 @@ const Hero: React.FC = () => {
                       ))}
                     </div>
 
-                    <button className="!w-full !py-2 !rounded-lg !bg-[ #0F596E] !text-white !font-semibold !hover:bg-secondary/90 !transition-colors">
+                    <button className="!w-full !py-2 !rounded-lg !bg-[#0F596E] !text-white !font-semibold !hover:bg-secondary/90 !transition-colors">
                       Next Question
                     </button>
                   </div>

@@ -2,6 +2,7 @@
 
 import Navbar from "@/components/Navbar/Navbar";
 import { AuthGuard } from "@/lib/auth";
+import  Footer  from "@/components/Footer/Footer";
 
 export default function Layout({
   children,
@@ -12,6 +13,7 @@ export default function Layout({
     <>
       <Navbar />
       <AuthGuard>{children}</AuthGuard>
+      <Footer/>
     </>
   );
 }

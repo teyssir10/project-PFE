@@ -14,7 +14,7 @@ import { useAuth } from "@/lib/auth"; // 👈 adapte le chemin
 
 const menuItems = [
   { key: 'home',        label: <Link href="/">Home</Link> },
-  { key: 'about',       label: <Link href="/about">About</Link> },
+  { key: 'about',       label: <Link href="/dashboard">dashboard</Link> },
   { key: 'quiz',        label: <Link href="/quiz">Quiz</Link> },
   { key: 'leaderboard', label: <Link href="/leaderboard">Leaderboard</Link> },
   { key: 'contact',     label: <Link href="/contact">Contact</Link> },
