@@ -1,13 +1,12 @@
 "use client"
 import React from 'react'
 import { useAuth } from "@/lib/auth"
-import { Button, Menu } from 'antd';
+import { Button, Menu,Card } from 'antd';
 import { LogoutOutlined,ThunderboltOutlined, CaretRightOutlined, PlusOutlined, RiseOutlined, ShareAltOutlined } from '@ant-design/icons';
 import Image from 'next/image'
 import logo from '@/app/assets/panda-logo.png';
 import Link from 'next/link';
-import { Card } from 'antd';
- import { Deco } from '@/app/components/Decoration/Deco';
+ import { Deco } from '@/components/Decoration/Deco';
   
 const menuItems = [
   { key: 'home', label: <Link href="/">Home</Link> },
