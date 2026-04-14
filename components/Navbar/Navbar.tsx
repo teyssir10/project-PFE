@@ -3,12 +3,14 @@ import { Button, Menu } from 'antd';
 import {
   MenuUnfoldOutlined, MenuFoldOutlined,
   LoginOutlined, UserAddOutlined,
-  LogoutOutlined, SunOutlined, MoonOutlined
+  LogoutOutlined, SunOutlined, MoonOutlined,
+  FileSearchOutlined
 } from '@ant-design/icons';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
-import logo from '@/app/assets/panda-logo.png';
+import logo from '@/public/panda-logo.png';
 import { useTheme } from "next-themes";
 import { useAuth } from "@/lib/auth"; // 👈 adapte le chemin
 
@@ -24,7 +26,11 @@ const Navbar = () => {
   const [mounted, setMounted]       = useState(false);
   const [menuOpen, setMenuOpen]     = useState(false);
   const { resolvedTheme, setTheme } = useTheme();
-  const { user, signOut }           = useAuth(); // 👈 lit l'état auth
+  const { user, signOut }           = useAuth();
+  const router                      = useRouter();
+  const goToDashboard = () => {
+    router.push("/dashboard");
+  };
 
   useEffect(() => { setMounted(true); }, []);
 
@@ -66,19 +72,31 @@ const Navbar = () => {
                     }
                   </Button>
                 )}
-            {user ? (
-              // ✅ Connecté → Logout
-              <Button
-                icon={<LogoutOutlined />}
-                onClick={signOut}
-                className="px-6 py-2 rounded-full font-semibold !text-white
-                  !bg-gradient-to-r !from-cyan-500 !via-cyan-400 !to-[#00D4D0]
-                  !border-0 shadow-md hover:shadow-lg hover:scale-105
-                  transition-all duration-300 shadow-cyan-300/50"
-              >
-                Logout
-              </Button>
-            ) : (
+{user ? (
+  // ✅ Connecté → Logout
+  <>
+    <Button
+      icon={<LogoutOutlined />}
+      onClick={signOut}
+      className="px-6 py-2 rounded-full font-semibold !text-white
+        !bg-gradient-to-r !from-cyan-500 !via-cyan-400 !to-[#00D4D0]
+        !border-0 shadow-md hover:shadow-lg hover:scale-105
+        transition-all duration-300 shadow-cyan-300/50"
+    >
+      Logout
+    </Button>
+    <Button
+      icon={<FileSearchOutlined />}
+      onClick={goToDashboard}
+      className="px-6 py-2 rounded-full font-semibold !text-cyan-500
+                      bg-gradient-to-r from-cyan-500 via-cyan-400 to-sky-500 shadow-md
+                      hover:shadow-lg hover:scale-105 transition-all duration-300
+                      !shadow-cyan-400/40 hover:shadow-cyan-500/60"
+    >
+      Dashboard
+    </Button>
+  </>
+) : (
               // ✅ Non connecté → dark toggle + Login + Sign Up
               <>
              

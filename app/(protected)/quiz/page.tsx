@@ -6,7 +6,7 @@ import Title from "antd/es/typography/Title"
 import Text from "antd/es/typography/Text"
 import { Input } from "antd"
 import Image from "next/image"
-import panda from "@/app/assets/panda.png"
+import panda from "@/public/panda.png"
 
 const Page = () => {
   const [difficulty, setDifficulty] = useState("Moyen")
