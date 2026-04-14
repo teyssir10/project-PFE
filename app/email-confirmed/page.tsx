@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import logo from "@/app/assets/panda-logo.png";
+import logo from "@/public/panda-logo.png";
 
 export default function EmailConfirmedPage() {
   const router = useRouter();

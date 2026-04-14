@@ -13,7 +13,7 @@ import { useForm, Controller } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useAuth } from '@/lib/auth'
 import { useRouter } from 'next/navigation'
-import logo from '@/app/assets/panda-logo.png'
+import logo from '@/public/panda-logo.png'
 
 const loginSchema = yup.object({
   email: yup.string().required('Please enter your email').email('Please enter a valid email address'),

@@ -10,7 +10,7 @@ import {
 } from '@ant-design/icons'
 import { useAuth } from '@/lib/auth'
 import Image from 'next/image'
-import logo from '@/app/assets/panda-logo.png'
+import logo from '@/public/panda-logo.png'
 
 interface NavItem {
   icon: React.ElementType
