@@ -12,19 +12,20 @@ import logo from '@/app/assets/panda-logo.png';
 import { useTheme } from "next-themes";
 import { useAuth } from "@/lib/auth"; // 👈 adapte le chemin
 
+
 const menuItems = [
   { key: 'home',        label: <Link href="/">Home</Link> },
-  { key: 'about',       label: <Link href="/dashboard">dashboard</Link> },
+  { key: 'dashboard',   label: <Link href="/dashboard">dashboard</Link> },
   { key: 'quiz',        label: <Link href="/quiz">Quiz</Link> },
   { key: 'leaderboard', label: <Link href="/leaderboard">Leaderboard</Link> },
   { key: 'contact',     label: <Link href="/contact">Contact</Link> },
 ];
-
 const Navbar = () => {
   const [mounted, setMounted]       = useState(false);
   const [menuOpen, setMenuOpen]     = useState(false);
   const { resolvedTheme, setTheme } = useTheme();
-  const { user, signOut }           = useAuth(); // 👈 lit l'état auth
+  const { user, signOut }           = useAuth(); 
+  const [selectedKey, setSelectedKey] = useState('')// 👈 lit l'état auth
 
   useEffect(() => { setMounted(true); }, []);
 
@@ -44,12 +45,15 @@ const Navbar = () => {
           </div>
 
           {/* Menu links */}
-          <div className="hidden md:flex items-center">
+        <div className="hidden md:flex items-center">
             <Menu
               mode="horizontal"
               items={menuItems}
-              className="bg-transparent border-none text-sm font-medium text-gray-700 dark:text-white tracking-tight hover:text-cyan-500 transition-colors duration-200 [&_.ant-menu-item]:px-3"
-              style={{ background: 'transparent' }}
+              selectedKeys={[selectedKey]}
+  onClick={({ key }) => setSelectedKey(key)}
+              defaultSelectedKeys={[]}
+                className="bg-transparent border-none text-sm font-medium text-gray-700 dark:text-white tracking-tight transition-colors duration-200 [&_.ant-menu-item]:px-3 [&_.ant-menu-item-selected]:!text-[#00D4D0] [&_.ant-menu-item-selected::after]:!border-b-2 [&_.ant-menu-item-selected::after]:!border-b-[#00D4D0] [&_.ant-menu-item:hover::after]:!border-b-[#00D4D0]"
+  style={{ background: 'transparent' }}
             />
           </div>
 
@@ -67,7 +71,7 @@ const Navbar = () => {
                   </Button>
                 )}
             {user ? (
-              // ✅ Connecté → Logout
+
               <Button
                 icon={<LogoutOutlined />}
                 onClick={signOut}
@@ -79,7 +83,7 @@ const Navbar = () => {
                 Logout
               </Button>
             ) : (
-              // ✅ Non connecté → dark toggle + Login + Sign Up
+
               <>
              
 

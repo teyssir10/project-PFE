@@ -46,7 +46,6 @@ export function Page() {
   const username = user?.user_metadata?.firstName || user?.email?.split('@')[0]
 
   return (
-    <DashboardLayout>
       <div className="relative min-h-screen py-6">
         <Deco />
 
@@ -228,7 +227,6 @@ export function Page() {
 
         </div>
       </div>
-    </DashboardLayout>
   )
 }
 
