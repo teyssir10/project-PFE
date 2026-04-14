@@ -1,0 +1,127 @@
+"use client"
+import React, { useState } from 'react'
+import { Button, Avatar, Dropdown } from 'antd'
+import { useRouter } from 'next/navigation'
+import {
+  BellOutlined, SearchOutlined,
+  SunOutlined, MoonOutlined, UserOutlined,
+LogoutOutlined,RobotOutlined,
+PlusOutlined,
+} from '@ant-design/icons'
+import { supabase } from '@/lib/supabase'
+import LightToDark from '../UI/Button/LightToDark'
+
+type TopbarProps = {
+  username: string
+}
+
+const notifications = [
+  { title: 'New challenge from Ahmed!', time: '2 min ago', read: false },
+  { title: 'You ranked up to #42 globally', time: '1 hour ago', read: false },
+  { title: 'Weekly report is ready', time: 'Yesterday', read: true },
+]
+
+export default function Topbar({ username }: TopbarProps) {
+  const [dark, setDark] = useState(false)
+  const router = useRouter()
+
+  const notifMenu = {
+    items: [
+      {
+        key: 'header',
+        label: <span className="font-bold">Notifications</span>,
+        disabled: true,
+      },
+      ...notifications.map((n, i) => ({
+        key: i,
+        label: (
+          <div>
+            <p className="text-sm">{n.title}</p>
+            <span className="text-xs text-gray-400">{n.time}</span>
+          </div>
+        ),
+      })),
+    ],
+  }
+
+const handleLogout = async () => {
+  await supabase.auth.signOut()
+  router.push('/login')
+}
+  const profileMenu = {
+    items: [
+      {
+        key: 'user',
+        label: <span>{username}</span>,
+      },
+      {
+        key: 'profile',
+        icon: <UserOutlined />,
+        label: 'Profile',
+      },
+      {
+        key: 'logout',
+        icon: <span className="!text-cyan-500"><LogoutOutlined  /></span>,
+        label: <span className="text-cyan-500">Logout</span>,
+        onClick: handleLogout,
+      },
+    ],
+  }
+  
+
+  return (
+    <div className="sticky top-0 z-30 flex items-center justify-between h-16 px-6 py-3
+    bg-white/80 dark:bg-slate-900/80 backdrop-blur-md
+    border-b border-gray-100 dark:border-slate-700 gap-1">
+
+    <div className="flex items-center gap-4 w-full max-w-md">
+  <div className="flex items-center gap-2 w-full px-4 py-2 rounded-2xl
+    bg-white/70 dark:bg-slate-800/70 backdrop-blur-md
+    border border-gray-200 dark:border-slate-700
+    shadow-sm focus-within:ring-2 focus-within:ring-cyan-400 transition-all">
+
+    <SearchOutlined className="text-gray-400 text-lg" />
+
+    <input
+      type="text"
+      placeholder="Search quizzes, categories..."
+      className="bg-transparent outline-none w-full text-sm 
+      text-gray-700 dark:text-gray-200 placeholder-gray-400"
+    />
+  </div>
+
+</div>
+    <div className='flex gap-4'>
+        <Dropdown menu={notifMenu} trigger={['click']}>
+            <Button className="rounded-full w-10 h-10 flex items-center justify-center transition hover:scale-110">
+                <BellOutlined />
+            </Button>
+        </Dropdown>
+
+        <LightToDark />
+
+        <Button 
+        className='h-[58px] rounded-[16px]  !text-white font-bold text-[16px] !bg-gradient-to-r !from-cyan-500 !to-[#00D4D0] border-0 shadow-[0_10px_30px_rgba(6,182,212,0.4)] tracking-[0.02em] hover:scale-[1.03] transition-all duration-300'
+        icon={<PlusOutlined />}>
+          Generate AI Quiz
+        </Button>
+
+        <Dropdown menu={profileMenu} trigger={['click']}>
+          <Avatar 
+          className="
+                    !bg-gradient-to-br !from-cyan-500 !to-teal-400
+                    !shadow-md hover:!shadow-xl
+                    ring-2 ring-white dark:ring-slate-800
+                    !hover:ring-cyan-400
+                    transition-all duration-300
+                    hover:scale-105
+                    cursor-pointer
+                    "
+          icon={<UserOutlined />} />
+        </Dropdown>
+    </div>
+
+      </div>
+
+  )
+}

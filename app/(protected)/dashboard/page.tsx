@@ -9,10 +9,12 @@ import {
   TeamOutlined
 } from '@ant-design/icons';
 import { Deco } from '@/components/Decoration/Deco';
-import { DashboardLayout } from '@/components/DashboardLayout/page';
+
 import Stats from '@/components/LayoutDashboard/stats';
 import QuickActions from '@/components/LayoutDashboard/Quick-Actions';
 
+import Image from 'next/image';
+import welcomeLogo from '@/public/dashboard.png';
 
 
 const recentActivity = [
@@ -45,7 +47,7 @@ export function Page() {
         <div className="relative px-2 lg:px-10 py-0 space-y-4">
 
           {/* WELCOME */}
-          <div className="flex items-center justify-between">
+          <div className="flex items-center">
             <div>
               <h1 className="text-3xl font-extrabold">
                 <span className="text-cyan-500">Welcome back, </span>
@@ -55,6 +57,7 @@ export function Page() {
                 Ready to challenge yourself today?
               </p>
             </div>
+            git<Image src={welcomeLogo} alt="Welcome logo" width={100} height={100} />
           </div>
           <Stats/>
 

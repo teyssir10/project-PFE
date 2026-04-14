@@ -13,6 +13,8 @@ import React, { useEffect, useState } from 'react';
 import logo from '@/public/panda-logo.png';
 import { useTheme } from "next-themes";
 import { useAuth } from "@/lib/auth";
+import LightToDark from '../UI/Button/LightToDark';
+
 
 const Navbar = () => {
   const [mounted, setMounted]       = useState(false);
@@ -74,23 +76,9 @@ const Navbar = () => {
 
           {/* RIGHT ACTIONS */}
           <div className="hidden md:flex items-center gap-2">
-
-            {/* DARK MODE */}
-            {mounted && (
-              <Button
-                onClick={() =>
-                  setTheme(resolvedTheme === "dark" ? "light" : "dark")
-                }
-                className="rounded-full w-10 h-10 flex items-center justify-center"
-              >
-                {resolvedTheme === "dark" ? (
-                  <SunOutlined className="text-yellow-400" />
-                ) : (
-                  <MoonOutlined />
+             {mounted && (
+               <LightToDark />
                 )}
-              </Button>
-            )}
-
             {user ? (
   <>
     <Button

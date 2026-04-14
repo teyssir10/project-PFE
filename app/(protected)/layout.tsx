@@ -1,12 +1,14 @@
 "use client";
 
 import Navbar from "@/components/Navbar/Navbar";
-import { AuthGuard } from "@/lib/auth";
+import { AuthGuard, useAuth } from "@/lib/auth";
 import  Footer  from "@/components/Footer/Footer";
-import DashboardLayout from "@/components/DashboardLayout/page";
+
 import RouteLoader from "@/components/RouteLoader/RouteLoader";
 import dynamic  from "next/dynamic";
 import { Spin } from "antd";
+import Sidebar from "@/components/Navigation/sidebar";
+import Topbar from "@/components/Navigation/topbar";
 const LazyWrapper = dynamic(
   () =>
     Promise.resolve(({ children }: { children: React.ReactNode }) => (
@@ -21,25 +23,35 @@ const LazyWrapper = dynamic(
   }
 );
 
+
+
 export default function Layout({
   children,
 }: {
   children: React.ReactNode;
-}) {
+}) 
+
+{
+  const { user } = useAuth()
+  const username = user?.user_metadata?.firstName
   return (
     <>
     
-      <Navbar />
+    
       <AuthGuard>
         <RouteLoader>
           <LazyWrapper>
-            <DashboardLayout>
+            <Topbar username={username} /> 
+             <Sidebar>
             {children}
-          </DashboardLayout>
+       </Sidebar>
           </LazyWrapper>
           
         </RouteLoader>
       </AuthGuard>
+     
+     
+         
      
     </>
   );
