@@ -17,12 +17,12 @@ export default function Home() {
         <div className="relative z-10">
           <Navbar />
       <div className="relative z-10">
-        <HeroSection />
-        <FeaturesSection/>
-        <StepsSection/>
-        <CategoriesSection/>
-        <LeaderboardSection/>
-        <CTASection/>
+        <section id="home"><HeroSection /></section>
+<section id="features"><FeaturesSection /></section>
+<section id="steps"><StepsSection /></section>
+<section id="categories"><CategoriesSection /></section>
+<section id="leaderboard"><LeaderboardSection /></section>
+<section id="contact"><CTASection /></section>
          <Footer/>
       </div>
 

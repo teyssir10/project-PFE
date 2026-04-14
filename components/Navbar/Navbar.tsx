@@ -12,16 +12,8 @@ import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import logo from '@/public/panda-logo.png';
 import { useTheme } from "next-themes";
-import { useAuth } from "@/lib/auth"; // 👈 adapte le chemin
+import { useAuth } from "@/lib/auth";
 
-
-const menuItems = [
-  { key: 'home',        label: <Link href="/">Home</Link> },
-  { key: 'dashboard',   label: <Link href="/dashboard">dashboard</Link> },
-  { key: 'quiz',        label: <Link href="/quiz">Quiz</Link> },
-  { key: 'leaderboard', label: <Link href="/leaderboard">Leaderboard</Link> },
-  { key: 'contact',     label: <Link href="/contact">Contact</Link> },
-];
 const Navbar = () => {
   const [mounted, setMounted]       = useState(false);
   const [menuOpen, setMenuOpen]     = useState(false);
@@ -30,17 +22,37 @@ const Navbar = () => {
   const router                      = useRouter();
   const goToDashboard = () => {
     router.push("/dashboard");
-  };
 
-  useEffect(() => { setMounted(true); }, []);
+  };
+    useEffect(() => { setMounted(true); }, []);
+
+  // 🔥 scroll function
+  const scrollTo = (id: string) => {
+  const el = document.getElementById(id);
+  if (!el) return;
+
+  el.scrollIntoView({ behavior: "smooth", block: "start" });
+};
+
+  const menuItems = [
+    { key: "home", label: <span onClick={() => scrollTo("home")}>Home</span> },
+    { key: "features", label: <span onClick={() => scrollTo("features")}>Features</span> },
+    { key: "steps", label: <span onClick={() => scrollTo("steps")}>How it works</span> },
+    { key: "categories", label: <span onClick={() => scrollTo("categories")}>Categories</span> },
+    { key: "leaderboard", label: <span onClick={() => scrollTo("leaderboard")}>Leaderboard</span> },
+    
+   
+  ];
+
+
 
   return (
     <nav className="sticky top-0 z-50 backdrop-blur-xl bg-white/70 dark:bg-slate-900/70 border-b border-gray-200/60 dark:border-gray-800 shadow-sm transition-all duration-300">
       <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-10">
         <div className="flex justify-between items-center h-16">
 
-          {/* Logo */}
-          <div className="flex items-center gap-3 cursor-pointer transition-transform duration-200 hover:scale-105">
+          {/* LOGO */}
+             <div className="flex items-center gap-3 cursor-pointer transition-transform duration-200 hover:scale-105">
             <div className="w-10 h-10 flex items-center justify-center rounded-xl font-extrabold shadow-md">
               <Image src={logo} alt="PandaBrain AI logo" width={100} height={100} />
             </div>
@@ -49,34 +61,37 @@ const Navbar = () => {
             </h1>
           </div>
 
-          {/* Menu links */}
-        <div className="hidden md:flex items-center">
+          {/* MENU DESKTOP */}
+          <div className="hidden md:flex items-center">
             <Menu
-              mode="horizontal"
-              items={menuItems}
-              selectedKeys={[selectedKey]}
-  onClick={({ key }) => setSelectedKey(key)}
-              defaultSelectedKeys={[]}
-                className="bg-transparent border-none text-sm font-medium text-gray-700 dark:text-white tracking-tight transition-colors duration-200 [&_.ant-menu-item]:px-3 [&_.ant-menu-item-selected]:!text-[#00D4D0] [&_.ant-menu-item-selected::after]:!border-b-2 [&_.ant-menu-item-selected::after]:!border-b-[#00D4D0] [&_.ant-menu-item:hover::after]:!border-b-[#00D4D0]"
-  style={{ background: 'transparent' }}
-            />
+  mode="horizontal"
+  items={menuItems}
+  onClick={(e) => scrollTo(e.key)}
+  className="bg-transparent border-none !text-sm font-medium text-gray-700 dark:text-white tracking-tight hover:text-cyan-500 transition-colors duration-200 [&_.ant-menu-item]:px-3"
+              style={{ background: 'transparent' }}
+/>
           </div>
 
-          {/* Right side */}
+          {/* RIGHT ACTIONS */}
           <div className="hidden md:flex items-center gap-2">
-             {mounted && (
-                  <Button
-                    onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
-                    className="rounded-full w-10 h-10 flex items-center justify-center transition hover:scale-110"
-                  >
-                    {resolvedTheme === "dark"
-                      ? <SunOutlined className="text-yellow-400 text-lg" />
-                      : <MoonOutlined className="text-gray-700 text-lg" />
-                    }
-                  </Button>
+
+            {/* DARK MODE */}
+            {mounted && (
+              <Button
+                onClick={() =>
+                  setTheme(resolvedTheme === "dark" ? "light" : "dark")
+                }
+                className="rounded-full w-10 h-10 flex items-center justify-center"
+              >
+                {resolvedTheme === "dark" ? (
+                  <SunOutlined className="text-yellow-400" />
+                ) : (
+                  <MoonOutlined />
                 )}
-{user ? (
-  // ✅ Connecté → Logout
+              </Button>
+            )}
+
+            {user ? (
   <>
     <Button
       icon={<LogoutOutlined />}
@@ -100,7 +115,6 @@ const Navbar = () => {
     </Button>
   </>
 ) : (
-              // ✅ Non connecté → dark toggle + Login + Sign Up
               <>
              
 

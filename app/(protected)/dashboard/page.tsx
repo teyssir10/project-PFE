@@ -10,17 +10,10 @@ import {
 } from '@ant-design/icons';
 import { Deco } from '@/components/Decoration/Deco';
 import { DashboardLayout } from '@/components/DashboardLayout/page';
+import Stats from '@/components/LayoutDashboard/stats';
+import QuickActions from '@/components/LayoutDashboard/Quick-Actions';
 
-const stats = [
-  { label: 'Quizzes Played', value: '24', trend: '+3 this week',
-    icon: <ThunderboltOutlined className="text-xl text-cyan-500" /> },
-  { label: 'Avg. Score', value: '85%', trend: '+5% vs last week',
-    icon: <RiseOutlined className="text-xl text-teal-500" /> },
-  { label: 'Total Points', value: '1,240', trend: '+120 today',
-    icon: <TrophyOutlined className="text-xl text-cyan-600" /> },
-  { label: 'Global Rank', value: '#42', trend: '↑ 8 positions',
-    icon: <GlobalOutlined className="text-xl text-teal-600" /> },
-]
+
 
 const recentActivity = [
   { title: 'Biology Basics', score: 90, total: 15, date: '2 hours ago', status: 'completed' },
@@ -49,7 +42,7 @@ export function Page() {
       <div className="relative min-h-screen py-6">
         <Deco />
 
-        <div className="relative px-6 lg:px-10 py-8 space-y-10">
+        <div className="relative px-2 lg:px-10 py-0 space-y-4">
 
           {/* WELCOME */}
           <div className="flex items-center justify-between">
@@ -63,30 +56,10 @@ export function Page() {
               </p>
             </div>
           </div>
+          <Stats/>
 
           {/* STATS CARDS */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {stats.map((stat, i) => (
-              <Card
-                key={i}
-                className="!rounded-2xl !shadow-md 
-                  !bg-gradient-to-br !from-[#D6EEF5] !to-cyan-200 
-                  dark:!from-slate-800 dark:!to-slate-700
-                  !backdrop-blur-md hover:!shadow-xl hover:!-translate-y-1 transition-all duration-300"
-              >
-                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-teal-400 to-cyan-400 flex items-center justify-center mb-4 shadow-sm">
-                  {stat.icon}
-                </div>
-                <p className="text-3xl font-extrabold text-gray-900 dark:text-white">{stat.value}</p>
-                <p className="text-gray-500 dark:text-gray-400 text-sm font-medium mt-1">{stat.label}</p>
-                <div className="flex items-center gap-1 mt-3 bg-white dark:bg-slate-600/50 rounded-full px-3 py-1 w-fit">
-                  <RiseOutlined className="text-cyan-400 text-xs" />
-                  <p className="text-xs text-cyan-900 dark:text-cyan-300 font-semibold">{stat.trend}</p>
-                </div>
-              </Card>
-            ))}
-          </div>
-
+         
           {/* RECENT + RECOMMENDED */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
@@ -186,44 +159,7 @@ export function Page() {
           </div>
 
           {/* QUICK ACTIONS */}
-          <div>
-            <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
-              Quick Actions
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-
-              <button className="group p-6 rounded-2xl bg-gradient-to-br from-cyan-400 to-cyan-500 text-white font-semibold hover:shadow-xl hover:scale-105 transition-all duration-300 flex items-center gap-4">
-                <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
-                  <CaretRightOutlined className="text-2xl" />
-                </div>
-                <div className="text-left">
-                  <p className="font-bold text-lg">Start Quiz</p>
-                  <p className="text-white/80 text-sm">Jump into a quiz now</p>
-                </div>
-              </button>
-
-              <button className="group p-6 rounded-2xl bg-gradient-to-br from-cyan-500 to-teal-500 text-white font-semibold hover:shadow-xl hover:scale-105 transition-all duration-300 flex items-center gap-4">
-                <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
-                  <TeamOutlined className="text-2xl" />
-                </div>
-                <div className="text-left">
-                  <p className="font-bold text-lg">Play with Friends</p>
-                  <p className="text-white/80 text-sm">Challenge your friends</p>
-                </div>
-              </button>
-
-              <button className="group p-6 rounded-2xl bg-gradient-to-br from-teal-400 to-cyan-600 text-white font-semibold hover:shadow-xl hover:scale-105 transition-all duration-300 flex items-center gap-4">
-                <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
-                  <RobotOutlined className="text-2xl" />
-                </div>
-                <div className="text-left">
-                  <p className="font-bold text-lg">Generate AI Quiz</p>
-                  <p className="text-white/80 text-sm">Create with AI instantly</p>
-                </div>
-              </button>
-
-            </div>
-          </div>
+          <QuickActions/>
 
         </div>
       </div>
