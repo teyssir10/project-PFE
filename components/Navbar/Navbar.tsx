@@ -12,7 +12,8 @@ import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import logo from '@/public/panda-logo.png';
 import { useTheme } from "next-themes";
-import { useAuth } from "@/lib/auth"; // 👈 adapte le chemin
+import { useAuth } from "@/lib/auth";
+import LightToDark from '../UI/Button/LightToDark';
 
 
 const menuItems = [
@@ -54,29 +55,17 @@ const Navbar = () => {
             <Menu
               mode="horizontal"
               items={menuItems}
-              selectedKeys={[selectedKey]}
-  onClick={({ key }) => setSelectedKey(key)}
-              defaultSelectedKeys={[]}
-                className="bg-transparent border-none text-sm font-medium text-gray-700 dark:text-white tracking-tight transition-colors duration-200 [&_.ant-menu-item]:px-3 [&_.ant-menu-item-selected]:!text-[#00D4D0] [&_.ant-menu-item-selected::after]:!border-b-2 [&_.ant-menu-item-selected::after]:!border-b-[#00D4D0] [&_.ant-menu-item:hover::after]:!border-b-[#00D4D0]"
-  style={{ background: 'transparent' }}
+              className="bg-transparent border-none text-sm font-medium text-gray-700 dark:text-white tracking-tight hover:text-cyan-500 transition-colors duration-200 [&_.ant-menu-item]:px-3"
+              style={{ background: 'transparent' }}
             />
           </div>
 
           {/* Right side */}
           <div className="hidden md:flex items-center gap-2">
              {mounted && (
-                  <Button
-                    onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
-                    className="rounded-full w-10 h-10 flex items-center justify-center transition hover:scale-110"
-                  >
-                    {resolvedTheme === "dark"
-                      ? <SunOutlined className="text-yellow-400 text-lg" />
-                      : <MoonOutlined className="text-gray-700 text-lg" />
-                    }
-                  </Button>
+               <LightToDark />
                 )}
-{user ? (
-  // ✅ Connecté → Logout
+            {user ? (
   <>
     <Button
       icon={<LogoutOutlined />}
@@ -100,7 +89,6 @@ const Navbar = () => {
     </Button>
   </>
 ) : (
-              // ✅ Non connecté → dark toggle + Login + Sign Up
               <>
              
 

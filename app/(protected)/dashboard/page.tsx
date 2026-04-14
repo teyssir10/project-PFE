@@ -9,7 +9,8 @@ import {
   TeamOutlined
 } from '@ant-design/icons';
 import { Deco } from '@/components/Decoration/Deco';
-import { DashboardLayout } from '@/components/DashboardLayout/page';
+import Image from 'next/image';
+import welcomeLogo from '@/public/dashboard.png';
 
 const stats = [
   { label: 'Quizzes Played', value: '24', trend: '+3 this week',
@@ -52,7 +53,7 @@ export function Page() {
         <div className="relative px-6 lg:px-10 py-8 space-y-10">
 
           {/* WELCOME */}
-          <div className="flex items-center justify-between">
+          <div className="flex items-center">
             <div>
               <h1 className="text-3xl font-extrabold">
                 <span className="text-cyan-500">Welcome back, </span>
@@ -62,7 +63,9 @@ export function Page() {
                 Ready to challenge yourself today?
               </p>
             </div>
+            git<Image src={welcomeLogo} alt="Welcome logo" width={100} height={100} />
           </div>
+          
 
           {/* STATS CARDS */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">

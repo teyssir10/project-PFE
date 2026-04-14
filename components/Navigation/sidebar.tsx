@@ -10,7 +10,7 @@ import {
 } from '@ant-design/icons'
 import { useAuth } from '@/lib/auth'
 import Image from 'next/image'
-import logo from '@/public/panda-logo.png'
+import logo from '@/public/panda-logo.png';
 
 interface NavItem {
   icon: React.ElementType
@@ -29,11 +29,16 @@ const navItems: NavItem[] = [
 
 const LogoSection = () => (
   <div className="flex items-center gap-3">
-    <div>
+    <div className='flex gap-7'>
+      
+     
+      <div>
       <h1 className="text-lg font-extrabold text-gray-900 dark:text-white">
         Pando<span className="text-cyan-500">Mind</span>
       </h1>
       <p className="text-xs text-gray-400 dark:text-gray-500 font-medium">AI Quiz Platform</p>
+      </div>
+       <Image src={logo} alt="PandaBrain AI logo" width={40} height={40} />
     </div>
   </div>
 )
@@ -75,7 +80,7 @@ function LogoutButton({ onClick }: { onClick?: () => void }) {
   const username = user?.user_metadata?.firstName || user?.email?.split('@')[0]
 
   return (
-    <div className="px-4 py-6 border-t border-gray-100 dark:border-slate-700 space-y-3">
+    <div className=" sticky px-4 py-6 border-t border-gray-100 dark:border-slate-700 space-y-3">
       {/* User info */}
       <div className="flex items-center gap-3 px-2">
         <div className="w-8 h-8 rounded-full bg-gradient-to-br from-cyan-500 to-teal-400 flex items-center justify-center text-white font-bold text-sm">
@@ -102,7 +107,7 @@ function LogoutButton({ onClick }: { onClick?: () => void }) {
   )
 }
 
-export function DashboardLayout({ children }: { children: React.ReactNode }) {
+export function sidebar({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex h-screen bg-gray-50 dark:bg-slate-900">
 
@@ -111,7 +116,7 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
         bg-white dark:bg-slate-800 
         border-r border-gray-100 dark:border-slate-700 
         flex-col  h-screen shadow-sm">
-        <div className="px-6 py-5 border-b border-gray-100 dark:border-slate-700">
+        <div className=" h-16 px-6 py-3 border-b border-gray-100 dark:border-slate-700">
           <LogoSection />
         </div>
         <NavLinks />
@@ -129,4 +134,4 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
   )
 }
 
-export default DashboardLayout
+export default sidebar
