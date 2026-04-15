@@ -6,7 +6,8 @@ import { usePathname } from 'next/navigation'
 import {
   LogoutOutlined, HomeOutlined, LineChartOutlined,
   TeamOutlined, SettingOutlined,
-  FileAddOutlined, UnorderedListOutlined
+  FileAddOutlined, UsergroupAddOutlined,
+  TrophyOutlined
 } from '@ant-design/icons'
 import { useAuth } from '@/lib/auth'
 import Image from 'next/image'
@@ -18,14 +19,30 @@ interface NavItem {
   href: string
 }
 
-const navItems: NavItem[] = [
-  { icon: HomeOutlined,         label: 'dashboard', href: '/dashboard' },
-  { icon: FileAddOutlined,      label: 'Create Quiz', href: '/quiz' },
-  { icon: UnorderedListOutlined,label: 'My Quizzes',  href: '/quiz' },
-  { icon: LineChartOutlined,    label: 'Analytics',   href: '/analytics' },
-  { icon: TeamOutlined,         label: 'Leaderboard', href: '/leaderboard' },
-  { icon: SettingOutlined,      label: 'Settings',    href: '/settings' },
+const navSections = [
+  {
+    label: 'MAIN',
+    items: [
+      { icon: HomeOutlined,    label: 'Dashboard', href: '/dashboard' },
+    ]
+  },
+  {
+    label: 'PLAY',
+    items: [
+      { icon: FileAddOutlined,      label: 'Start Quiz',  href: '/quiz' },
+      { icon: LineChartOutlined, label: 'Analytics', href: '/analytics' },
+      { icon: UsergroupAddOutlined, label: 'Multiplayer', href: '/multiplayer' },
+      { icon: TrophyOutlined,       label: 'Leaderboard', href: '/leaderboard' },
+    ]
+  },
+  {
+    label: 'ACCOUNT',
+    items: [
+      { icon: SettingOutlined,   label: 'Settings',  href: '/settings' },
+    ]
+  },
 ]
+
 
 const LogoSection = () => (
   <div className="flex items-center gap-3">
@@ -47,30 +64,42 @@ function NavLinks({ onClickItem }: { onClickItem?: () => void }) {
   const pathname = usePathname()
 
   return (
-    <nav className="flex-1 px-4 py-6 space-y-1 overflow-y-auto">
-      {navItems.map((item) => {
-        const Icon = item.icon
-        const isActive = pathname === item.href
+    <nav 
+      className="flex-1 px-4 py-6 space-y-1 overflow-y-auto [&::-webkit-scrollbar]:hidden"
+      style={{ scrollbarWidth: 'none' }}
+      >
+      {navSections.map((section) => (
+        <div key={section.label} className="space-y-2">
+          <p className="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest">
+            {section.label}
+          </p>
+          <div className="space-y-1">
+            {section.items.map((item) => {
+              const Icon = item.icon
+              const isActive = pathname === item.href
         return (
-      <Link
-        key={item.href}
-        href={item.href}
-        onClick={onClickItem}
-        className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 font-medium text-sm group
-            ${isActive
-            ? 'bg-cyan-50 dark:bg-cyan-900/30 text-[#003333] dark:text-white'
-            : 'text-[#003333] dark:text-white hover:bg-gray-50 dark:hover:bg-slate-700/50 hover:text-cyan-500 dark:hover:text-cyan-400'
-            }`}
-        >
-        <Icon className="text-lg flex-shrink-0 group-hover:scale-110 transition-transform !text-[#003333] dark:!text-white" />
-        <span className="text-[#003333] dark:text-white">{item.label}</span>
-        {isActive && (
-            <div className="ml-auto w-1.5 h-1.5 rounded-full bg-[#003333] dark:bg-white" />
-        )}
-        </Link>
+          <Link
+            key={item.href}
+            href={item.href}
+            onClick={onClickItem}
+            className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 font-medium text-sm group
+                ${isActive
+                ? 'bg-cyan-50 dark:bg-cyan-900/30 text-[#003333] dark:text-white'
+                : 'text-[#003333] dark:text-white hover:bg-gray-50 dark:hover:bg-slate-700/50 hover:text-cyan-500 dark:hover:text-cyan-400'
+                }`}
+            >
+            <Icon className="text-lg flex-shrink-0 group-hover:scale-110 transition-transform !text-[#003333] dark:!text-white" />
+            <span className="text-[#003333] dark:text-white">{item.label}</span>
+            {isActive && (
+                <div className="ml-auto w-1.5 h-1.5 rounded-full bg-[#003333] dark:bg-white" />
+            )}
+            </Link>
                 
                 )
             })}
+            </div>
+        </div>
+      ))}
             </nav>
         )
         }

@@ -41,8 +41,9 @@ export default function Layout({
       <AuthGuard>
         <RouteLoader>
           <LazyWrapper>
-            <Topbar username={username} /> 
+            
              <Sidebar>
+              <Topbar username={username} /> 
             {children}
        </Sidebar>
           </LazyWrapper>

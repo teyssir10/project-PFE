@@ -29,7 +29,7 @@ export default function Topbar({ username }: TopbarProps) {
     items: [
       {
         key: 'header',
-        label: <span className="font-bold">Notifications</span>,
+        label: <span className="font-bold !text-cyan-600">Notifications</span>,
         disabled: true,
       },
       ...notifications.map((n, i) => ({
@@ -93,7 +93,7 @@ const handleLogout = async () => {
 </div>
     <div className='flex gap-4'>
         <Dropdown menu={notifMenu} trigger={['click']}>
-            <Button className="rounded-full w-10 h-10 flex items-center justify-center transition hover:scale-110">
+            <Button className="rounded-full w-10 h-10 flex items-center justify-center transition hover:scale-110 !hover:border-cyan-500">
                 <BellOutlined />
             </Button>
         </Dropdown>
@@ -109,7 +109,7 @@ const handleLogout = async () => {
         <Dropdown menu={profileMenu} trigger={['click']}>
           <Avatar 
           className="
-                    !bg-gradient-to-br !from-cyan-500 !to-teal-400
+                    !bg-gradient-to-br !from-cyan-500 !to-teal-900
                     !shadow-md hover:!shadow-xl
                     ring-2 ring-white dark:ring-slate-800
                     !hover:ring-cyan-400
