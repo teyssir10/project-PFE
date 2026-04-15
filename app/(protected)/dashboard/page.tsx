@@ -57,7 +57,7 @@ export function Page() {
                 Ready to challenge yourself today?
               </p>
             </div>
-            git<Image src={welcomeLogo} alt="Welcome logo" width={100} height={100} />
+            <Image src={welcomeLogo} alt="Welcome logo" width={100} height={100} />
           </div>
           <Stats/>
 
