@@ -1,7 +1,7 @@
 "use client"
 import React, { useState } from 'react'
 import { Button, Avatar, Dropdown } from 'antd'
-import { useRouter } from 'next/navigation'
+import { useRouter, usePathname } from 'next/navigation'
 import {
   BellOutlined, SearchOutlined,
   SunOutlined, MoonOutlined, UserOutlined,
@@ -24,6 +24,15 @@ const notifications = [
 export default function Topbar({ username }: TopbarProps) {
   const [dark, setDark] = useState(false)
   const router = useRouter()
+  const pathname = usePathname()
+  const currentPage = pathname.split("/").pop()
+  const formatName = (name: string | undefined) => {
+    if (!name) return "Dashboard"
+    return name
+      .replace("-", " ")
+      .replace(/\b\w/g, (c) => c.toUpperCase())
+  }
+
 
   const notifMenu = {
     items: [
@@ -58,6 +67,7 @@ const handleLogout = async () => {
         key: 'profile',
         icon: <UserOutlined />,
         label: 'Profile',
+        onClick: () => router.push('/profile'),
       },
       {
         key: 'logout',
@@ -75,20 +85,13 @@ const handleLogout = async () => {
     border-b border-gray-100 dark:border-slate-700 gap-1">
 
     <div className="flex items-center gap-4 w-full max-w-md">
-  <div className="flex items-center gap-2 w-full px-4 py-2 rounded-2xl
-    bg-white/70 dark:bg-slate-800/70 backdrop-blur-md
-    border border-gray-200 dark:border-slate-700
-    shadow-sm focus-within:ring-2 focus-within:ring-cyan-400 transition-all">
-
-    <SearchOutlined className="text-gray-400 text-lg" />
-
-    <input
-      type="text"
-      placeholder="Search quizzes, categories..."
-      className="bg-transparent outline-none w-full text-sm 
-      text-gray-700 dark:text-gray-200 placeholder-gray-400"
-    />
-  </div>
+    <div className="flex items-center gap-2 text-sm">
+        <span className="font-bold text-cyan-500">PandoMind</span>
+        <span className="text-gray-400">/</span>
+        <span className="text-gray-800 dark:text-white font-medium">
+          {formatName(currentPage)}
+        </span>
+      </div>
 
 </div>
     <div className='flex gap-4'>

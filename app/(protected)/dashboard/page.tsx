@@ -118,7 +118,7 @@ export function Page() {
                 <h2 className="text-lg font-bold text-gray-900 dark:text-white">
                   Recommended for You
                 </h2>
-                <Tag className="!rounded-full !text-xs !font-semibold !bg-cyan-500 !text-cyan-100 dark:!bg-slate-700/40 dark:!text-cyan-300">
+                <Tag className="!rounded-full !text-xs !font-semibold !bg-cyan-500 !text-cyan-100 dark:!bg-slate-100/40 dark:!text-cyan-300">
                    AI ✨
                 </Tag>
               </div>
