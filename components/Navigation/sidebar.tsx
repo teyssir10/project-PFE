@@ -4,10 +4,9 @@ import React from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import {
-  LogoutOutlined, HomeOutlined, LineChartOutlined,
-  TeamOutlined, SettingOutlined,
+  LogoutOutlined, HomeOutlined, LineChartOutlined, SettingOutlined,
   FileAddOutlined, UsergroupAddOutlined,
-  TrophyOutlined
+  TrophyOutlined, PlusOutlined, AppstoreOutlined
 } from '@ant-design/icons'
 import { useAuth } from '@/lib/auth'
 import Image from 'next/image'
@@ -29,7 +28,8 @@ const navSections = [
   {
     label: 'PLAY',
     items: [
-      { icon: FileAddOutlined,      label: 'Start Quiz',  href: '/quiz' },
+      { icon: AppstoreOutlined ,     label: 'Browse Quizzes',  href: '/quiz' },
+      { icon: PlusOutlined,      label: 'Create Quiz',  href: '/quiz' },
       { icon: LineChartOutlined, label: 'Analytics', href: '/analytics' },
       { icon: UsergroupAddOutlined, label: 'Multiplayer', href: '/multiplayer' },
       { icon: TrophyOutlined,       label: 'Leaderboard', href: '/leaderboard' },
@@ -45,8 +45,8 @@ const navSections = [
 
 
 const LogoSection = () => (
-  <div className="flex items-center gap-3">
-    <div className='flex gap-7'>
+  <div className="items-center gap-3 ">
+    <div className=' flex gap-7  items-center gap-3 cursor-pointer transition-transform duration-200 hover:scale-105'>
       
      
       <div>
@@ -55,7 +55,10 @@ const LogoSection = () => (
       </h1>
       <p className="text-xs text-gray-400 dark:text-gray-500 font-medium">AI Quiz Platform</p>
       </div>
+      <div>
        <Image src={logo} alt="PandaBrain AI logo" width={40} height={40} />
+       </div>
+       
     </div>
   </div>
 )
