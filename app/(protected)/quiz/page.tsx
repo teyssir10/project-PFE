@@ -1,21 +1,18 @@
-import React from 'react'
+"use client"
 import AIQuiz from '@/components/createquiz/AIQuiz'
-import Title from 'antd/es/typography/Title'
+import ManualQuiz from '@/components/createquiz/ManualQuiz'
+import Deco from '@/components/Decoration/Deco'
+import { useQuizModeStore } from '@/store/useQuizModeStore'
 
-const page = () => {
+export default function CreateQuizPage() {
+  const { mode } = useQuizModeStore()
+
   return (
-    <div>
-    <div>
-      <Title className="text-2xl font-bold text-center py-10">🧠 Create Your <span className="text-cyan-500">Quiz</span> </Title>
-      <p className="text-center text-gray-600 ">Create powerful quizzes in seconds using AI, or design them manually with full control. <br /> 
-      Whether you want speed or flexibility, everything is designed to make quiz creation simple, fast, and enjoyable.</p>
-    </div>
-
-
-   <div><AIQuiz />
-</div>
+    <div className='py-4 mb-2 gap-2'>
+      <Deco />
+      <div>
+        {mode === "ai" ? <AIQuiz /> : <ManualQuiz />}
+      </div>
     </div>
   )
 }
-
-export default page

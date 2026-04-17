@@ -47,7 +47,7 @@ export function Page() {
         <div className="relative px-2 lg:px-10 py-0 space-y-4">
 
           {/* WELCOME */}
-          <div className="flex items-center">
+          <div className="relative flex items-center justify-between">
             <div>
               <h1 className="text-3xl font-extrabold">
                 <span className="text-cyan-500">Welcome back, </span>
@@ -57,13 +57,9 @@ export function Page() {
                 Ready to challenge yourself today?
               </p>
             </div>
-            <Image src={welcomeLogo} alt="Welcome logo" width={100} height={100} />
           </div>
           <Stats/>
 
-          {/* STATS CARDS */}
-         
-          {/* RECENT + RECOMMENDED */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
             {/* Recent Activity */}
@@ -72,9 +68,25 @@ export function Page() {
               dark:!from-slate-800 dark:!to-slate-700
               !backdrop-blur-md">
               <div className="flex items-center justify-between mb-6">
-                <h2 className="text-lg font-bold text-gray-900 dark:text-white">Recent Activity</h2>
-                <ClockCircleOutlined className="text-gray-400 dark:text-gray-500 text-lg" />
-              </div>
+  
+  {/* LEFT */}
+  <div className="flex items-center gap-2">
+    <h2 className="text-lg font-bold text-gray-900 dark:text-white">
+      Recent Activity
+    </h2>
+
+    <Image
+      src={welcomeLogo}
+      alt="Welcome"
+      width={20}
+      height={20}
+      className="w-10 h-10"
+    />
+  </div>
+
+  {/* RIGHT */}
+  <ClockCircleOutlined className="text-gray-400 dark:text-gray-500 text-lg" />
+</div>
               <div className="space-y-4">
                 {recentActivity.map((quiz, i) => (
                   <div key={i} className="flex items-center gap-4">
@@ -107,7 +119,13 @@ export function Page() {
               </div>
             </Card>
 
-            {/* Recommended */}
+           
+            <div className="space-y-4">
+            <div>
+            <QuickActions/>
+            </div>
+            <div>
+             {/* Recommended */}
             <Card className="!rounded-2xl !border-0 !shadow-md 
               !bg-gradient-to-br !from-[#D6EEF5] !to-cyan-100
               dark:!from-slate-800 dark:!to-slate-700
@@ -116,7 +134,9 @@ export function Page() {
                 <h2 className="text-lg font-bold text-gray-900 dark:text-white">
                   Recommended for You
                 </h2>
-                <RobotOutlined className="text-cyan-400 text-lg" />
+                <Tag className="!rounded-full !text-xs !font-semibold !bg-cyan-500 !text-cyan-100 dark:!bg-slate-700/40 dark:!text-cyan-300">
+                   AI ✨
+                </Tag>
               </div>
               <div className="space-y-4">
                 {recommendedQuizzes.map((quiz, i) => (
@@ -158,11 +178,10 @@ export function Page() {
                 Get More Recommendations
               </Button>
             </Card>
+            </div>
+            </div>
 
           </div>
-
-          {/* QUICK ACTIONS */}
-          <QuickActions/>
 
         </div>
       </div>
