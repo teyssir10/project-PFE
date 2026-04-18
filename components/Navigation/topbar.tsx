@@ -110,32 +110,34 @@ export default function Topbar({ username }: TopbarProps) {
         <LightToDark />
 
         {/* Boutons conditionnels */}
-        {isCreateQuizPage ? (
-          <div className="flex items-center p-1 gap-1 bg-gray-100 rounded-[16px]">
-      <Button
-        onClick={() => setMode("ai")}
-        className={`h-[38px] rounded-[12px] font-bold text-[13px] border-0 tracking-[0.02em] transition-all duration-300 hover:scale-[1.02] ${
-          mode === "ai"
-            ? "!text-white !bg-gradient-to-r !from-cyan-500 !to-[#00D4D0] shadow-[0_6px_16px_rgba(6,182,212,0.35)]"
-            : "!bg-transparent !text-gray-500 hover:!text-cyan-500"
-        }`}
-        icon={<RobotOutlined />}
-      >
-        AI Generate
-      </Button>
+       {isCreateQuizPage ? (
+  <div className="flex items-center p-1 gap-1 bg-gray-100 dark:bg-slate-700 rounded-[16px] transition-colors duration-300">
+    
+    <Button
+      onClick={() => setMode("ai")}
+      className={`h-[38px] rounded-[12px] font-bold text-[13px] border-0 tracking-[0.02em] transition-all duration-300 hover:scale-[1.02] ${
+        mode === "ai"
+          ? "!text-white !bg-gradient-to-r !from-cyan-500 !to-[#00D4D0] shadow-[0_6px_16px_rgba(6,182,212,0.35)]"
+          : "!bg-transparent !text-gray-500 dark:!text-slate-400 hover:!text-cyan-500 dark:hover:!text-cyan-400"
+      }`}
+      icon={<RobotOutlined />}
+    >
+      AI Generate
+    </Button>
 
-            <Button
-              onClick={() => setMode("manual")}
-              className={`h-[38px] rounded-[12px] font-bold text-[13px] border-0 tracking-[0.02em] transition-all duration-300 hover:scale-[1.02] ${
-                mode === "manual"
-                  ? "!text-white !bg-gradient-to-r !from-cyan-500 !to-[#00D4D0] shadow-[0_6px_16px_rgba(6,182,212,0.35)]"
-                  : "!bg-transparent !text-gray-500 hover:!text-cyan-500"
-              }`}
-              icon={<EditOutlined />}
-            >
-              Manual
-            </Button>
-          </div>
+    <Button
+      onClick={() => setMode("manual")}
+      className={`h-[38px] rounded-[12px] font-bold text-[13px] border-0 tracking-[0.02em] transition-all duration-300 hover:scale-[1.02] ${
+        mode === "manual"
+          ? "!text-white !bg-gradient-to-r !from-cyan-500 !to-[#00D4D0] shadow-[0_6px_16px_rgba(6,182,212,0.35)]"
+          : "!bg-transparent !text-gray-500 dark:!text-slate-400 hover:!text-cyan-500 dark:hover:!text-cyan-400"
+      }`}
+      icon={<EditOutlined />}
+    >
+      Manual
+    </Button>
+
+  </div>
         ) : (
           <Button
             onClick={() => router.push('/quiz')}

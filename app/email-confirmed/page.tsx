@@ -11,21 +11,41 @@ export default function EmailConfirmedPage() {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    setTimeout(() => setVisible(true), 100);
+  const confirmEmail = async () => {
+    // Récupérer les params de l'URL
+    const { createClient } = await import('@supabase/supabase-js')
+    const params = new URLSearchParams(window.location.search)
+    const token_hash = params.get('token_hash')
+    const type = params.get('type') as any
 
+    if (token_hash && type) {
+      const { supabase } = await import('@/lib/supabase')
+      // Confirmer le token
+      const { error } = await supabase.auth.verifyOtp({ token_hash, type })
+      if (!error) {
+        setTimeout(() => setVisible(true), 100)
+        // Déconnecter après confirmation → forcer login
+        await supabase.auth.signOut()
+      }
+    }
+
+    // Countdown vers /login
     const timer = setInterval(() => {
       setCountdown((prev) => {
         if (prev <= 1) {
-          clearInterval(timer);
-          router.push("/dashboard");
-          return 0;
+          clearInterval(timer)
+          router.push('/login') // ← login pas dashboard
+          return 0
         }
-        return prev - 1;
-      });
-    }, 1000);
+        return prev - 1
+      })
+    }, 1000)
 
-    return () => clearInterval(timer);
-  }, [router]);
+    return () => clearInterval(timer)
+  }
+
+  confirmEmail()
+}, [router])
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-cyan-50 via-white to-[#00D4D0] flex flex-col items-center justify-center px-4">
@@ -82,7 +102,7 @@ export default function EmailConfirmedPage() {
           </div>
 
           <button
-            onClick={() => router.push("/dashboard")}
+            onClick={() => router.push("/login")}
             className="w-full bg-gradient-to-r from-cyan-400 to-[#00D4D0] hover:from-cyan-500 hover:to-[#00D4D0] text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 hover:shadow-lg hover:shadow-cyan-200 active:scale-95"
           >
             Aller au dashboard →

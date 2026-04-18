@@ -16,6 +16,7 @@ import { useRouter } from 'next/navigation'
 import { useTheme } from 'next-themes'
 import { SunOutlined, MoonOutlined } from '@ant-design/icons'
 import logo from '@/public/panda-logo.png'
+import { supabase } from '@/lib/supabase'
 
 const registerSchema = yup.object({
   email: yup.string().required('Please enter your email').email('Please enter a valid email address'),
@@ -39,22 +40,28 @@ const RegisterPage = () => {
     resolver: yupResolver(registerSchema),
   })
 
-  const onSubmit = async (values: any) => {
-    setLoading(true)
-    try {
-      const { error } = await signUp(values.email, values.password)
-      if (error) {
-        message.error(error.message)
-      } else {
-        setEmailSent(true)
-      }
-    } catch (error: unknown) {
-      message.error((error as { message: string }).message || 'An error occurred. Please try again.')
-    } finally {
-      setLoading(false)
+ // ✅ CORRIGÉ
+const onSubmit = async (values: any) => {
+  setLoading(true)
+  try {
+    const { error } = await signUp(
+      values.email,
+      values.password,
+      { firstname: values.firstName, lastname: values.lastName }
+    )
+    if (error) {
+      message.error(error.message)
+    } else {
+      // ✅ Déconnecter pour éviter la redirection automatique
+      await supabase.auth.signOut()
+      setEmailSent(true)
     }
+  } catch (error: unknown) {
+    message.error((error as { message: string }).message || 'An error occurred.')
+  } finally {
+    setLoading(false)
   }
-
+}
   const handleGoogleLogin = async () => {
     const { error } = await signInWithGoogle()
     if (error) {

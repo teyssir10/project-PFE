@@ -11,7 +11,11 @@ type AuthContextType = {
   session: Session | null;
   isLoading: boolean;
   signIn: (email: string, password: string) => Promise<{ error: AuthError | null }>;
-  signUp: (email: string, password: string) => Promise<{
+ signUp: (
+    email: string, 
+    password: string, 
+    metadata?: { firstname: string; lastname: string }
+  ) => Promise<{
     error: AuthError | null;
     data: { user: User | null; session: Session | null } | null;
   }>;
@@ -60,20 +64,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return { error };
   };
 
-  const signUp = async (email: string, password: string) => {
-    const { data, error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        emailRedirectTo: 'http://localhost:3000/email-confirmed',
-      },
-    });
-    return { data, error };
-  };
+ const signUp = async (email: string, password: string, metadata?: { firstname: string, lastname: string }) => {
+  const { data, error } = await supabase.auth.signUp({
+    email,
+    password,
+    options: {
+      data: {
+        firstname: metadata?.firstname,
+        lastname: metadata?.lastname,
+      }
+    }
+  })
+  return { data, error }
+}
 
   const signOut = async () => {
     await supabase.auth.signOut();
-    router.push('/login');
   };
 
   const signInWithGoogle = async () => {

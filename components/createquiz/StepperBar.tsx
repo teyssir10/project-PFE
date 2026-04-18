@@ -2,7 +2,8 @@
 
 import React from 'react';
 import { RocketOutlined } from "@ant-design/icons";
-import {Step} from '@/types/stepperBar';
+import { Step } from '@/types/stepperBar';
+
 const steps: Step[] = [
   { id: 1, label: "Configure quiz" },
   { id: 2, label: "Generating questions" },
@@ -15,7 +16,7 @@ interface StepperBarProps {
 
 export default function StepperBar({ currentStep }: StepperBarProps) {
   return (
-    <div className="sticky bottom-0 w-full bg-white border-t border-gray-100 shadow-[0_-1px_8px_rgba(0,0,0,0.04)] z-20">
+    <div className="sticky bottom-0 w-full bg-white dark:bg-slate-900 border-t border-gray-100 dark:border-slate-700 shadow-[0_-1px_8px_rgba(0,0,0,0.04)] dark:shadow-[0_-1px_8px_rgba(0,0,0,0.3)] z-20 transition-colors duration-300">
       <div className="max-w-7xl mx-auto px-6 h-14 flex items-center justify-between gap-6">
 
         {/* Steps */}
@@ -26,15 +27,23 @@ export default function StepperBar({ currentStep }: StepperBarProps) {
             return (
               <div key={s.id} className="flex items-center gap-2">
                 <span className={`w-2 h-2 rounded-full transition-all ${
-                  isDone ? "bg-cyan-400" : isActive ? "bg-cyan-500 ring-2 ring-cyan-200" : "bg-gray-300"
+                  isDone
+                    ? "bg-cyan-400"
+                    : isActive
+                    ? "bg-cyan-500 ring-2 ring-cyan-200 dark:ring-cyan-800"
+                    : "bg-gray-300 dark:bg-slate-600"
                 }`} />
                 <span className={`text-xs font-medium transition-all ${
-                  isActive ? "text-gray-800" : isDone ? "text-cyan-500" : "text-gray-400"
+                  isActive
+                    ? "text-gray-800 dark:text-white"
+                    : isDone
+                    ? "text-cyan-500"
+                    : "text-gray-400 dark:text-slate-500"
                 }`}>
                   Step {s.id} of {steps.length} — {s.label}
                 </span>
                 {idx < steps.length - 1 && (
-                  <span className="ml-2 text-gray-200 text-xs">|</span>
+                  <span className="ml-2 text-gray-200 dark:text-slate-700 text-xs">|</span>
                 )}
               </div>
             );
@@ -44,36 +53,20 @@ export default function StepperBar({ currentStep }: StepperBarProps) {
         {/* Actions */}
         <div className="flex items-center gap-3">
           <button
-  type="button"
-  className="
-    text-xs text-gray-400
-    hover:text-[#00D4D0]   /* ← couleur au hover */
-    font-medium px-3 py-1.5
-    rounded-lg
-    hover:bg-gray-50
-    transition-all
-  "
->
-  Save draft
-</button>
+            type="button"
+            className="text-xs text-gray-400 dark:text-slate-500 hover:text-[#00D4D0] dark:hover:text-cyan-400 font-medium px-3 py-1.5 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-800 transition-all"
+          >
+            Save draft
+          </button>
+
           <button
-  type="button"
-  disabled={currentStep < 3}
-  className="
-    inline-flex items-center gap-2
-    text-sm font-semibold
-    px-6 py-3
-    rounded-full
-    bg-gray-900 text-white
-    hover:bg-gray-700
-    disabled:opacity-40 disabled:cursor-not-allowed
-    transition-all duration-300
-    shadow-md hover:shadow-lg
-  "
->
-  Review & Publish
-  <RocketOutlined className="text-base" />
-</button>
+            type="button"
+            disabled={currentStep < 3}
+            className="inline-flex items-center gap-2 text-sm font-semibold px-6 py-3 rounded-full bg-gray-900 dark:bg-white text-white dark:text-gray-900 hover:bg-gray-700 dark:hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-300 shadow-md hover:shadow-lg"
+          >
+            Review & Publish
+            <RocketOutlined className="text-base" />
+          </button>
         </div>
 
       </div>
