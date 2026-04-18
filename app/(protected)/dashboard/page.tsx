@@ -37,7 +37,7 @@ const difficultyColor: Record<string, string> = {
 
 export function Page() {
   const { user } = useAuth()
-  const username = user?.user_metadata?.firstName || user?.email?.split('@')[0]
+const username = user?.user_metadata?.firstname || user?.email?.split('@')[0] || 'User';
 
   return (
       <div className="relative min-h-screen py-6">
