@@ -9,6 +9,7 @@ import dynamic  from "next/dynamic";
 import { Spin } from "antd";
 import Sidebar from "@/components/Navigation/sidebar";
 import Topbar from "@/components/Navigation/topbar";
+import Deco from "@/components/Decoration/Deco";
 const LazyWrapper = dynamic(
   () =>
     Promise.resolve(({ children }: { children: React.ReactNode }) => (
@@ -36,8 +37,7 @@ export default function Layout({
   const username = user?.user_metadata?.firstName
   return (
     <>
-    
-    
+    <Deco/>
       <AuthGuard>
         <RouteLoader>
           <LazyWrapper>
@@ -45,7 +45,7 @@ export default function Layout({
              <Sidebar>
               <Topbar username={username} /> 
             {children}
-       </Sidebar>
+            </Sidebar>
           </LazyWrapper>
           
         </RouteLoader>

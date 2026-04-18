@@ -4,7 +4,7 @@ import { useState } from 'react'
 import Image from 'next/image'
 import * as yup from 'yup'
 
-import Deco from '@/components/Decoration/Deco'
+
 import { MailOutlined, LockOutlined } from '@ant-design/icons'
 import { App, Button, Card, Divider, Form, Input } from 'antd'
 import Text from 'antd/es/typography/Text'
@@ -56,7 +56,7 @@ const { message } = App.useApp()
 
   return (
     <div className="w-full min-h-screen relative overflow-hidden">
-      <Deco />
+
 
       <div className="relative z-10 flex items-center justify-center h-screen overflow-hidden px-6">
         <div className="w-full max-w-7xl grid grid-cols-1 md:grid-cols-2 gap-16 items-center mx-auto">

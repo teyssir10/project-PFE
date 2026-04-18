@@ -173,6 +173,16 @@ const Navbar = () => {
                       Login
                     </Button>
                   </Link>
+                   <Button
+      icon={<FileSearchOutlined />}
+      onClick={goToDashboard}
+      className="px-6 py-2 rounded-full font-semibold !text-cyan-500
+                      bg-gradient-to-r from-cyan-500 via-cyan-400 to-sky-500 shadow-md
+                      hover:shadow-lg hover:scale-105 transition-all duration-300
+                      !shadow-cyan-400/40 hover:shadow-cyan-500/60"
+    >
+      Dashboard
+    </Button>
                   <Link href="/register">
                     <Button block type="primary"
                       className="rounded-full font-semibold

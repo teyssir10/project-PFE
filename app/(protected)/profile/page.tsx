@@ -8,7 +8,6 @@ import {
   CloseCircleOutlined, RiseOutlined, GlobalOutlined, LockOutlined,
 } from "@ant-design/icons";
 import { useAuth } from "@/lib/auth";
-import Deco from "@/components/Decoration/Deco";
 import { Controller, useForm } from 'react-hook-form'
 
 const achievements = [
@@ -47,7 +46,6 @@ export default function ProfilePage() {
 
   return (
 <Fragment>
-  <Deco />
   <div className="min-h-screen bg-gray-50 dark:bg-slate-900 p-4 md:p-8 space-y-4">
     <div className="mx-auto max-w-7xl !space-y-6 dark:!bg-gray-800">
 

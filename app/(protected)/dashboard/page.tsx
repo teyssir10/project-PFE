@@ -8,7 +8,6 @@ import {
   ClockCircleOutlined, RobotOutlined, GlobalOutlined,
   TeamOutlined
 } from '@ant-design/icons';
-import { Deco } from '@/components/Decoration/Deco';
 
 import Stats from '@/components/LayoutDashboard/stats';
 import QuickActions from '@/components/LayoutDashboard/Quick-Actions';
@@ -42,7 +41,6 @@ export function Page() {
 
   return (
       <div className="relative min-h-screen py-6">
-        <Deco />
 
         <div className="relative px-2 lg:px-10 py-0 space-y-4">
 
@@ -68,9 +66,25 @@ export function Page() {
               dark:!from-slate-800 dark:!to-slate-700
               !backdrop-blur-md">
               <div className="flex items-center justify-between mb-6">
-                <h2 className="text-lg font-bold text-gray-900 dark:text-white">Recent Activity</h2>
-                <ClockCircleOutlined className="text-gray-400 dark:text-gray-500 text-lg" />
-              </div>
+  
+  {/* LEFT */}
+  <div className="flex items-center gap-2">
+    <h2 className="text-lg font-bold text-gray-900 dark:text-white">
+      Recent Activity
+    </h2>
+
+    <Image
+      src={welcomeLogo}
+      alt="Welcome"
+      width={20}
+      height={20}
+      className="w-10 h-10"
+    />
+  </div>
+
+  {/* RIGHT */}
+  <ClockCircleOutlined className="text-gray-400 dark:text-gray-500 text-lg" />
+</div>
               <div className="space-y-4">
                 {recentActivity.map((quiz, i) => (
                   <div key={i} className="flex items-center gap-4">

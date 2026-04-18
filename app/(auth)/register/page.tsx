@@ -4,7 +4,7 @@ import { useState } from 'react'
 import Image from 'next/image'
 import * as yup from 'yup'
 import { useAntdApp } from '@/lib/useAntdApp'
-import Deco from '@/components/Decoration/Deco'
+
 import { MailOutlined, LockOutlined, UserOutlined } from '@ant-design/icons'
 import { Button, Card, Divider, Form, Input } from 'antd'
 import Text from 'antd/es/typography/Text'
@@ -64,7 +64,6 @@ const RegisterPage = () => {
 
   return (
     <div className="w-full min-h-screen relative overflow-hidden bg-white dark:bg-gray-950 transition-colors duration-300">
-      <Deco />
 
       {/* Bouton dark mode */}
       <button
