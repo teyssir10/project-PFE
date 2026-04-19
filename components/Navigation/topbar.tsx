@@ -30,7 +30,7 @@ export default function Topbar({ username }: TopbarProps) {
   const currentPage = pathname.split("/").pop()
   const { mode, setMode } = useQuizModeStore()
 
-  const isCreateQuizPage = pathname === "/quiz" || pathname === "/quiz/create"
+  const isCreateQuizPage = pathname === "/create-quiz" || pathname === "/quiz/create"
 
   const formatName = (name: string | undefined) => {
     if (!name) return "Dashboard"
@@ -138,7 +138,7 @@ export default function Topbar({ username }: TopbarProps) {
   </div>
         ) : (
           <Button
-            onClick={() => router.push('/quiz')}
+            onClick={() => router.push('/create-quiz')}
             className="h-[58px] rounded-[16px] !text-white font-bold text-[16px] !bg-gradient-to-r !from-cyan-500 !to-[#00D4D0] border-0 shadow-[0_10px_30px_rgba(6,182,212,0.4)] tracking-[0.02em] hover:scale-[1.03] transition-all duration-300"
             icon={<PlusOutlined />}
           >
