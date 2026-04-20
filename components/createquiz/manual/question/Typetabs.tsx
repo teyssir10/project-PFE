@@ -1,0 +1,29 @@
+"use client";
+
+import { QuestionType, TYPE_ICONS, TYPE_LABELS } from "@/types/quiz";
+
+interface TypeTabsProps {
+  activeType: QuestionType;
+  onChange: (type: QuestionType) => void;
+}
+
+export default function TypeTabs({ activeType, onChange }: TypeTabsProps) {
+  return (
+    <div className="flex items-center gap-1 p-4 border-b border-gray-50 dark:border-slate-800 bg-gray-50/50 dark:bg-slate-800/30">
+      {(["multiple", "truefalse", "short"] as QuestionType[]).map((type) => (
+        <button
+          key={type}
+          onClick={() => onChange(type)}
+          className={`flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200 ${
+            activeType === type
+              ? "bg-cyan-500 text-white shadow-sm"
+              : "text-gray-400 dark:text-slate-500 hover:bg-gray-100 dark:hover:bg-slate-700 hover:text-gray-600 dark:hover:text-slate-300"
+          }`}
+        >
+          <span>{TYPE_ICONS[type]}</span>
+          {TYPE_LABELS[type]}
+        </button>
+      ))}
+    </div>
+  );
+}
