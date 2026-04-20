@@ -1,5 +1,6 @@
 "use client";
 import React from "react";
+import { useRouter } from "next/navigation";  // ✅ ajoute
 import { Button } from "antd";
 import { PlayCircleOutlined, StarOutlined, FireOutlined, ClockCircleOutlined, HeartOutlined, HeartFilled } from "@ant-design/icons";
 
@@ -8,6 +9,8 @@ export default function QuizCard({ quiz, isFavorite, onToggleFavorite }: {
   isFavorite: boolean;
   onToggleFavorite: (id: string) => void;
 }) {
+  const router = useRouter();  // ✅ ajoute
+
   const difficultyConfig: Record<string, { color: string; bg: string; icon: string }> = {
     Easy:   { color: "text-green-600", bg: "bg-green-50 border-green-200", icon: "🟢" },
     Medium: { color: "text-amber-600", bg: "bg-amber-50 border-amber-200", icon: "🟡" },
@@ -21,11 +24,19 @@ export default function QuizCard({ quiz, isFavorite, onToggleFavorite }: {
 
       {/* Image */}
       <div className="relative h-40 bg-gradient-to-br from-cyan-50 to-teal-50 flex items-center justify-center overflow-hidden dark:from-slate-600/50 dark:to-slate-500/50">
-        <span className="text-6xl group-hover:scale-110 transition-transform duration-300">
-          {quiz.emoji || "🎯"}
-        </span>
 
-        {/* Badges top-left */}
+  {quiz.cover_image ? (
+    <img
+      src={quiz.cover_image}
+      alt={quiz.title}
+      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+    />
+  ) : (
+    <span className="text-6xl group-hover:scale-110 transition-transform duration-300">
+      {quiz.emoji || "🎯"}
+    </span>
+  )}
+
         <div className="absolute top-3 left-3 flex gap-2">
           {quiz.featured && (
             <span className="flex items-center gap-1 text-xs bg-cyan-500 text-white px-2.5 py-1 rounded-full font-semibold">
@@ -39,7 +50,6 @@ export default function QuizCard({ quiz, isFavorite, onToggleFavorite }: {
           )}
         </div>
 
-        {/* Difficulty top-right */}
         <div className={`absolute top-3 right-3 flex items-center gap-1 text-xs px-2.5 py-1 rounded-full font-semibold border ${diff.bg} ${diff.color} dark:bg-slate-600/50 dark:border-slate-500 dark:text-slate-300`}>
           {diff.icon} {quiz.difficulty}
         </div>
@@ -78,6 +88,7 @@ export default function QuizCard({ quiz, isFavorite, onToggleFavorite }: {
           <Button
             icon={<PlayCircleOutlined />}
             block
+            onClick={() => router.push(`/play-quiz/${quiz.id}/play`)}  // ✅ ajoute
             className="!h-10 !rounded-xl !bg-gradient-to-r !from-cyan-500 !to-teal-400 !text-white !border-0 !font-semibold hover:!opacity-90 !shadow-md !shadow-cyan-200"
           >
             Play now

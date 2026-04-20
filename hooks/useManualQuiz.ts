@@ -1,10 +1,14 @@
 import { useState } from "react";
 import { Question, QuestionType, defaultQuestion } from "@/types/quiz";
+import { useQuizStore } from "@/store/useQuizStore";
 
 export function useQuizEditor() {
+  const { title: savedTitle } = useQuizStore();
+
   const [questions, setQuestions] = useState<Question[]>([defaultQuestion()]);
   const [activeId, setActiveId] = useState<string>(questions[0].id);
-  const [quizTitle, setQuizTitle] = useState("Untitled Quiz");
+  // ✅ Lire le titre depuis le store (saisi en Step 1)
+  const [quizTitle, setQuizTitle] = useState(savedTitle || "Untitled Quiz");
 
   const activeQuestion = questions.find((q) => q.id === activeId)!;
   const activeIndex = questions.findIndex((q) => q.id === activeId);

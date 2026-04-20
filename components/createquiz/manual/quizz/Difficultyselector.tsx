@@ -44,8 +44,8 @@ const LEVELS: {
     label: "Mixed",
     icon: "🎲",
     desc: "All levels",
-    active: "bg-violet-500 text-white border-violet-400 shadow-violet-500/20",
-    bg: "bg-violet-50 dark:bg-violet-900/20 border-violet-200 dark:border-violet-800/40 text-violet-700 dark:text-violet-400",
+    active: "bg-cyan-500 text-white border-cyan-400 shadow-cyan-500/20",
+    bg: "bg-cyan-50 dark:bg-cyan-900/20 border-cyan-200 dark:border-cyan-800/40 text-cyan-700 dark:text-cyan-400",
   },
 ];
 

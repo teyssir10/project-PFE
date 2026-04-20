@@ -29,12 +29,18 @@ export default function QuizSettingsPage() {
   const [coverImage, setCoverImage]         = useState<string | null>(null);
 
   const handleContinue = () => {
-    if (!title.trim()) { alert("Please enter a quiz title"); return; }
-    const finalCategory = isCustomCategory ? customCategory : category;
-    setQuizData({ title, description, difficulty, category: finalCategory, timePerQuestion: time });
-    router.push("/create-quiz/manuelQuiz.tsx/question");
-  };
-
+  if (!title.trim()) { alert("Please enter a quiz title"); return; }
+  const finalCategory = isCustomCategory ? customCategory : category;
+  setQuizData({
+    title,
+    description,
+    difficulty,
+    category: finalCategory,
+    timePerQuestion: time,
+    coverImage,  // ✅ ajoute
+  });
+  router.push("/create-quiz/manuelQuiz.tsx/question");
+};
   const completionFields = [
     !!title.trim(),
     !!category || !!customCategory,
@@ -47,52 +53,44 @@ export default function QuizSettingsPage() {
 
   return (
     <div className="min-h-screen pb-20 flex flex-col bg-gray-50 dark:bg-slate-950 text-gray-900 dark:text-white transition-colors duration-300">
-
-      {/* Top accent */}
       <div className="h-[3px] w-full bg-gradient-to-r from-cyan-400 via-teal-400 to-cyan-500" />
 
-      <div className="flex-1 flex items-start justify-center px-8 py-10">
+      <div className="py-10 flex-1 flex items-start justify-center px-8 pb-20">
         <div className="w-full max-w-7xl">
 
-          {/* ── Page header ── */}
-          <div className="mb-10 flex items-end justify-between">
-            <div>
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-cyan-100 dark:bg-cyan-900/40 text-cyan-600 dark:text-cyan-400 text-xs font-bold tracking-widest uppercase mb-3">
-                Step 1 of 3
-              </span>
-              <h1 className="text-3xl font-extrabold tracking-tight text-gray-900 dark:text-white">
-                Quiz Settings
-              </h1>
-              <p className="text-sm text-gray-500 dark:text-slate-400 mt-1">
-                Set up your quiz details before adding questions
-              </p>
-            </div>
-
-            {/* Completion ring */}
-            <div className="relative w-18 h-40 shrink-0">
-              <svg className="w-18 h-40 -rotate-90" viewBox="0 0 56 56">
-                <circle cx="28" cy="28" r="24" fill="none" stroke="currentColor"
-                  className="text-gray-200 dark:text-slate-800" strokeWidth="4" />
-                <circle cx="28" cy="28" r="24" fill="none" stroke="currentColor"
-                  className="text-cyan-500 transition-all duration-500"
-                  strokeWidth="4"
-                  strokeDasharray={`${2 * Math.PI * 24}`}
-                  strokeDashoffset={`${2 * Math.PI * 24 * (1 - completionPct / 100)}`}
-                  strokeLinecap="round" />
-              </svg>
-              <span className="absolute inset-0 flex items-center justify-center text-xs font-bold text-gray-700 dark:text-slate-300">
-                {completionPct}%
-              </span>
+          <div className="mb-6">
+            <div className="flex items-end gap-4 mb-3">
+              <div className="relative w-15 h-15 shrink-0">
+                <svg className="w-15 h-15 -rotate-90" viewBox="0 0 56 56">
+                  <circle cx="28" cy="28" r="24" fill="none" stroke="currentColor"
+                    className="text-gray-200 dark:text-slate-800" strokeWidth="4" />
+                  <circle cx="28" cy="28" r="24" fill="none" stroke="currentColor"
+                    className="text-cyan-500 transition-all duration-500"
+                    strokeWidth="4"
+                    strokeDasharray={`${2 * Math.PI * 24}`}
+                    strokeDashoffset={`${2 * Math.PI * 24 * (1 - completionPct / 100)}`}
+                    strokeLinecap="round" />
+                </svg>
+                <span className="absolute inset-0 flex items-center justify-center text-[9px] font-bold text-gray-700 dark:text-slate-300">
+                  {completionPct}%
+                </span>
+              </div>
+              <div>
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-cyan-100 dark:bg-cyan-900/40 text-cyan-600 dark:text-cyan-400 text-xs font-bold tracking-widest uppercase mb-2 block">
+                  Step 1 of 3
+                </span>
+                <h1 className="text-3xl font-extrabold tracking-tight text-gray-900 dark:text-white">
+                  Quiz Settings
+                </h1>
+                <p className="text-sm text-gray-500 dark:text-slate-400 mt-1">
+                  Set up your quiz details before adding questions
+                </p>
+              </div>
             </div>
           </div>
 
-          {/* ── Layout: 2 columns ── */}
           <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
-
-            {/* ══ LEFT — main form (3 cols) ══ */}
             <div className="lg:col-span-3 space-y-6">
-
-              {/* Info card */}
               <div className="bg-white dark:bg-slate-900 rounded-2xl border border-gray-100 dark:border-slate-800 shadow-sm overflow-hidden">
                 <div className="px-8 py-5 border-b border-gray-100 dark:border-slate-800 flex items-center gap-3">
                   <span className="w-8 h-8 rounded-xl bg-cyan-100 dark:bg-cyan-900/40 flex items-center justify-center text-sm">📝</span>
@@ -108,7 +106,6 @@ export default function QuizSettingsPage() {
                 </div>
               </div>
 
-              {/* Difficulty card */}
               <div className="bg-white dark:bg-slate-900 rounded-2xl border border-gray-100 dark:border-slate-800 shadow-sm overflow-hidden">
                 <div className="px-8 py-5 border-b border-gray-100 dark:border-slate-800 flex items-center gap-3">
                   <span className="w-8 h-8 rounded-xl bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center text-sm">⚡</span>
@@ -119,7 +116,6 @@ export default function QuizSettingsPage() {
                 </div>
               </div>
 
-              {/* Category card */}
               <div className="bg-white dark:bg-slate-900 rounded-2xl border border-gray-100 dark:border-slate-800 shadow-sm overflow-hidden">
                 <div className="px-8 py-5 border-b border-gray-100 dark:border-slate-800 flex items-center gap-3">
                   <span className="w-8 h-8 rounded-xl bg-violet-100 dark:bg-violet-900/30 flex items-center justify-center text-sm">🏷️</span>
@@ -136,27 +132,13 @@ export default function QuizSettingsPage() {
                   />
                 </div>
               </div>
-
             </div>
 
-            {/* ══ RIGHT — cover + timer + summary (2 cols) ══ */}
             <div className="lg:col-span-2 space-y-6 relative overflow-visible">
-
-              {/* Cover image card — panda fixé dessus */}
               <div className="relative bg-white dark:bg-slate-900 rounded-2xl border border-gray-100 dark:border-slate-800 shadow-sm overflow-visible">
-
-                {/* Panda */}
                 <div className="absolute -top-20 -right-2 pointer-events-none select-none z-10">
-                  <Image
-                    src={cardd}
-                    alt="PandoMind mascot"
-                    width={140}
-                    height={140}
-                    className="object-contain drop-shadow-xl"
-                    priority
-                  />
+                  <Image src={cardd} alt="PandoMind mascot" width={140} height={140} className="object-contain drop-shadow-xl" priority />
                 </div>
-
                 <div className="px-8 py-5 border-b border-gray-100 dark:border-slate-800 flex items-center gap-3">
                   <span className="w-8 h-8 rounded-xl bg-rose-100 dark:bg-rose-900/30 flex items-center justify-center text-sm">🖼️</span>
                   <h2 className="text-base font-bold text-gray-700 dark:text-slate-200">Cover Image</h2>
@@ -167,7 +149,6 @@ export default function QuizSettingsPage() {
                 </div>
               </div>
 
-              {/* Timer card */}
               <div className="bg-white dark:bg-slate-900 rounded-2xl border border-gray-100 dark:border-slate-800 shadow-sm overflow-hidden">
                 <div className="px-8 py-5 border-b border-gray-100 dark:border-slate-800 flex items-center gap-3">
                   <span className="w-8 h-8 rounded-xl bg-teal-100 dark:bg-teal-900/30 flex items-center justify-center text-sm">⏱️</span>
@@ -184,7 +165,6 @@ export default function QuizSettingsPage() {
                 </div>
               </div>
 
-              {/* Summary card */}
               <div className="bg-gradient-to-br from-cyan-50 to-teal-50 dark:from-cyan-900/20 dark:to-teal-900/20 rounded-2xl border border-cyan-100 dark:border-cyan-800/40 p-8">
                 <p className="text-xs font-bold text-cyan-700 dark:text-cyan-400 tracking-widest uppercase mb-4">Summary</p>
                 <div className="space-y-3">
@@ -193,6 +173,7 @@ export default function QuizSettingsPage() {
                     { label: "Difficulty", value: difficulty },
                     { label: "Category",   value: isCustomCategory ? customCategory || "—" : category || "—" },
                     { label: "Timer",      value: `${time}s per question` },
+                    { label: "Cover",      value: coverImage ? "✓ Uploaded" : "—" },
                   ].map((item) => (
                     <div key={item.label} className="flex justify-between items-center text-sm">
                       <span className="text-cyan-600 dark:text-cyan-500 font-medium">{item.label}</span>
@@ -203,11 +184,9 @@ export default function QuizSettingsPage() {
                   ))}
                 </div>
               </div>
-
             </div>
           </div>
 
-          {/* ── Footer actions ── */}
           <div className="mt-10 flex justify-between items-center">
             <button
               onClick={() => router.back()}
