@@ -12,36 +12,3 @@ export const fetchQuizzes = async () => {
   if (error) throw error;
   return data ?? [];
 };
-
-// 🔹 GET FAVORITES
-
-
-// 🔹 ADD FAVORITE
-export const addFavorite = async (quizId: string) => {
-  const user = await getCurrentUser();
-
-  if (!user) throw new Error("User not authenticated");
-
-  const { error } = await supabase.from("favorites").insert({
-    user_id: user.id,
-    quiz_id: quizId,
-  });
-
-  if (error) throw error;
-};
-
-// 🔹 REMOVE FAVORITE
-export const removeFavorite = async (quizId: string) => {
-  const { data } = await supabase.auth.getUser();
-  const user = data.user;
-
-  if (!user) throw new Error("User not authenticated");
-
-  const { error } = await supabase
-    .from("favorites")
-    .delete()
-    .eq("quiz_id", quizId)
-    .eq("user_id", user.id);
-
-  if (error) throw error;
-};

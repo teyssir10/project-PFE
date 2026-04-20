@@ -4,8 +4,13 @@ import React, { useState } from "react";
 import QuizCard from "@/components/UI/QuizCard/quiz-card";
 import { SearchOutlined } from "@ant-design/icons";
 import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { fetchQuizzes } from "@/lib/api/quiz";
-import { fetchFavorites, addFavorite, removeFavorite } from "@/lib/api/favorites";
+import {
+  fetchFavorites,
+  addFavorite,
+  removeFavorite,
+} from "@/lib/api/favorites";
 import { useAuth } from "@/lib/auth";
 
 const tabs = [
@@ -13,79 +18,80 @@ const tabs = [
   { key: "community", label: "Community" },
   { key: "my", label: "My quizzes" },
   { key: "favorites", label: "Favourites" },
-  { key: "recent", label: "Recently played" },
+  { key: "recently", label: "Recently played" },
 ];
 
-
 export default function QuizPage() {
+  const router = useRouter();
   const [search, setSearch] = useState("");
   const [tab, setTab] = useState("all");
   const [favorites, setFavorites] = useState<string[]>([]);
   const { user } = useAuth();
   const [quizzes, setQuizzes] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  
-  useEffect(() => {
-  const loadData = async () => {
-    try {
-      const quizzesData = await fetchQuizzes();
-      setQuizzes(quizzesData);
 
-      if (user) {
-        const favs = await fetchFavorites(user.id);
-        setFavorites(favs);
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        const quizzesData = await fetchQuizzes();
+        setQuizzes(quizzesData);
+
+        if (user) {
+          const favs = await fetchFavorites(user.id);
+          setFavorites(favs);
+        }
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadData();
+  }, [user]);
+
+  const toggleFavorite = async (id: string) => {
+    try {
+      if (favorites.includes(id)) {
+        await removeFavorite(id);
+        setFavorites((prev) => prev.filter((f) => f !== id));
+      } else {
+        await addFavorite(id);
+        setFavorites((prev) => [...prev, id]);
       }
     } catch (err) {
       console.error(err);
-    } finally {
-      setLoading(false);
     }
   };
+  const filtered = quizzes.filter((q) => {
+    const matchSearch = q.title.toLowerCase().includes(search.toLowerCase());
 
-  loadData();
-}, [user]);
+    if (tab === "all") return matchSearch;
+    if (tab === "community") return matchSearch && q.is_community;
+    if (tab === "my") return matchSearch && q.creator_id === user?.id;
+    if (tab === "favorites") return matchSearch && favorites.includes(q.id);
+    if (tab === "recently") return matchSearch;
 
-const toggleFavorite = async (id: string) => {
-  try {
-    if (favorites.includes(id)) {
-      await removeFavorite(id);
-      setFavorites(prev => prev.filter(f => f !== id));
-    } else {
-      await addFavorite(id);
-      setFavorites(prev => [...prev, id]);
-    }
-  } catch (err) {
-    console.error(err);
+    return true;
+  });
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-[60vh]">
+        <p className="text-gray-500">Loading quizzes...</p>
+      </div>
+    );
   }
-};
-const filtered = quizzes.filter((q) => {
-  const matchSearch = q.title.toLowerCase().includes(search.toLowerCase());
-
-  if (tab === "all") return matchSearch;
-  if (tab === "community") return matchSearch && q.is_community;
-  if (tab === "my") return matchSearch && q.creator_id === user?.id;
-  if (tab === "favorites") return matchSearch && favorites.includes(q.id);
-  if (tab === "recent") return matchSearch;
-
-  return true;
-});
-
-if (loading) {
-  return (
-    <div className="flex justify-center items-center h-[60vh]">
-      <p className="text-gray-500">Loading quizzes...</p>
-    </div>
-  );
-}
 
   return (
     <div className="p-6 space-y-6">
-
       {/* Search */}
-      <div className="flex items-center gap-2 w-full px-4 py-2 rounded-2xl
+      <div
+        className="flex items-center gap-2 w-full px-4 py-2 rounded-2xl
         bg-white/70 dark:bg-slate-800/70 backdrop-blur-md
         border border-gray-200 dark:border-slate-700
-        shadow-sm focus-within:ring-2 focus-within:ring-cyan-400 transition-all">
+        shadow-sm focus-within:ring-2 focus-within:ring-cyan-400 transition-all"
+      >
         <SearchOutlined className="text-gray-400 text-lg" />
         <input
           type="text"
@@ -117,6 +123,10 @@ if (loading) {
           </button>
         ))}
       </div>
+      <div>
+        <p className="text-sm text-gray-500 dark:text-gray-400">
+          Showing <span className="font-bold text-cyan-900 dark:text-white">{filtered.length} quizzes</span>  </p>
+      </div>
 
       {/* Banner */}
       <div className="bg-gradient-to-r from-cyan-600 to-teal-500 text-white p-6 rounded-xl flex justify-between items-center">
@@ -142,26 +152,27 @@ if (loading) {
             {tab === "favorites" ? "No favourites yet" : "No quizzes found"}
           </p>
           <p className="text-gray-400 text-sm mt-1">
-            {tab === "favorites" ? "Click the heart on any quiz to save it here" : "Try a different search"}
+            {tab === "favorites"
+              ? "Click the heart on any quiz to save it here"
+              : "Try a different search"}
           </p>
         </div>
       ) : (
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filtered.map((quiz) => (
             <QuizCard
-                key={quiz.id}
-                quiz={{
-                    ...quiz,
-                    creator: quiz.creator_name,
-                    questionCount: quiz.question_count,
-                }}
-                isFavorite={favorites.includes(quiz.id)}
-                onToggleFavorite={toggleFavorite}
+              key={quiz.id}
+              quiz={{
+                ...quiz,
+                creator: quiz.creator_name,
+                questionCount: quiz.question_count,
+              }}
+              isFavorite={favorites.includes(quiz.id)}
+              onToggleFavorite={toggleFavorite}
             />
           ))}
         </div>
       )}
-
     </div>
   );
 }
