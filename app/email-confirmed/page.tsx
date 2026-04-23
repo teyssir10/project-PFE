@@ -12,7 +12,7 @@ export default function EmailConfirmedPage() {
 
   useEffect(() => {
   const confirmEmail = async () => {
-    // Récupérer les params de l'URL
+
     const { createClient } = await import('@supabase/supabase-js')
     const params = new URLSearchParams(window.location.search)
     const token_hash = params.get('token_hash')
@@ -20,21 +20,21 @@ export default function EmailConfirmedPage() {
 
     if (token_hash && type) {
       const { supabase } = await import('@/lib/supabase')
-      // Confirmer le token
+      
       const { error } = await supabase.auth.verifyOtp({ token_hash, type })
       if (!error) {
         setTimeout(() => setVisible(true), 100)
-        // Déconnecter après confirmation → forcer login
+        
         await supabase.auth.signOut()
       }
     }
 
-    // Countdown vers /login
+
     const timer = setInterval(() => {
       setCountdown((prev) => {
         if (prev <= 1) {
           clearInterval(timer)
-          router.push('/login') // ← login pas dashboard
+          router.push('/login') 
           return 0
         }
         return prev - 1

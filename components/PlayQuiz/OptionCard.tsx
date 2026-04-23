@@ -31,7 +31,7 @@ export default function OptionCard({ label, text, state, onClick, disabled }: Pr
   const s = stateStyles[state];
 
   const handleClick = () => {
-    // ✅ Double protection — bloque le clic si disabled, peu importe le DOM
+
     if (disabled) return;
     onClick();
   };

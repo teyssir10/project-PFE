@@ -112,7 +112,7 @@ export function useAuth() {
   return context;
 }
 
-//  AUTH GUARD
+
 export function AuthGuard({ children }: { children: React.ReactNode }) {
   const { user, isLoading } = useAuth();
   const pathname = usePathname();
@@ -135,7 +135,7 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
     }
   }, [user, pathname, isLoading, router]);
 
-  // ✅ 1. Loading → spinner
+  
   if (isLoading) {
     return (
       <div className="flex justify-center items-center min-h-screen bg-slate-50">
@@ -144,16 +144,16 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
     );
   }
 
-  // ✅ 2. PAS connecté → bloquer rendu
+ 
   if (!user && !isPublicRoute) {
-    return null; // 🔥 empêche le flash
+    return null; 
   }
 
-  // ✅ 3. Connecté mais sur login → bloquer aussi
+  
   if (user && isPublicRoute) {
     return null;
   }
 
-  // ✅ 4. OK
+ 
   return <>{children}</>;
 }

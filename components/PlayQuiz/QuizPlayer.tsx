@@ -20,9 +20,18 @@ export default function QuizPlayer({ quiz }: { quiz: QuizFull }) {
     Array(quiz.questions.length).fill("unanswered")
   );
 
-  const question = quiz.questions[currentIndex];
-  const isLast   = currentIndex === quiz.questions.length - 1;
-  const hint     = question.explanation;
+const question = quiz.questions[currentIndex];
+const isLast   = currentIndex === quiz.questions.length - 1;
+
+if (!question) {
+  return (
+    <div className="flex items-center justify-center h-screen text-gray-500">
+      No questions found for this quiz.
+    </div>
+  );
+}
+
+const hint = question.explanation;
 
   // ✅ Question verrouillée si déjà répondue (correct/wrong) ou sautée
   const isLocked = statuses[currentIndex] !== "unanswered";

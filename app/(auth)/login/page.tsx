@@ -14,6 +14,7 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import { useAuth } from '@/lib/auth'
 import { useRouter } from 'next/navigation'
 import logo from '@/public/panda-logo.png'
+import { useAntdApp } from '@/hooks/useAntdApp'
 
 const loginSchema = yup.object({
   email: yup.string().required('Please enter your email').email('Please enter a valid email address'),
@@ -25,7 +26,7 @@ const LoginPage = () => {
   const [loading, setLoading] = useState(false)
   const { signIn, signInWithGoogle } = useAuth()
   const router = useRouter()
-const { message } = App.useApp() 
+const { message } = useAntdApp() 
   const { control, handleSubmit, formState: { errors } } = useForm({
     resolver: yupResolver(loginSchema),
   })

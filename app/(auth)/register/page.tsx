@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import Image from 'next/image'
 import * as yup from 'yup'
-import { useAntdApp } from '@/lib/useAntdApp'
+import { useAntdApp } from '@/hooks/useAntdApp'
 
 import { MailOutlined, LockOutlined, UserOutlined } from '@ant-design/icons'
 import { Button, Card, Divider, Form, Input } from 'antd'
@@ -40,7 +40,6 @@ const RegisterPage = () => {
     resolver: yupResolver(registerSchema),
   })
 
- // ✅ CORRIGÉ
 const onSubmit = async (values: any) => {
   setLoading(true)
   try {
@@ -52,7 +51,7 @@ const onSubmit = async (values: any) => {
     if (error) {
       message.error(error.message)
     } else {
-      // ✅ Déconnecter pour éviter la redirection automatique
+     
       await supabase.auth.signOut()
       setEmailSent(true)
     }

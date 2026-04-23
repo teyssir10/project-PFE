@@ -18,8 +18,8 @@ export async function saveQuiz({
   userId,
   userFirstname = "",
   userLastname = "",
-  quizDifficulty,   // ✅ ajoute
-  coverImage,       // ✅ ajoute
+  quizDifficulty,   //
+  coverImage,       //
   getEffectiveTimeLimit,
 }: SaveQuizParams): Promise<void> {
 
