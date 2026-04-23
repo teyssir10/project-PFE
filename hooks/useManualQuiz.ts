@@ -7,7 +7,6 @@ export function useQuizEditor() {
 
   const [questions, setQuestions] = useState<Question[]>([defaultQuestion()]);
   const [activeId, setActiveId] = useState<string>(questions[0].id);
-  // ✅ Lire le titre depuis le store (saisi en Step 1)
   const [quizTitle, setQuizTitle] = useState(savedTitle || "Untitled Quiz");
 
   const activeQuestion = questions.find((q) => q.id === activeId)!;

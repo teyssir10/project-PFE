@@ -12,3 +12,19 @@ export const fetchQuizzes = async () => {
   if (error) throw error;
   return data ?? [];
 };
+export const getQuizWithQuestions = async (quizId: string) => {
+  const { data, error } = await supabase
+    .from('quizzes')
+    .select(`
+      *,
+      questions (
+        *,
+        options (*)
+      )
+    `)
+    .eq('id', quizId)
+    .single();
+
+  if (error) throw error;
+  return data;
+};

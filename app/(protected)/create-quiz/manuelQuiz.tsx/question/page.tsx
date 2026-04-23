@@ -4,7 +4,7 @@ import { useState } from "react";
 import { message } from "antd";
 import { useAuth } from "@/lib/auth";
 import { useRouter } from "next/navigation";
-import { useQuizStore } from "@/store/useQuizStore";  // ✅ ajoute
+import { useQuizStore } from "@/store/useQuizStore";
 import StepperBar, { MANUAL_STEPS } from "@/components/Navigation/StepperBar";
 import { useQuizEditor } from "@/hooks/useManualQuiz";
 import { saveQuiz } from "@/lib/api/quizAPI";
@@ -16,7 +16,7 @@ export default function ManualQuiz() {
   const { user } = useAuth();
   const router = useRouter();
 
-  // ✅ récupère difficulty et coverImage depuis le store
+  // récupère difficulty et coverImage depuis le store
   const { difficulty, coverImage } = useQuizStore();
 
   const {
@@ -61,8 +61,8 @@ export default function ManualQuiz() {
         userId: user.id,
         userFirstname: user.user_metadata?.firstname,
         userLastname: user.user_metadata?.lastname,
-        quizDifficulty: difficulty,   // ✅ ajoute
-        coverImage: coverImage,        // ✅ ajoute
+        quizDifficulty: difficulty,
+        coverImage: coverImage,
         getEffectiveTimeLimit,
       });
       message.success("Quiz saved successfully! 🎉");

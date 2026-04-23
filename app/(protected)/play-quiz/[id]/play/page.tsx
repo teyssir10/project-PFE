@@ -6,11 +6,11 @@ import { getQuizWithQuestions } from "@/lib/api/quiz";
 import QuizPlayer from "@/components/PlayQuiz/QuizPlayer";
 
 export default function PlayQuizPage() {
-  const { id }    = useParams<{ id: string }>();
-  const router    = useRouter();
-  const [quiz, setQuiz]       = useState<any>(null);
+  const { id } = useParams<{ id: string }>();
+  const router = useRouter();
+  const [quiz, setQuiz] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError]     = useState(false);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
     getQuizWithQuestions(id)

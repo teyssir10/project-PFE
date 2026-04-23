@@ -18,15 +18,15 @@ export default function QuizSettingsPage() {
   const router = useRouter();
   const { setQuizData } = useQuizStore();
 
-  const [title, setTitle]                   = useState("");
-  const [description, setDescription]       = useState("");
-  const [difficulty, setDifficulty]         = useState<Difficulty>("Medium");
-  const [category, setCategory]             = useState("");
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [difficulty, setDifficulty] = useState<Difficulty>("Medium");
+  const [category, setCategory] = useState("");
   const [customCategory, setCustomCategory] = useState("");
   const [isCustomCategory, setIsCustomCategory] = useState(false);
-  const [time, setTime]                     = useState("20");
-  const [isCustomTime, setIsCustomTime]     = useState(false);
-  const [coverImage, setCoverImage]         = useState<string | null>(null);
+  const [time, setTime] = useState("20");
+  const [isCustomTime, setIsCustomTime] = useState(false);
+  const [coverImage, setCoverImage] = useState<string | null>(null);
 
   const handleContinue = () => {
   if (!title.trim()) { alert("Please enter a quiz title"); return; }
@@ -37,7 +37,7 @@ export default function QuizSettingsPage() {
     difficulty,
     category: finalCategory,
     timePerQuestion: time,
-    coverImage,  // ✅ ajoute
+    coverImage,
   });
   router.push("/create-quiz/manuelQuiz.tsx/question");
 };

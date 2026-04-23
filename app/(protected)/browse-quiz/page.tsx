@@ -12,6 +12,7 @@ import {
   removeFavorite,
 } from "@/lib/api/favorites";
 import { useAuth } from "@/lib/auth";
+import { Spin } from "antd";
 
 const tabs = [
   { key: "all", label: "All quizzes" },
@@ -70,7 +71,7 @@ export default function QuizPage() {
     if (tab === "community") return matchSearch && q.is_community;
     if (tab === "my") return matchSearch && q.creator_id === user?.id;
     if (tab === "favorites") return matchSearch && favorites.includes(q.id);
-    if (tab === "recently") return matchSearch;
+    if (tab === "recently") return matchSearch && q.recently_played_by?.includes(user?.id || "");
 
     return true;
   });
@@ -78,7 +79,7 @@ export default function QuizPage() {
   if (loading) {
     return (
       <div className="flex justify-center items-center h-[60vh]">
-        <p className="text-gray-500">Loading quizzes...</p>
+        <Spin size="large" />
       </div>
     );
   }
