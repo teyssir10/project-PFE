@@ -9,6 +9,7 @@ import {
 } from "@ant-design/icons";
 import { useAuth } from "@/lib/auth";
 import { Controller, useForm } from 'react-hook-form'
+import AvatarUpload from "@/components/AvatarUpload/AvatarUpload";
 
 const achievements = [
   { name: "Quiz Master", desc: "Completed 20+ quizzes", emoji: "🏆", color: "!bg-amber-50 !text-amber-600 !border-amber-200" },
@@ -31,6 +32,9 @@ export default function ProfilePage() {
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [form] = Form.useForm();
   const { control, formState: { errors } } = useForm();
+    const [avatarUrl, setAvatarUrl] = useState<string | null>(
+    user?.user_metadata?.avatar_url || null
+  );
 
   const isDark = typeof document !== 'undefined' && document.documentElement.classList.contains('dark');
 
@@ -53,17 +57,12 @@ export default function ProfilePage() {
       <Card className="rounded-2xl! border-0! shadow-md! bg-white dark:!bg-slate-800">
         <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
           <div className="flex items-center gap-6">
-            {/* Avatar */}
-            <div className="relative">
-              <Avatar
-                size={100}
-                className="bg-linear-to-br! from-cyan-500! to-teal-400! text-white! text-4xl! font-bold! shadow-lg!"
-              >
-                {username?.charAt(0)?.toUpperCase() || "U"}
-              </Avatar>
-              {/* Online indicator */}
-              <div className="absolute bottom-1 right-1 w-4 h-4 bg-green-400 rounded-full border-2 border-white dark:border-slate-800" />
-            </div>
+                {/* ── AVATAR UPLOAD ── */}
+                <AvatarUpload
+                  currentUrl={avatarUrl}
+                  size={100}
+                  onUploadSuccess={(url) => setAvatarUrl(url)}
+                />
 
             {/* Info */}
             <div>

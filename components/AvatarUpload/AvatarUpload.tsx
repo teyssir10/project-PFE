@@ -37,11 +37,6 @@ export default function AvatarUpload({
       return;
     }
 
-    if (file.size > 2 * 1024 * 1024) {
-      message.error("Image must be smaller than 2 MB.");
-      return;
-    }
-
     setUploading(true);
 
     try {
@@ -103,7 +98,7 @@ export default function AvatarUpload({
           />
         ) : (
           <Image
-            src="/panda-avatar.png"
+            src="/panda-logo.png"
             alt="Default panda avatar"
             width={size}
             height={size}

@@ -120,8 +120,7 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
 
   const isPublicRoute =
     pathname === "/login" ||
-    pathname === "/signup" ||
-    pathname === "/hero";
+    pathname === "/signup"
 
   useEffect(() => {
     if (!isLoading) {
@@ -135,7 +134,6 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
     }
   }, [user, pathname, isLoading, router]);
 
-  // ✅ 1. Loading → spinner
   if (isLoading) {
     return (
       <div className="flex justify-center items-center min-h-screen bg-slate-50">
@@ -144,16 +142,13 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
     );
   }
 
-  // ✅ 2. PAS connecté → bloquer rendu
   if (!user && !isPublicRoute) {
-    return null; // 🔥 empêche le flash
+    return null; //  empêche le flash
   }
 
-  // ✅ 3. Connecté mais sur login → bloquer aussi
   if (user && isPublicRoute) {
     return null;
   }
 
-  // ✅ 4. OK
   return <>{children}</>;
 }

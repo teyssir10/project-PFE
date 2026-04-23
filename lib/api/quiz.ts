@@ -2,7 +2,7 @@ import { supabase } from "../supabase";
 import { getCurrentUser } from "./user";
 
 
-// 🔹 GET ALL QUIZZES
+// GET ALL QUIZZES
 export const fetchQuizzes = async () => {
   const { data, error } = await supabase
     .from("quizzes")
