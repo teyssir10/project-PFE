@@ -55,3 +55,28 @@ export const defaultQuestion = (): Question => ({
   difficulty: "Easy",
   explanation: "",
 });
+// ─── PLAY PAGE TYPES ───────────────────────────────────
+
+export interface PlayOption {
+  id: string;
+  text: string;
+  is_correct: boolean;     
+  question_id: string;
+}
+export interface PlayQuestion {
+  id: string;
+  text: string;
+  hint?: string | null;
+  explanation?: string | null;
+  quiz_id: string;
+  options: PlayOption[];
+}
+
+export interface QuizFull {
+  id: string;
+  title: string;
+  category: string;
+  difficulty: string;
+  time_per_question: number; 
+  questions: PlayQuestion[];
+}

@@ -6,6 +6,7 @@ type QuizState = {
   difficulty: string;
   category: string;
   timePerQuestion: string;
+  coverImage: string | null;  // ✅ ajoute
 
   setQuizData: (data: Partial<QuizState>) => void;
 };
@@ -16,6 +17,7 @@ export const useQuizStore = create<QuizState>((set) => ({
   difficulty: "Medium",
   category: "",
   timePerQuestion: "20",
+  coverImage: null,  // ✅ ajoute
 
   setQuizData: (data) => set((state) => ({ ...state, ...data })),
 }));

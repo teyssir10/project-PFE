@@ -7,6 +7,8 @@ interface SaveQuizParams {
   userId: string;
   userFirstname?: string;
   userLastname?: string;
+  quizDifficulty: string;      // ✅ ajoute
+  coverImage?: string | null;  // ✅ ajoute
   getEffectiveTimeLimit: (q: Question) => string;
 }
 
@@ -16,16 +18,19 @@ export async function saveQuiz({
   userId,
   userFirstname = "",
   userLastname = "",
+  quizDifficulty,   // ✅ ajoute
+  coverImage,       // ✅ ajoute
   getEffectiveTimeLimit,
 }: SaveQuizParams): Promise<void> {
-  // 1. Créer le quiz
+
   const { data: quiz, error: quizError } = await supabase
     .from("quizzes")
     .insert({
       title: quizTitle,
       creator_id: userId,
       creator_name: `${userFirstname} ${userLastname}`.trim(),
-      difficulty: questions[0]?.difficulty ?? "Easy",
+      difficulty: quizDifficulty,       // ✅ fix
+      cover_image: coverImage ?? null,  // ✅ fix
       question_count: questions.length,
       featured: false,
       is_community: false,
@@ -37,7 +42,6 @@ export async function saveQuiz({
 
   if (quizError) throw quizError;
 
-  // 2. Insérer chaque question
   for (let i = 0; i < questions.length; i++) {
     const q = questions[i];
 
@@ -58,11 +62,11 @@ export async function saveQuiz({
 
     if (qError) throw qError;
 
-    // 3. Insérer les options
     if (q.type !== "short" && q.options.length > 0) {
       const optionRows = q.options.map((o) => ({
         question_id: insertedQ.id,
         text: o.text,
+        is_correct: o.id === q.correctOptionId,
       }));
 
       const { data: insertedOptions, error: optError } = await (supabase as any)
@@ -72,7 +76,6 @@ export async function saveQuiz({
 
       if (optError) throw optError;
 
-      // 4. Mettre à jour correct_option_id
       if (insertedOptions && insertedOptions.length > 0) {
         const localIndex = q.options.findIndex((o) => o.id === q.correctOptionId);
         if (localIndex !== -1 && insertedOptions[localIndex]) {
