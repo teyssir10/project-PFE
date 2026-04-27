@@ -120,8 +120,7 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
 
   const isPublicRoute =
     pathname === "/login" ||
-    pathname === "/signup" ||
-    pathname === "/hero";
+    pathname === "/signup"
 
   useEffect(() => {
     if (!isLoading) {

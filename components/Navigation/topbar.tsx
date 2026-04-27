@@ -3,45 +3,43 @@ import React from 'react'
 import { Button, Avatar, Dropdown } from 'antd'
 import { useRouter, usePathname } from 'next/navigation'
 import {
-  BellOutlined,
-  UserOutlined,
-  LogoutOutlined,
-  RobotOutlined,
-  PlusOutlined,
-  EditOutlined,
+  BellOutlined, UserOutlined, LogoutOutlined,
+  RobotOutlined, PlusOutlined, EditOutlined,
 } from '@ant-design/icons'
 import { supabase } from '@/lib/supabase'
 import LightToDark from '../UI/Button/LightToDark'
 import { useQuizModeStore } from '@/store/useQuizModeStore'
+import { useTranslations } from 'next-intl'
 
 type TopbarProps = {
   username: string
 }
 
-const notifications = [
-  { title: 'New challenge from Ahmed!', time: '2 min ago', read: false },
-  { title: 'You ranked up to #42 globally', time: '1 hour ago', read: false },
-  { title: 'Weekly report is ready', time: 'Yesterday', read: true },
-]
-
 export default function Topbar({ username }: TopbarProps) {
+  const t = useTranslations('topbar')
   const router = useRouter()
   const pathname = usePathname()
   const currentPage = pathname.split("/").pop()
   const { mode, setMode } = useQuizModeStore()
 
-  const isCreateQuizPage = pathname === "/create-quiz" || pathname === "/quiz/create"
+ const isCreateQuizPage = pathname.includes("/create-quiz") || pathname.includes("/quiz/create")
 
   const formatName = (name: string | undefined) => {
     if (!name) return "Dashboard"
     return name.replace("-", " ").replace(/\b\w/g, (c) => c.toUpperCase())
   }
 
+  const notifications = [
+    { title: t('notif1'), time: t('minutesAgo'), read: false },
+    { title: t('notif2'), time: t('hourAgo'), read: false },
+    { title: t('notif3'), time: t('yesterday'), read: true },
+  ]
+
   const notifMenu = {
     items: [
       {
         key: 'header',
-        label: <span className="font-bold !text-cyan-600">Notifications</span>,
+        label: <span className="font-bold !text-cyan-600">{t('notifications')}</span>,
         disabled: true,
       },
       ...notifications.map((n, i) => ({
@@ -63,20 +61,17 @@ export default function Topbar({ username }: TopbarProps) {
 
   const profileMenu = {
     items: [
-      {
-        key: 'user',
-        label: <span>{username}</span>,
-      },
+      { key: 'user', label: <span>{username}</span> },
       {
         key: 'profile',
         icon: <UserOutlined />,
-        label: 'Profile',
+        label: t('profile'),
         onClick: () => router.push('/profile'),
       },
       {
         key: 'logout',
         icon: <span className="!text-cyan-500"><LogoutOutlined /></span>,
-        label: <span className="text-cyan-500">Logout</span>,
+        label: <span className="text-cyan-500">{t('logout')}</span>,
         onClick: handleLogout,
       },
     ],
@@ -100,49 +95,46 @@ export default function Topbar({ username }: TopbarProps) {
       <div className='flex gap-4 items-center'>
 
         <Dropdown menu={notifMenu} trigger={['click']}>
-          <Button className="rounded-full w-10 h-10 flex items-center justify-center transition hover:scale-110 !hover:border-cyan-500">
+          <Button className="rounded-full w-10 h-10 flex items-center justify-center transition hover:scale-110">
             <BellOutlined />
           </Button>
         </Dropdown>
 
         <LightToDark />
 
-        {/* Boutons conditionnels */}
-       {isCreateQuizPage ? (
-  <div className="flex items-center p-1 gap-1 bg-gray-100 dark:bg-slate-700 rounded-[16px] transition-colors duration-300">
-    
-    <Button
-      onClick={() => setMode("ai")}
-      className={`h-[38px] rounded-[12px] font-bold text-[13px] border-0 tracking-[0.02em] transition-all duration-300 hover:scale-[1.02] ${
-        mode === "ai"
-          ? "!text-white !bg-gradient-to-r !from-cyan-500 !to-[#00D4D0] shadow-[0_6px_16px_rgba(6,182,212,0.35)]"
-          : "!bg-transparent !text-gray-500 dark:!text-slate-400 hover:!text-cyan-500 dark:hover:!text-cyan-400"
-      }`}
-      icon={<RobotOutlined />}
-    >
-      AI Generate
-    </Button>
+        {isCreateQuizPage ? (
+          <div className="flex items-center p-1 gap-1 bg-gray-100 dark:bg-slate-700 rounded-[16px] transition-colors duration-300">
+            <Button
+              onClick={() => setMode("ai")}
+              className={`h-[38px] rounded-[12px] font-bold text-[13px] border-0 tracking-[0.02em] transition-all duration-300 hover:scale-[1.02] ${
+                mode === "ai"
+                  ? "!text-white !bg-gradient-to-r !from-cyan-500 !to-[#00D4D0] shadow-[0_6px_16px_rgba(6,182,212,0.35)]"
+                  : "!bg-transparent !text-gray-500 dark:!text-slate-400 hover:!text-cyan-500 dark:hover:!text-cyan-400"
+              }`}
+              icon={<RobotOutlined />}
+            >
+              {t('aiGenerate')}
+            </Button>
 
-    <Button
-      onClick={() => setMode("manual")}
-      className={`h-[38px] rounded-[12px] font-bold text-[13px] border-0 tracking-[0.02em] transition-all duration-300 hover:scale-[1.02] ${
-        mode === "manual"
-          ? "!text-white !bg-gradient-to-r !from-cyan-500 !to-[#00D4D0] shadow-[0_6px_16px_rgba(6,182,212,0.35)]"
-          : "!bg-transparent !text-gray-500 dark:!text-slate-400 hover:!text-cyan-500 dark:hover:!text-cyan-400"
-      }`}
-      icon={<EditOutlined />}
-    >
-      Manual
-    </Button>
-
-  </div>
+            <Button
+              onClick={() => setMode("manual")}
+              className={`h-[38px] rounded-[12px] font-bold text-[13px] border-0 tracking-[0.02em] transition-all duration-300 hover:scale-[1.02] ${
+                mode === "manual"
+                  ? "!text-white !bg-gradient-to-r !from-cyan-500 !to-[#00D4D0] shadow-[0_6px_16px_rgba(6,182,212,0.35)]"
+                  : "!bg-transparent !text-gray-500 dark:!text-slate-400 hover:!text-cyan-500 dark:hover:!text-cyan-400"
+              }`}
+              icon={<EditOutlined />}
+            >
+              {t('manual')}
+            </Button>
+          </div>
         ) : (
           <Button
             onClick={() => router.push('/create-quiz')}
             className="h-[58px] rounded-[16px] !text-white font-bold text-[16px] !bg-gradient-to-r !from-cyan-500 !to-[#00D4D0] border-0 shadow-[0_10px_30px_rgba(6,182,212,0.4)] tracking-[0.02em] hover:scale-[1.03] transition-all duration-300"
             icon={<PlusOutlined />}
           >
-            Generate AI Quiz
+            {t('generateQuiz')}
           </Button>
         )}
 

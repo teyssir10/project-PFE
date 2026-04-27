@@ -13,28 +13,29 @@ export default function QuizPlayer({ quiz }: { quiz: QuizFull }) {
   const router = useRouter();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selected, setSelected]         = useState<string | null>(null);
+  const [confirmed, setConfirmed]       = useState(false);
   const [score, setScore]               = useState(0);
   const [timeLeft, setTimeLeft]         = useState(quiz.time_per_question ?? 30);
   const [showHint, setShowHint]         = useState(false);
+  const [shortInput, setShortInput]     = useState("");
   const [statuses, setStatuses]         = useState<("unanswered" | "correct" | "wrong" | "skipped")[]>(
     Array(quiz.questions.length).fill("unanswered")
   );
 
-const question = quiz.questions[currentIndex];
-const isLast   = currentIndex === quiz.questions.length - 1;
+  const question = quiz.questions[currentIndex];
+  const isLast   = currentIndex === quiz.questions.length - 1;
 
-if (!question) {
-  return (
-    <div className="flex items-center justify-center h-screen text-gray-500">
-      No questions found for this quiz.
-    </div>
-  );
-}
+  if (!question) {
+    return (
+      <div className="flex items-center justify-center h-screen text-gray-500">
+        No questions found for this quiz.
+      </div>
+    );
+  }
 
-const hint = question.explanation;
-
-  // ✅ Question verrouillée si déjà répondue (correct/wrong) ou sautée
+  const hint     = question.explanation;
   const isLocked = statuses[currentIndex] !== "unanswered";
+  const isShort  = question.type === "short";
 
   const goNext = useCallback(() => {
     if (isLast) {
@@ -43,26 +44,28 @@ const hint = question.explanation;
     }
     setCurrentIndex(i => i + 1);
     setSelected(null);
+    setConfirmed(false);
+    setShortInput("");
     setTimeLeft(quiz.time_per_question ?? 30);
     setShowHint(false);
   }, [isLast, router, quiz.id, quiz.questions.length, quiz.time_per_question, score]);
 
   const handleSkip = useCallback(() => {
-    if (isLocked) return; // ✅ Bloque si déjà répondue
+    if (isLocked) return;
     const newStatuses = [...statuses];
     newStatuses[currentIndex] = "skipped";
     setStatuses(newStatuses);
     goNext();
   }, [isLocked, statuses, currentIndex, goNext]);
 
-  // Timer
   useEffect(() => {
-    if (isLocked) return; // ✅ Stop le timer si déjà répondue
+    if (isLocked) return;
     if (timeLeft === 0) {
       const newStatuses = [...statuses];
       newStatuses[currentIndex] = "wrong";
       setStatuses(newStatuses);
       setSelected("__timeout__");
+      setConfirmed(true);
       return;
     }
     const t = setTimeout(() => setTimeLeft(p => p - 1), 1000);
@@ -70,16 +73,37 @@ const hint = question.explanation;
   }, [timeLeft, isLocked]);
 
   const handleSelect = (opt: PlayOption) => {
-    // ✅ Triple protection — bloque si déjà répondue via selected OU via statuses
     if (selected) return;
     if (isLocked) return;
-
     setSelected(opt.id);
+  };
+
+  const handleConfirm = () => {
+    if (isLocked || confirmed) return;
+
+    if (isShort) {
+      if (!shortInput.trim()) return;
+      const correct =
+        shortInput.trim().toLowerCase() ===
+        (question.correct_answer ?? "").trim().toLowerCase();
+      const newStatuses = [...statuses];
+      newStatuses[currentIndex] = correct ? "correct" : "wrong";
+      setStatuses(newStatuses);
+      if (correct) setScore(s => s + 1);
+      setSelected("__short__");
+      setConfirmed(true);
+      return;
+    }
+
+    if (!selected) return;
+    const opt = question.options.find(o => o.id === selected);
+    if (!opt) return;
     const correct = isCorrect(opt.is_correct);
     const newStatuses = [...statuses];
     newStatuses[currentIndex] = correct ? "correct" : "wrong";
     setStatuses(newStatuses);
     if (correct) setScore(s => s + 1);
+    setConfirmed(true);
   };
 
   const answeredCount = statuses.filter(s => s === "correct" || s === "wrong").length;
@@ -87,7 +111,8 @@ const hint = question.explanation;
   const remaining     = statuses.filter(s => s === "unanswered").length;
 
   const isTimeout   = selected === "__timeout__";
-  const wasAnswered = !!selected;
+  const wasAnswered = confirmed;
+  const canConfirm  = isShort ? shortInput.trim().length > 0 : !!selected;
 
   return (
     <div className="flex h-screen bg-gradient-to-br from-slate-50 via-cyan-50/30 to-teal-50/30 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 overflow-hidden">
@@ -97,12 +122,14 @@ const hint = question.explanation;
         statuses={statuses}
         onJump={(i) => {
           setCurrentIndex(i);
-          // ✅ Restaure le selected correct si la question a déjà été répondue
           const s = statuses[i];
           if (s !== "unanswered") {
             setSelected("__locked__");
+            setConfirmed(true);
           } else {
             setSelected(null);
+            setConfirmed(false);
+            setShortInput("");
           }
           setTimeLeft(quiz.time_per_question ?? 30);
           setShowHint(false);
@@ -112,7 +139,8 @@ const hint = question.explanation;
         remaining={remaining}
       />
 
-      <div className="flex-1 flex flex-col overflow-y-auto">
+      {/* 👇 z-10 AJOUTÉ */}
+      <div className="flex-1 flex flex-col overflow-y-auto relative z-10">
         <QuizHeader
           title={quiz.title}
           category={quiz.category}
@@ -122,7 +150,8 @@ const hint = question.explanation;
           onExit={() => router.push("/dashboard")}
         />
 
-        <div className="flex-1 px-10 py-8 max-w-3xl w-full mx-auto">
+        {/* 👇 z-10 AJOUTÉ */}
+        <div className="flex-1 px-10 py-8 max-w-3xl w-full mx-auto relative z-10">
 
           {/* Question counter + score */}
           <div className="flex items-center justify-between mb-6">
@@ -143,7 +172,6 @@ const hint = question.explanation;
               {question.text}
             </h2>
 
-            {/* Hint — avant de répondre seulement */}
             {!isLocked && showHint && hint && (
               <div className="mt-4 flex items-start gap-3 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-700 rounded-xl px-4 py-3 text-sm text-amber-800 dark:text-amber-300">
                 <span className="text-base mt-0.5">💡</span>
@@ -151,7 +179,6 @@ const hint = question.explanation;
               </div>
             )}
 
-            {/* Timeout */}
             {isTimeout && (
               <div className="mt-4 flex items-start gap-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-700 rounded-xl px-4 py-3 text-sm text-red-700 dark:text-red-300">
                 <span className="text-base mt-0.5">⏱</span>
@@ -160,38 +187,84 @@ const hint = question.explanation;
             )}
           </div>
 
-          {/* Options */}
-          <div className="space-y-3 mb-6">
-            {question.options.map((opt, i) => {
-              let state: "default" | "correct" | "wrong" = "default";
+          {/* SHORT ANSWER */}
+          {isShort ? (
+            <div className="space-y-3 mb-6">
+              <input
+                type="text"
+                value={shortInput}
+                onChange={(e) => {
+                  if (!confirmed && !isLocked) {
+                    setShortInput(e.target.value);
+                  }
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && canConfirm && !confirmed && !isLocked) {
+                    handleConfirm();
+                  }
+                }}
+                disabled={confirmed || isLocked}
+                placeholder="Tapez votre réponse ici..."
+                className="w-full px-5 py-4 rounded-2xl border-2 border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-gray-800 dark:text-white text-sm focus:outline-none focus:border-cyan-400 dark:focus:border-cyan-500 transition-all disabled:opacity-60 placeholder-gray-300 dark:placeholder-slate-600"
+              />
 
-              if (wasAnswered && !isTimeout && opt.id === selected) {
-                state = isCorrect(opt.is_correct) ? "correct" : "wrong";
-              }
+              {confirmed && !isTimeout && (
+                <div className={`flex items-start gap-3 rounded-2xl px-5 py-4 text-sm font-medium border
+                  ${statuses[currentIndex] === "correct"
+                    ? "bg-emerald-50 dark:bg-emerald-900/20 border-emerald-200 dark:border-emerald-700 text-emerald-700 dark:text-emerald-300"
+                    : "bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-700 text-red-700 dark:text-red-300"
+                  }`}
+                >
+                  <span className="text-lg shrink-0">
+                    {statuses[currentIndex] === "correct" ? "✅" : "❌"}
+                  </span>
+                  <div>
+                    {statuses[currentIndex] === "correct"
+                      ? <p>Bonne réponse ! <strong>{shortInput}</strong></p>
+                      : <p>Mauvaise réponse. La bonne réponse était : <strong>{question.correct_answer}</strong></p>
+                    }
+                  </div>
+                </div>
+              )}
+            </div>
 
-              return (
-                <OptionCard
-                  key={opt.id}
-                  label={String.fromCharCode(65 + i)}
-                  text={opt.text}
-                  state={state}
-                  onClick={() => handleSelect(opt)}
-                  disabled={isLocked || wasAnswered}
-                />
-              );
-            })}
-          </div>
+          ) : (
+            // MULTIPLE / TRUEFALSE
+            <div className="space-y-3 mb-6">
+              {question.options.map((opt, i) => {
+                let state: "default" | "correct" | "wrong" | "selected" = "default";
+
+                if (!confirmed && selected === opt.id) {
+                  state = "selected";
+                } else if (confirmed && !isTimeout && opt.id === selected) {
+                  state = isCorrect(opt.is_correct) ? "correct" : "wrong";
+                }
+
+                return (
+                  <OptionCard
+                    key={opt.id}
+                    label={String.fromCharCode(65 + i)}
+                    text={opt.text}
+                    state={state}
+                    onClick={() => handleSelect(opt)}
+                    disabled={isLocked || confirmed}
+                  />
+                );
+              })}
+            </div>
+          )}
 
           {/* Footer */}
           <div className="flex items-center justify-between">
             <p className="text-sm text-gray-400 dark:text-slate-500">
               Current score:{" "}
-              <span className="font-bold text-gray-700 dark:text-white">{score} / {answeredCount} correct</span>
+              <span className="font-bold text-gray-700 dark:text-white">
+                {score} / {answeredCount} correct
+              </span>
             </p>
             <div className="flex gap-3 items-center">
 
-              {/* Use hint — avant de répondre */}
-              {!isLocked && hint && !showHint && (
+              {!isLocked && !confirmed && hint && !showHint && (
                 <button
                   onClick={() => setShowHint(true)}
                   className="flex items-center gap-1.5 px-4 py-2 rounded-lg border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs font-medium text-gray-500 dark:text-slate-400 hover:border-gray-300 dark:hover:border-slate-600 hover:text-gray-700 dark:hover:text-slate-300 transition-all"
@@ -203,8 +276,7 @@ const hint = question.explanation;
                 </button>
               )}
 
-              {/* Skip — avant de répondre */}
-              {!isLocked && (
+              {!isLocked && !confirmed && !canConfirm && (
                 <button
                   onClick={handleSkip}
                   className="px-5 py-2.5 rounded-xl border border-gray-200 dark:border-slate-700 text-sm text-gray-500 dark:text-slate-400 hover:border-gray-400 dark:hover:border-slate-500 transition font-medium"
@@ -213,7 +285,15 @@ const hint = question.explanation;
                 </button>
               )}
 
-              {/* Next / Finish — après réponse ou locked */}
+              {canConfirm && !confirmed && !isLocked && (
+                <button
+                  onClick={handleConfirm}
+                  className="px-8 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-teal-400 hover:from-cyan-400 hover:to-teal-300 text-white font-bold text-sm transition shadow-lg shadow-cyan-500/25 flex items-center gap-2"
+                >
+                  ✅ Confirm Answer
+                </button>
+              )}
+
               {(wasAnswered || isLocked) && (
                 <button
                   onClick={goNext}

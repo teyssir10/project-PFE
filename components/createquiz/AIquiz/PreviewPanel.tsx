@@ -1,12 +1,15 @@
 "use client";
 
 import { EyeOutlined } from "@ant-design/icons";
+import { useTranslations } from "next-intl";
 
 interface PreviewPanelProps {
   loading: boolean;
 }
 
 export default function PreviewPanel({ loading }: PreviewPanelProps) {
+  const t = useTranslations("aiQuiz");
+
   return (
     <div className="bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 shadow-sm min-h-[600px] flex flex-col h-full transition-colors duration-300">
 
@@ -17,8 +20,8 @@ export default function PreviewPanel({ loading }: PreviewPanelProps) {
             <EyeOutlined className="text-violet-500" />
           </div>
           <div>
-            <p className="text-sm font-semibold text-gray-800 dark:text-white">Quiz Preview</p>
-            <p className="text-[11px] text-gray-400 dark:text-slate-400">Generated questions appear here</p>
+            <p className="text-sm font-semibold text-gray-800 dark:text-white">{t("previewTitle")}</p>
+            <p className="text-[11px] text-gray-400 dark:text-slate-400">{t("previewSub")}</p>
           </div>
         </div>
 
@@ -30,7 +33,7 @@ export default function PreviewPanel({ loading }: PreviewPanelProps) {
           <span className={`w-1.5 h-1.5 rounded-full ${
             loading ? "bg-amber-400 animate-pulse" : "bg-gray-300 dark:bg-slate-500"
           }`} />
-          {loading ? "Generating..." : "Waiting"}
+          {loading ? t("statusGenerating") : t("statusWaiting")}
         </span>
       </div>
 
@@ -47,21 +50,18 @@ export default function PreviewPanel({ loading }: PreviewPanelProps) {
               <div className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-cyan-400 border-2 border-white dark:border-slate-800" />
             </div>
             <p className="text-gray-700 dark:text-slate-300 font-semibold text-sm mb-1">
-              No quiz generated yet
+              {t("noQuizYet")}
             </p>
             <p className="text-xs text-gray-400 dark:text-slate-500 max-w-xs leading-relaxed">
-              Fill in the form and click{" "}
-              <span className="text-cyan-500 font-medium">Generate Quiz</span>{" "}
-              to create your questions instantly.
+              {t("noQuizSub")}{" "}
+              <span className="text-cyan-500 font-medium">{t("noQuizBtn")}</span>{" "}
+              {t("noQuizSub2")}
             </p>
 
             {/* Ghost cards */}
             <div className="mt-8 w-full max-w-md space-y-3 opacity-[0.15] pointer-events-none select-none">
               {[75, 55, 85].map((w, i) => (
-                <div
-                  key={i}
-                  className="p-4 rounded-xl border border-gray-200 dark:border-slate-600 bg-gray-50 dark:bg-slate-700 text-left"
-                >
+                <div key={i} className="p-4 rounded-xl border border-gray-200 dark:border-slate-600 bg-gray-50 dark:bg-slate-700 text-left">
                   <div className="h-3 bg-gray-300 dark:bg-slate-500 rounded mb-3" style={{ width: `${w}%` }} />
                   <div className="grid grid-cols-2 gap-2">
                     {[1, 2, 3, 4].map((o) => (
@@ -78,11 +78,8 @@ export default function PreviewPanel({ loading }: PreviewPanelProps) {
         {loading && (
           <div className="space-y-4">
             {[1, 2, 3, 4].map((i) => (
-              <div
-                key={i}
-                className="p-5 rounded-xl border border-gray-100 dark:border-slate-700 bg-gray-50 dark:bg-slate-700/50 animate-pulse"
-                style={{ animationDelay: `${i * 80}ms` }}
-              >
+              <div key={i} className="p-5 rounded-xl border border-gray-100 dark:border-slate-700 bg-gray-50 dark:bg-slate-700/50 animate-pulse"
+                style={{ animationDelay: `${i * 80}ms` }}>
                 <div className="flex items-center gap-2 mb-3">
                   <div className="w-5 h-5 bg-gray-200 dark:bg-slate-600 rounded-lg" />
                   <div className="h-3 w-20 bg-gray-200 dark:bg-slate-600 rounded" />

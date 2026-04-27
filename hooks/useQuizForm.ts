@@ -9,7 +9,6 @@ export function useQuizForm() {
 
   const update = (fields: Partial<QuizFormState>) =>
     setForm((prev) => ({ ...prev, ...fields }));
-
   const handleTagClick = (text: string) => {
     update({ prompt: form.prompt ? form.prompt + " " + text : text });
   };

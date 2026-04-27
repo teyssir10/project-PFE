@@ -1,5 +1,7 @@
 "use client";
 
+import { useTranslations } from "next-intl";
+
 interface QuizInfoFieldsProps {
   title: string;
   description: string;
@@ -14,41 +16,29 @@ const inputCls =
   "dark:bg-slate-800 dark:border-slate-700 dark:text-white dark:placeholder-slate-500 " +
   "dark:focus:border-cyan-500 dark:focus:bg-slate-900";
 
-export default function QuizInfoFields({
-  title,
-  description,
-  onTitleChange,
-  onDescriptionChange,
-}: QuizInfoFieldsProps) {
+export default function QuizInfoFields({ title, description, onTitleChange, onDescriptionChange }: QuizInfoFieldsProps) {
+  const t = useTranslations("quizInfo");
+
   return (
     <>
       <div>
         <label className="block text-[10px] font-bold text-gray-400 dark:text-slate-500 tracking-widest uppercase mb-2">
-          Quiz Title <span className="text-rose-400">*</span>
+          {t("titleLabel")} <span className="text-rose-400">*</span>
         </label>
-        <input
-          value={title}
-          onChange={(e) => onTitleChange(e.target.value)}
-          placeholder="Enter your quiz title here..."
-          className={inputCls}
-        />
+        <input value={title} onChange={(e) => onTitleChange(e.target.value)}
+          placeholder={t("titlePlaceholder")} className={inputCls} />
         {!title.trim() && (
-          <p className="text-[10px] text-gray-300 dark:text-slate-600 mt-1">Required to continue</p>
+          <p className="text-[10px] text-gray-300 dark:text-slate-600 mt-1">{t("required")}</p>
         )}
       </div>
 
       <div>
         <label className="block text-[10px] font-bold text-gray-400 dark:text-slate-500 tracking-widest uppercase mb-2">
-          Description{" "}
-          <span className="normal-case font-normal text-gray-300 dark:text-slate-600">(optional)</span>
+          {t("descLabel")}{" "}
+          <span className="normal-case font-normal text-gray-300 dark:text-slate-600">{t("descOptional")}</span>
         </label>
-        <textarea
-          value={description}
-          onChange={(e) => onDescriptionChange(e.target.value)}
-          placeholder="What is this quiz about? Give participants a hint..."
-          rows={3}
-          className={inputCls + " resize-none"}
-        />
+        <textarea value={description} onChange={(e) => onDescriptionChange(e.target.value)}
+          placeholder={t("descPlaceholder")} rows={3} className={inputCls + " resize-none"} />
       </div>
     </>
   );

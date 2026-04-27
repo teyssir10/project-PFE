@@ -3,18 +3,7 @@
 import React from "react";
 import { RocketOutlined } from "@ant-design/icons";
 import { Step } from "@/types/stepperBar";
-
-export const AI_STEPS: Step[] = [
-  { id: 1, label: "Configure quiz" },
-  { id: 2, label: "Generating" },
-  { id: 3, label: "Review & publish" },
-];
-
-export const MANUAL_STEPS: Step[] = [
-  { id: 1, label: "Quiz info" },
-  { id: 2, label: "Create questions" },
-  { id: 3, label: "Review & publish" },
-];
+import { useTranslations } from "next-intl";
 
 interface StepperBarProps {
   currentStep: number;
@@ -26,9 +15,26 @@ interface StepperBarProps {
 export default function StepperBar({
   currentStep,
   withSidebar = false,
-  steps = AI_STEPS,
+  steps,
   onPublish,
 }: StepperBarProps) {
+  const t = useTranslations('stepper')
+
+  const AI_STEPS: Step[] = [
+    { id: 1, label: t('aiStep1') },
+    { id: 2, label: t('aiStep2') },
+    { id: 3, label: t('aiStep3') },
+  ]
+
+  const MANUAL_STEPS: Step[] = [
+    { id: 1, label: t('manualStep1') },
+    { id: 2, label: t('manualStep2') },
+    { id: 3, label: t('manualStep3') },
+  ]
+
+  // Si steps non fourni, utilise AI_STEPS par défaut
+  const resolvedSteps = steps ?? AI_STEPS
+
   return (
     <div className={`fixed bottom-0 right-0 ${
       withSidebar ? "left-64" : "left-0"
@@ -37,9 +43,9 @@ export default function StepperBar({
 
         {/* Steps */}
         <div className="flex items-center gap-3">
-          {steps.map((s, idx) => {
-            const isDone = currentStep > s.id;
-            const isActive = currentStep === s.id;
+          {resolvedSteps.map((s, idx) => {
+            const isDone = currentStep > s.id
+            const isActive = currentStep === s.id
             return (
               <div key={s.id} className="flex items-center gap-2 shrink-0">
                 <span className={`w-2 h-2 rounded-full shrink-0 transition-all ${
@@ -52,13 +58,13 @@ export default function StepperBar({
                   : isDone ? "text-cyan-500"
                   : "text-gray-400 dark:text-slate-500"
                 }`}>
-                  Step {s.id} of {steps.length} — {s.label}
+                  {t('stepOf', { current: s.id, total: resolvedSteps.length })} — {s.label}
                 </span>
-                {idx < steps.length - 1 && (
+                {idx < resolvedSteps.length - 1 && (
                   <span className="ml-1 text-gray-200 dark:text-slate-700 text-xs">|</span>
                 )}
               </div>
-            );
+            )
           })}
         </div>
 
@@ -68,7 +74,7 @@ export default function StepperBar({
             type="button"
             className="text-xs text-gray-400 dark:text-slate-500 hover:text-cyan-500 dark:hover:text-cyan-400 font-medium px-3 py-1.5 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-800 transition-all whitespace-nowrap"
           >
-            Save draft
+            {t('saveDraft')}
           </button>
           <button
             type="button"
@@ -76,11 +82,12 @@ export default function StepperBar({
             onClick={onPublish}
             className="inline-flex items-center gap-1.5 text-xs font-semibold px-4 py-2 rounded-full bg-gray-900 dark:bg-white text-white dark:text-gray-900 hover:bg-gray-700 dark:hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-300 shadow-md hover:shadow-lg whitespace-nowrap"
           >
-            Review & Publish
+            {t('reviewPublish')}
             <RocketOutlined />
           </button>
         </div>
+
       </div>
     </div>
-  );
+  )
 }

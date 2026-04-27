@@ -7,8 +7,8 @@ interface SaveQuizParams {
   userId: string;
   userFirstname?: string;
   userLastname?: string;
-  quizDifficulty: string;      // ✅ ajoute
-  coverImage?: string | null;  // ✅ ajoute
+  quizDifficulty: string;  
+  coverImage?: string | null; 
   getEffectiveTimeLimit: (q: Question) => string;
 }
 
@@ -18,8 +18,8 @@ export async function saveQuiz({
   userId,
   userFirstname = "",
   userLastname = "",
-  quizDifficulty,   //
-  coverImage,       //
+  quizDifficulty,
+  coverImage,
   getEffectiveTimeLimit,
 }: SaveQuizParams): Promise<void> {
 
@@ -29,8 +29,8 @@ export async function saveQuiz({
       title: quizTitle,
       creator_id: userId,
       creator_name: `${userFirstname} ${userLastname}`.trim(),
-      difficulty: quizDifficulty,       // ✅ fix
-      cover_image: coverImage ?? null,  // ✅ fix
+      difficulty: quizDifficulty, 
+      cover_image: coverImage ?? null,
       question_count: questions.length,
       featured: false,
       is_community: false,
@@ -55,6 +55,7 @@ export async function saveQuiz({
         points: q.points,
         difficulty: q.difficulty,
         explanation: q.explanation || null,
+        correct_answer: q.type === "short" ? (q.correctAnswer?.trim() || null) : null, // 👈 NOUVEAU
         order_index: i,
       } as any)
       .select()

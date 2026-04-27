@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { useRouter } from "next/navigation";  // ✅ ajoute
+import { useRouter } from "next/navigation"; 
 import { Button } from "antd";
 import { PlayCircleOutlined, StarOutlined, FireOutlined, ClockCircleOutlined, HeartOutlined, HeartFilled } from "@ant-design/icons";
 
@@ -9,7 +9,7 @@ export default function QuizCard({ quiz, isFavorite, onToggleFavorite }: {
   isFavorite: boolean;
   onToggleFavorite: (id: string) => void;
 }) {
-  const router = useRouter();  // ✅ ajoute
+  const router = useRouter(); 
 
   const difficultyConfig: Record<string, { color: string; bg: string; icon: string }> = {
     Easy:   { color: "text-green-600", bg: "bg-green-50 border-green-200", icon: "🟢" },

@@ -11,6 +11,7 @@ export interface Question {
   type: QuestionType;
   options: Option[];
   correctOptionId: string | null;
+  correctAnswer: string;        // 👈 NOUVEAU
   timeLimit: string;
   customTime: string;
   points: string;
@@ -49,25 +50,30 @@ export const defaultQuestion = (): Question => ({
     { id: crypto.randomUUID(), text: "" },
   ],
   correctOptionId: null,
+  correctAnswer: "",             // 👈 NOUVEAU
   timeLimit: "30",
   customTime: "",
   points: "Standard (1x)",
   difficulty: "Easy",
   explanation: "",
 });
+
 // ─── PLAY PAGE TYPES ───────────────────────────────────
 
 export interface PlayOption {
   id: string;
   text: string;
-  is_correct: boolean;     
+  is_correct: boolean;
   question_id: string;
 }
+
 export interface PlayQuestion {
   id: string;
   text: string;
+  type: string;                  // 👈 NOUVEAU
   hint?: string | null;
   explanation?: string | null;
+  correct_answer?: string | null; // 👈 NOUVEAU
   quiz_id: string;
   options: PlayOption[];
 }
@@ -77,6 +83,6 @@ export interface QuizFull {
   title: string;
   category: string;
   difficulty: string;
-  time_per_question: number; 
+  time_per_question: number;
   questions: PlayQuestion[];
 }
