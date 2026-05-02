@@ -1,6 +1,6 @@
 "use client";
 
-import { usePathname } from "next/navigation";  // ✅ ajoute
+import { usePathname } from "next/navigation";
 import Navbar from "@/components/Navbar/Navbar";
 import { AuthGuard, useAuth } from "@/lib/auth";
 import Footer from "@/components/Footer/Footer";
@@ -27,10 +27,10 @@ const LazyWrapper = dynamic(
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const { user } = useAuth();
-  const pathname = usePathname();  // ✅ ajoute
+  const pathname = usePathname();
   const username = user?.user_metadata?.firstName;
 
-  // ✅ true si on est sur une page play
+  // true si on est sur une page play
   const isPlayPage = pathname?.includes("/play");
 
   return (

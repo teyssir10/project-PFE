@@ -31,7 +31,7 @@ const navSections = [
       { icon: AppstoreOutlined ,     label: 'Browse Quizzes',  href: '/browse-quiz' },
       { icon: PlusOutlined,      label: 'Create Quiz',  href: '/create-quiz' },
       { icon: LineChartOutlined, label: 'Analytics', href: '/analytics' },
-      { icon: UsergroupAddOutlined, label: 'Multiplayer', href: '/multiplayer' },
+      { icon: UsergroupAddOutlined, label: 'Multiplayer', href: 'multiplayerroom' },
       { icon: TrophyOutlined,       label: 'Leaderboard', href: '/leaderboard' },
     ]
   },

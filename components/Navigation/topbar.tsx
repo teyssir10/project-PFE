@@ -27,14 +27,38 @@ const notifications = [
 export default function Topbar({ username }: TopbarProps) {
   const router = useRouter()
   const pathname = usePathname()
-  const currentPage = pathname.split("/").pop()
   const { mode, setMode } = useQuizModeStore()
 
   const isCreateQuizPage = pathname === "/create-quiz" || pathname === "/quiz/create"
 
-  const formatName = (name: string | undefined) => {
-    if (!name) return "Dashboard"
-    return name.replace("-", " ").replace(/\b\w/g, (c) => c.toUpperCase())
+  const pageNames: Record<string, string> = {
+    "dashboard":   "Dashboard",
+    "browse-quiz": "Browse Quiz",
+    "create-quiz": "Create Quiz",
+    "analytics":   "Analytics",
+    "leaderboard": "Leaderboard",
+    "settings":    "Settings",
+    "room":        "Multiplayer",
+    "multiplayerroom": "Multiplayer",
+    "profile":     "Profile",
+    "play-quiz":   "Play Quiz",
+    "play":        "Play Quiz",
+  }
+
+  const formatName = (pathname: string) => {
+    const segments = pathname.split("/").filter(Boolean)
+    if (segments.length === 0) return "Dashboard"
+
+    // Parcourt les segments de la fin vers le début
+    // et retourne le premier segment connu (non dynamique)
+    for (let i = segments.length - 1; i >= 0; i--) {
+      const segment = segments[i]
+      if (pageNames[segment]) return pageNames[segment]
+    }
+
+    // Fallback : formate le dernier segment connu
+    const last = segments[segments.length - 1]
+    return last.replace(/-/g, " ").replace(/\b\w/g, c => c.toUpperCase())
   }
 
   const notifMenu = {
@@ -92,7 +116,7 @@ export default function Topbar({ username }: TopbarProps) {
           <span className="font-bold text-cyan-500">PandoMind</span>
           <span className="text-gray-400">/</span>
           <span className="text-gray-800 dark:text-white font-medium">
-            {formatName(currentPage)}
+            {formatName(pathname)}
           </span>
         </div>
       </div>

@@ -6,6 +6,8 @@ import { SearchOutlined } from "@ant-design/icons";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { fetchQuizzes } from "@/lib/api/quiz";
+import { useSearchParams} from 'next/navigation'
+import { supabase } from '@/lib/supabase'
 import {
   fetchFavorites,
   addFavorite,
@@ -30,6 +32,8 @@ export default function QuizPage() {
   const { user } = useAuth();
   const [quizzes, setQuizzes] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const searchParams = useSearchParams()
+  const isHostMode = searchParams.get('mode') === 'host'
 
   useEffect(() => {
     const loadData = async () => {
@@ -78,7 +82,7 @@ export default function QuizPage() {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-[60vh]">
+      <div className="flex justify-center items-center h-[80vh]">
         <Spin size="large" />
       </div>
     );
@@ -170,6 +174,7 @@ export default function QuizPage() {
               }}
               isFavorite={favorites.includes(quiz.id)}
               onToggleFavorite={toggleFavorite}
+              isHostMode={isHostMode}
             />
           ))}
         </div>

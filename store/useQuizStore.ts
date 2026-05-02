@@ -6,7 +6,7 @@ type QuizState = {
   difficulty: string;
   category: string;
   timePerQuestion: string;
-  coverImage: string | null;  // ✅ ajoute
+  coverImage: string | null;
 
   setQuizData: (data: Partial<QuizState>) => void;
 };

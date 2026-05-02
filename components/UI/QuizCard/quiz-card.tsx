@@ -2,14 +2,43 @@
 import React from "react";
 import { useRouter } from "next/navigation"; 
 import { Button } from "antd";
+import { supabase } from "@/lib/supabase";
 import { PlayCircleOutlined, StarOutlined, FireOutlined, ClockCircleOutlined, HeartOutlined, HeartFilled } from "@ant-design/icons";
 
-export default function QuizCard({ quiz, isFavorite, onToggleFavorite }: {
+export default function QuizCard({ quiz, isFavorite, onToggleFavorite, isHostMode }: {
   quiz: any;
   isFavorite: boolean;
   onToggleFavorite: (id: string) => void;
+  isHostMode?: boolean;
 }) {
-  const router = useRouter(); 
+  const router = useRouter();
+
+  const handlePlay = async () => {
+    if (!isHostMode) {
+      router.push(`/play-quiz/${quiz.id}/play`)
+      return
+    }
+
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) { router.push('/login'); return }
+
+    const newCode = Math.random().toString(36).substring(2, 8).toUpperCase()
+
+    const { error } = await supabase.from('rooms').insert({
+      code: newCode,
+      host_id: user.id,
+      quiz_id: quiz.id,
+      status: 'waiting',
+    })
+
+    if (error) {
+      console.error('Erreur création room:', error.message)
+      return
+    }
+
+    router.push(`/room/${newCode}`)  // ← redirige vers la lobby
+  }
+  
 
   const difficultyConfig: Record<string, { color: string; bg: string; icon: string }> = {
     Easy:   { color: "text-green-600", bg: "bg-green-50 border-green-200", icon: "🟢" },
@@ -88,17 +117,17 @@ export default function QuizCard({ quiz, isFavorite, onToggleFavorite }: {
           <Button
             icon={<PlayCircleOutlined />}
             block
-            onClick={() => router.push(`/play-quiz/${quiz.id}/play`)}  // ✅ ajoute
+            onClick={handlePlay}
             className="!h-10 !rounded-xl !bg-gradient-to-r !from-cyan-500 !to-teal-400 !text-white !border-0 !font-semibold hover:!opacity-90 !shadow-md !shadow-cyan-200"
           >
-            Play now
+          {isHostMode ? 'Create a room' : 'Play now'}
           </Button>
           <button
             onClick={() => onToggleFavorite(quiz.id)}
             className={`h-10 w-12 rounded-xl border-2 flex items-center justify-center flex-shrink-0 transition-all duration-300 hover:scale-105
               ${isFavorite ? 'border-red-300 bg-red-50 text-red-500' : 'border-gray-200 bg-white text-gray-400 hover:border-red-300 hover:text-red-400'} dark:border-slate-600 dark:bg-slate-700 dark:text-slate-400 dark:hover:border-red-300 dark:hover:text-red-400`}
-          >
-            {isFavorite ? <HeartFilled /> : <HeartOutlined />}
+          > 
+          {isFavorite ? <HeartFilled /> : <HeartOutlined />} 
           </button>
         </div>
       </div>

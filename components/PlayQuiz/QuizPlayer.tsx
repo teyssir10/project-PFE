@@ -12,19 +12,20 @@ const isCorrect = (val: any): boolean => val === true || val === "true";
 export default function QuizPlayer({ quiz }: { quiz: QuizFull }) {
   const router = useRouter();
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [selected, setSelected]         = useState<string | null>(null);
-  const [score, setScore]               = useState(0);
-  const [timeLeft, setTimeLeft]         = useState(quiz.time_per_question ?? 30);
-  const [showHint, setShowHint]         = useState(false);
-  const [statuses, setStatuses]         = useState<("unanswered" | "correct" | "wrong" | "skipped")[]>(
+  const [selected, setSelected] = useState<string | null>(null);
+  const [score, setScore] = useState(0);
+  const [timeLeft, setTimeLeft] = useState(quiz.time_per_question ?? 30);
+  const [showHint, setShowHint] = useState(false);
+  const [statuses, setStatuses] = useState<("unanswered" | "correct" | "wrong" | "skipped")[]>(
     Array(quiz.questions.length).fill("unanswered")
   );
 
   const question = quiz.questions[currentIndex];
-  const isLast   = currentIndex === quiz.questions.length - 1;
-  const hint     = question.explanation;
+  if (!question) return null;
+  const isLast = currentIndex === quiz.questions.length - 1;
+  const hint = question?.explanation;
 
-  // ✅ Question verrouillée si déjà répondue (correct/wrong) ou sautée
+  //  Question verrouillée si déjà répondue (correct/wrong) ou sautée
   const isLocked = statuses[currentIndex] !== "unanswered";
 
   const goNext = useCallback(() => {
@@ -39,7 +40,7 @@ export default function QuizPlayer({ quiz }: { quiz: QuizFull }) {
   }, [isLast, router, quiz.id, quiz.questions.length, quiz.time_per_question, score]);
 
   const handleSkip = useCallback(() => {
-    if (isLocked) return; // ✅ Bloque si déjà répondue
+    if (isLocked) return; // Bloque si déjà répondue
     const newStatuses = [...statuses];
     newStatuses[currentIndex] = "skipped";
     setStatuses(newStatuses);
@@ -48,7 +49,7 @@ export default function QuizPlayer({ quiz }: { quiz: QuizFull }) {
 
   // Timer
   useEffect(() => {
-    if (isLocked) return; // ✅ Stop le timer si déjà répondue
+    if (isLocked) return; //  Stop le timer si déjà répondue
     if (timeLeft === 0) {
       const newStatuses = [...statuses];
       newStatuses[currentIndex] = "wrong";
@@ -61,7 +62,7 @@ export default function QuizPlayer({ quiz }: { quiz: QuizFull }) {
   }, [timeLeft, isLocked]);
 
   const handleSelect = (opt: PlayOption) => {
-    // ✅ Triple protection — bloque si déjà répondue via selected OU via statuses
+    // Triple protection — bloque si déjà répondue via selected OU via statuses
     if (selected) return;
     if (isLocked) return;
 
@@ -83,12 +84,12 @@ export default function QuizPlayer({ quiz }: { quiz: QuizFull }) {
   return (
     <div className="flex h-screen bg-gradient-to-br from-slate-50 via-cyan-50/30 to-teal-50/30 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 overflow-hidden">
       <QuizSidebar
-        questions={quiz.questions}
+        questions={quiz?.questions}
         currentIndex={currentIndex}
         statuses={statuses}
         onJump={(i) => {
           setCurrentIndex(i);
-          // ✅ Restaure le selected correct si la question a déjà été répondue
+          // Restaure le selected correct si la question a déjà été répondue
           const s = statuses[i];
           if (s !== "unanswered") {
             setSelected("__locked__");
