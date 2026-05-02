@@ -6,10 +6,12 @@ import { QuizFull, PlayOption } from "@/types/quiz";
 import QuizHeader from "@/components/PlayQuiz/QuizHeader";
 import QuizSidebar from "@/components/PlayQuiz/QuizSidebar";
 import OptionCard from "@/components/PlayQuiz/OptionCard";
+import { useTranslations } from "next-intl";
 
 const isCorrect = (val: any): boolean => val === true || val === "true";
 
 export default function QuizPlayer({ quiz }: { quiz: QuizFull }) {
+  const t = useTranslations("quizPlay");
   const router = useRouter();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selected, setSelected]         = useState<string | null>(null);
@@ -28,7 +30,7 @@ export default function QuizPlayer({ quiz }: { quiz: QuizFull }) {
   if (!question) {
     return (
       <div className="flex items-center justify-center h-screen text-gray-500">
-        No questions found for this quiz.
+        {t("noQuestions")}
       </div>
     );
   }
@@ -68,24 +70,21 @@ export default function QuizPlayer({ quiz }: { quiz: QuizFull }) {
       setConfirmed(true);
       return;
     }
-    const t = setTimeout(() => setTimeLeft(p => p - 1), 1000);
-    return () => clearTimeout(t);
+    const timer = setTimeout(() => setTimeLeft(p => p - 1), 1000);
+    return () => clearTimeout(timer);
   }, [timeLeft, isLocked]);
 
+  // ✅ Toggle : re-cliquer désélectionne, cliquer une autre option change la sélection
   const handleSelect = (opt: PlayOption) => {
-    if (selected) return;
-    if (isLocked) return;
-    setSelected(opt.id);
+    if (isLocked || confirmed) return;
+    setSelected(prev => prev === opt.id ? null : opt.id);
   };
 
   const handleConfirm = () => {
     if (isLocked || confirmed) return;
-
     if (isShort) {
       if (!shortInput.trim()) return;
-      const correct =
-        shortInput.trim().toLowerCase() ===
-        (question.correct_answer ?? "").trim().toLowerCase();
+      const correct = shortInput.trim().toLowerCase() === (question.correct_answer ?? "").trim().toLowerCase();
       const newStatuses = [...statuses];
       newStatuses[currentIndex] = correct ? "correct" : "wrong";
       setStatuses(newStatuses);
@@ -94,7 +93,6 @@ export default function QuizPlayer({ quiz }: { quiz: QuizFull }) {
       setConfirmed(true);
       return;
     }
-
     if (!selected) return;
     const opt = question.options.find(o => o.id === selected);
     if (!opt) return;
@@ -139,7 +137,6 @@ export default function QuizPlayer({ quiz }: { quiz: QuizFull }) {
         remaining={remaining}
       />
 
-      {/* 👇 z-10 AJOUTÉ */}
       <div className="flex-1 flex flex-col overflow-y-auto relative z-10">
         <QuizHeader
           title={quiz.title}
@@ -150,16 +147,15 @@ export default function QuizPlayer({ quiz }: { quiz: QuizFull }) {
           onExit={() => router.push("/dashboard")}
         />
 
-        {/* 👇 z-10 AJOUTÉ */}
         <div className="flex-1 px-10 py-8 max-w-3xl w-full mx-auto relative z-10">
 
           {/* Question counter + score */}
           <div className="flex items-center justify-between mb-6">
             <span className="px-3 py-1 rounded-full bg-cyan-100 dark:bg-cyan-900/40 text-cyan-600 dark:text-cyan-400 text-xs font-bold tracking-widest uppercase">
-              Question {currentIndex + 1} / {quiz.questions.length}
+              {t("question")} {currentIndex + 1} / {quiz.questions.length}
             </span>
             <div className="flex items-center gap-2">
-              <span className="text-xs text-gray-400 dark:text-slate-500 font-medium">Score</span>
+              <span className="text-xs text-gray-400 dark:text-slate-500 font-medium">{t("score")}</span>
               <span className="px-3 py-1 rounded-full bg-emerald-100 dark:bg-emerald-900/40 text-emerald-600 dark:text-emerald-400 text-xs font-bold">
                 {score} / {quiz.questions.length}
               </span>
@@ -182,7 +178,7 @@ export default function QuizPlayer({ quiz }: { quiz: QuizFull }) {
             {isTimeout && (
               <div className="mt-4 flex items-start gap-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-700 rounded-xl px-4 py-3 text-sm text-red-700 dark:text-red-300">
                 <span className="text-base mt-0.5">⏱</span>
-                <p>Temps écoulé — cette question est verrouillée.</p>
+                <p>{t("timeExpired")}</p>
               </div>
             )}
           </div>
@@ -193,51 +189,46 @@ export default function QuizPlayer({ quiz }: { quiz: QuizFull }) {
               <input
                 type="text"
                 value={shortInput}
-                onChange={(e) => {
-                  if (!confirmed && !isLocked) {
-                    setShortInput(e.target.value);
-                  }
-                }}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" && canConfirm && !confirmed && !isLocked) {
-                    handleConfirm();
-                  }
-                }}
+                onChange={(e) => { if (!confirmed && !isLocked) setShortInput(e.target.value); }}
+                onKeyDown={(e) => { if (e.key === "Enter" && canConfirm && !confirmed && !isLocked) handleConfirm(); }}
                 disabled={confirmed || isLocked}
-                placeholder="Tapez votre réponse ici..."
+                placeholder={t("typePlaceholder")}
                 className="w-full px-5 py-4 rounded-2xl border-2 border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-gray-800 dark:text-white text-sm focus:outline-none focus:border-cyan-400 dark:focus:border-cyan-500 transition-all disabled:opacity-60 placeholder-gray-300 dark:placeholder-slate-600"
               />
 
               {confirmed && !isTimeout && (
-                <div className={`flex items-start gap-3 rounded-2xl px-5 py-4 text-sm font-medium border
-                  ${statuses[currentIndex] === "correct"
+                <div className={`flex items-start gap-3 rounded-2xl px-5 py-4 text-sm font-medium border ${
+                  statuses[currentIndex] === "correct"
                     ? "bg-emerald-50 dark:bg-emerald-900/20 border-emerald-200 dark:border-emerald-700 text-emerald-700 dark:text-emerald-300"
                     : "bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-700 text-red-700 dark:text-red-300"
-                  }`}
-                >
+                }`}>
                   <span className="text-lg shrink-0">
                     {statuses[currentIndex] === "correct" ? "✅" : "❌"}
                   </span>
                   <div>
                     {statuses[currentIndex] === "correct"
-                      ? <p>Bonne réponse ! <strong>{shortInput}</strong></p>
-                      : <p>Mauvaise réponse. La bonne réponse était : <strong>{question.correct_answer}</strong></p>
+                      ? <p>{t("correctAnswer")} <strong>{shortInput}</strong></p>
+                      : <p>{t("wrongAnswer")} <strong>{question.correct_answer}</strong></p>
                     }
                   </div>
                 </div>
               )}
             </div>
-
           ) : (
-            // MULTIPLE / TRUEFALSE
             <div className="space-y-3 mb-6">
               {question.options.map((opt, i) => {
-                let state: "default" | "correct" | "wrong" | "selected" = "default";
+                let state: "default" | "correct" | "wrong" | "selected" | "reveal" = "default";
 
                 if (!confirmed && selected === opt.id) {
                   state = "selected";
-                } else if (confirmed && !isTimeout && opt.id === selected) {
-                  state = isCorrect(opt.is_correct) ? "correct" : "wrong";
+                } else if (confirmed && !isTimeout) {
+                  if (opt.id === selected) {
+                    // L'option choisie par l'utilisateur
+                    state = isCorrect(opt.is_correct) ? "correct" : "wrong";
+                  } else if (isCorrect(opt.is_correct)) {
+                    // ✅ Révèle toujours la bonne réponse après confirmation
+                    state = "reveal";
+                  }
                 }
 
                 return (
@@ -257,11 +248,26 @@ export default function QuizPlayer({ quiz }: { quiz: QuizFull }) {
           {/* Footer */}
           <div className="flex items-center justify-between">
             <p className="text-sm text-gray-400 dark:text-slate-500">
-              Current score:{" "}
-              <span className="font-bold text-gray-700 dark:text-white">
-                {score} / {answeredCount} correct
-              </span>
+              {confirmed || isLocked ? (
+                statuses[currentIndex] === "correct" ? (
+                  <span className="text-emerald-500 font-semibold">{t("correctAnswer")}</span>
+                ) : statuses[currentIndex] === "skipped" ? (
+                  <span className="text-amber-500 font-semibold">{t("skipped")}</span>
+                ) : (
+                  <span className="text-red-400 font-semibold">{t("wrongAnswer")}</span>
+                )
+              ) : selected ? (
+                <span className="text-cyan-500">{t("changeOrConfirm") ?? "Change or confirm your answer"}</span>
+              ) : (
+                <span>
+                  {t("currentScore")}{" "}
+                  <span className="font-bold text-gray-700 dark:text-white">
+                    {score} / {answeredCount} {t("correct")}
+                  </span>
+                </span>
+              )}
             </p>
+
             <div className="flex gap-3 items-center">
 
               {!isLocked && !confirmed && hint && !showHint && (
@@ -272,7 +278,7 @@ export default function QuizPlayer({ quiz }: { quiz: QuizFull }) {
                   <svg xmlns="http://www.w3.org/2000/svg" className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
                   </svg>
-                  Use hint
+                  {t("useHint")}
                 </button>
               )}
 
@@ -281,7 +287,7 @@ export default function QuizPlayer({ quiz }: { quiz: QuizFull }) {
                   onClick={handleSkip}
                   className="px-5 py-2.5 rounded-xl border border-gray-200 dark:border-slate-700 text-sm text-gray-500 dark:text-slate-400 hover:border-gray-400 dark:hover:border-slate-500 transition font-medium"
                 >
-                  Skip →
+                  {t("skip")}
                 </button>
               )}
 
@@ -290,7 +296,7 @@ export default function QuizPlayer({ quiz }: { quiz: QuizFull }) {
                   onClick={handleConfirm}
                   className="px-8 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-teal-400 hover:from-cyan-400 hover:to-teal-300 text-white font-bold text-sm transition shadow-lg shadow-cyan-500/25 flex items-center gap-2"
                 >
-                  ✅ Confirm Answer
+                  {t("confirm")}
                 </button>
               )}
 
@@ -299,12 +305,13 @@ export default function QuizPlayer({ quiz }: { quiz: QuizFull }) {
                   onClick={goNext}
                   className="px-8 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-teal-400 hover:from-cyan-400 hover:to-teal-300 text-white font-bold text-sm transition shadow-lg shadow-cyan-500/25 flex items-center gap-2"
                 >
-                  {isLast ? "🎉 Finish" : "Next question →"}
+                  {isLast ? t("finish") : t("next")}
                 </button>
               )}
 
             </div>
           </div>
+
         </div>
       </div>
     </div>

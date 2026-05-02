@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { useAuth } from "@/lib/auth";
+import { useRouter } from "next/navigation";
 import { Button, Card, Progress, Tag, Spin } from "antd";
 import {
   CaretRightOutlined, ThunderboltOutlined,
@@ -19,14 +20,32 @@ const difficultyColor: Record<string, string> = {
   Hard: "!bg-cyan-400 !text-cyan-900 !border-cyan-500 dark:!bg-cyan-600/40 dark:!text-white dark:!border-cyan-500",
 };
 
-export function Page() {
+export default function Page() {
   const t = useTranslations('dashboard');
   const { user } = useAuth();
+  const router = useRouter();
   const username = user?.user_metadata?.firstname || user?.email?.split("@")[0] || "User";
+
   const [recentActivity, setRecentActivity] = useState<any[]>([]);
   const [recommendedQuizzes, setRecommendedQuizzes] = useState<any[]>([]);
   const [loadingActivity, setLoadingActivity] = useState(true);
   const [loadingRecommended, setLoadingRecommended] = useState(true);
+
+  // ✅ Rediriger admin vers /admin/dashboard
+  useEffect(() => {
+    if (!user) return;
+    const checkAdmin = async () => {
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("role")
+        .eq("id", user.id)
+        .single();
+      if (profile?.role === "admin") {
+        router.replace("/admin/dashboard");
+      }
+    };
+    checkAdmin();
+  }, [user]);
 
   useEffect(() => {
     if (!user) return;
@@ -215,5 +234,3 @@ export function Page() {
     </div>
   );
 }
-
-export default Page;

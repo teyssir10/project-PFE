@@ -1,6 +1,6 @@
 "use client";
 
-type State = "default" | "correct" | "wrong" | "selected"; // 👈 ajouté
+type State = "default" | "correct" | "wrong" | "selected" | "reveal"; // ✅ ajouté
 
 type Props = {
   label: string;
@@ -15,7 +15,6 @@ const stateStyles: Record<State, { card: string; label: string; icon?: string }>
     card:  "border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 hover:border-cyan-400 hover:shadow-md hover:shadow-cyan-100 dark:hover:shadow-cyan-900/20 hover:-translate-y-0.5",
     label: "bg-gray-100 dark:bg-slate-800 text-gray-500 dark:text-slate-400 group-hover:bg-cyan-500 group-hover:text-white",
   },
-  // 👇 NOUVEAU
   selected: {
     card:  "border-cyan-400 bg-cyan-50 dark:bg-cyan-900/20 shadow-md shadow-cyan-100 dark:shadow-cyan-900/20",
     label: "bg-cyan-500 text-white shadow-sm",
@@ -29,6 +28,12 @@ const stateStyles: Record<State, { card: string; label: string; icon?: string }>
     card:  "border-red-400 bg-gradient-to-r from-red-50 to-rose-50 dark:from-red-900/20 dark:to-rose-900/20 shadow-md shadow-red-100 dark:shadow-red-900/20",
     label: "bg-gradient-to-br from-red-400 to-rose-500 text-white shadow-sm",
     icon:  "✗",
+  },
+  // ✅ NOUVEAU : bonne réponse révélée quand l'utilisateur a choisi la mauvaise
+  reveal: {
+    card:  "border-emerald-300 bg-gradient-to-r from-emerald-50/60 to-teal-50/60 dark:from-emerald-900/10 dark:to-teal-900/10 shadow-sm shadow-emerald-100 dark:shadow-emerald-900/10",
+    label: "bg-gradient-to-br from-emerald-300 to-teal-400 text-white shadow-sm",
+    icon:  "✓",
   },
 };
 
@@ -49,11 +54,21 @@ export default function OptionCard({ label, text, state, onClick, disabled }: Pr
       <span className={`w-9 h-9 rounded-xl flex items-center justify-center text-sm font-bold shrink-0 transition-all duration-200 ${s.label}`}>
         {s.icon ?? label}
       </span>
-      <span className="text-sm font-semibold text-gray-800 dark:text-slate-200 flex-1">
+
+      <span className={`text-sm font-semibold flex-1 ${
+        state === "reveal"
+          ? "text-emerald-700 dark:text-emerald-300"
+          : "text-gray-800 dark:text-slate-200"
+      }`}>
         {text}
       </span>
+
       {s.icon && (
-        <span className={`text-lg font-bold ${state === "correct" ? "text-emerald-500" : "text-red-400"}`}>
+        <span className={`text-lg font-bold ${
+          state === "correct" || state === "reveal"
+            ? "text-emerald-500"
+            : "text-red-400"
+        }`}>
           {s.icon}
         </span>
       )}

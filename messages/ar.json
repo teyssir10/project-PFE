@@ -380,7 +380,105 @@
     "enterShortAnswer": "يرجى إدخال الإجابة الصحيحة للأسئلة ذات الإجابة القصيرة",
     "saveSuccess": "تم حفظ الاختبار بنجاح! 🎉",
     "saveError": "خطأ: "
+  },
+  
+  "browsePage": {
+    "searchPlaceholder": "ابحث عن اختبارات...",
+    "tabAll": "جميع الاختبارات",
+    "tabCommunity": "المجتمع",
+    "tabMy": "اختباراتي",
+    "tabFavorites": "المفضلة",
+    "tabRecently": "تم لعبها مؤخراً",
+    "showing": "عرض",
+    "quizzes": "اختبار",
+    "bannerTitle": "هل تريد إنشاء اختبارك الخاص؟",
+    "bannerSub": "أنشئ فوراً باستخدام الذكاء الاصطناعي",
+    "aiGenerate": "توليد بالذكاء الاصطناعي",
+    "manual": "يدوي",
+    "emptyFavTitle": "لا توجد مفضلة بعد",
+    "emptyFavSub": "انقر على القلب في أي اختبار لحفظه هنا",
+    "emptySearchTitle": "لم يتم العثور على اختبارات",
+    "emptySearchSub": "جرّب بحثاً مختلفاً"
+  },
+  
+  "quizPlay": {
+    "noQuestions": "لم يتم العثور على أسئلة لهذا الاختبار.",
+    "question": "السؤال",
+    "score": "النتيجة",
+    "timeExpired": "انتهى الوقت — هذا السؤال مقفل.",
+    "typePlaceholder": "اكتب إجابتك هنا...",
+    "correctAnswer": "إجابة صحيحة!",
+    "wrongAnswer": "إجابة خاطئة. الإجابة الصحيحة كانت:",
+    "currentScore": "النتيجة الحالية:",
+    "correct": "صحيح",
+    "useHint": "استخدام التلميح",
+    "skip": "تخطي →",
+    "confirm": "✅ تأكيد الإجابة",
+    "next": "السؤال التالي →",
+    "finish": "🎉 إنهاء",
+    "quizNotFound": "الاختبار غير موجود.",
+    "goBack": "رجوع"
+  },
+  "quizSidebarPlay": {
+    "questions": "الأسئلة",
+    "answered": "تمت الإجابة",
+    "skipped": "تم التخطي",
+    "remaining": "المتبقية",
+    "progress": "التقدم"
+  },
+  "quizHeader": {
+    "sec": "ثانية",
+    "exit": "الخروج من الاختبار"
+  },
+  
+  "results": {
+    "title": "نتائج الاختبار",
+    "correct": "صحيحة",
+    "wrong": "خاطئة",
+    "total": "المجموع",
+    "xpGained": "XP مكتسب",
+    "progression": "📈 التقدم",
+    "achieved": "محقق",
+    "analysis": "📊 التحليل",
+    "successRate": "معدل النجاح",
+    "correctAnswers": "الإجابات الصحيحة",
+    "wrongAnswers": "الإجابات الخاطئة",
+    "tipsWinner": "💡 نصائح للاستمرار",
+    "tipsLoser": "💡 نصائح للتحسين",
+    "performanceTop": "أنت في القمة! 🏅",
+    "performanceBetter": "يمكنك فعل أفضل! 💪",
+    "performanceSubWinner": "{name}، أنت تتقن هذا الموضوع جيداً.",
+    "performanceSubLoser": "{name}، راجع وأعد المحاولة!",
+    "performance": "الأداء",
+    "nextStep": "🎯 الخطوة التالية",
+    "replay": "🔄 إعادة اللعب",
+    "explore": "🔍 استكشف اختبارات أخرى",
+    "backDashboard": "🏠 العودة للوحة التحكم",
+    "msg100Title": "مثالي، {name}! 🏆",
+    "msg100Sub": "نتيجة مثالية — أنت لا يُقهر!",
+    "msg100Badge": "أسطوري",
+    "msg80Title": "ممتاز، {name}! 🎉",
+    "msg80Sub": "أداء رائع، استمر!",
+    "msg80Badge": "خبير",
+    "msg50Title": "أحسنت، {name}! 👍",
+    "msg50Sub": "لقد اجتزت الحد، استمر في المحاولة!",
+    "msg50Badge": "مقبول",
+    "msg25Title": "يمكن أن تفعل أفضل، {name} 😅",
+    "msg25Sub": "راجع وأعد المحاولة، ستنجح!",
+    "msg25Badge": "غير كافٍ",
+    "msg0Title": "تشجع، {name}! 😢",
+    "msg0Sub": "لا تستسلم! المرة القادمة ستكون أفضل!",
+    "msg0Badge": "يحتاج مراجعة",
+    "tipWinner1": "استمر في هذا الزخم! 🚀",
+    "tipWinner2": "جرّب اختباراً أصعب 💪",
+    "tipWinner3": "شارك نتيجتك مع أصدقائك 🎊",
+    "tipLoser1": "راجع المادة قبل إعادة المحاولة 📚",
+    "tipLoser2": "استخدم التلميحات في المرة القادمة 💡",
+    "tipLoser3": "ابدأ باختبار أسهل 🎯"
   }
+
+
+
 
 
 }

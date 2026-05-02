@@ -380,7 +380,105 @@
     "enterShortAnswer": "Please enter the correct answer for short answer questions",
     "saveSuccess": "Quiz saved successfully! 🎉",
     "saveError": "Error: "
+  },
+  
+  "browsePage": {
+    "searchPlaceholder": "Search quizzes...",
+    "tabAll": "All quizzes",
+    "tabCommunity": "Community",
+    "tabMy": "My quizzes",
+    "tabFavorites": "Favourites",
+    "tabRecently": "Recently played",
+    "showing": "Showing",
+    "quizzes": "quizzes",
+    "bannerTitle": "Want to create your own quiz?",
+    "bannerSub": "Generate instantly with AI",
+    "aiGenerate": "AI Generate",
+    "manual": "Manual",
+    "emptyFavTitle": "No favourites yet",
+    "emptyFavSub": "Click the heart on any quiz to save it here",
+    "emptySearchTitle": "No quizzes found",
+    "emptySearchSub": "Try a different search"
+  },
+  
+  "quizPlay": {
+    "noQuestions": "No questions found for this quiz.",
+    "question": "Question",
+    "score": "Score",
+    "timeExpired": "Time expired — this question is locked.",
+    "typePlaceholder": "Type your answer here...",
+    "correctAnswer": "Correct answer!",
+    "wrongAnswer": "Wrong answer. The correct answer was:",
+    "currentScore": "Current score:",
+    "correct": "correct",
+    "useHint": "Use hint",
+    "skip": "Skip →",
+    "confirm": "✅ Confirm Answer",
+    "next": "Next question →",
+    "finish": "🎉 Finish",
+    "quizNotFound": "Quiz not found.",
+    "goBack": "Go back"
+  },
+  "quizSidebarPlay": {
+    "questions": "Questions",
+    "answered": "Answered",
+    "skipped": "Skipped",
+    "remaining": "Remaining",
+    "progress": "Progress"
+  },
+  "quizHeader": {
+    "sec": "sec",
+    "exit": "Exit quiz"
+  },
+  
+  "results": {
+    "title": "Quiz Results",
+    "correct": "correct",
+    "wrong": "wrong",
+    "total": "total",
+    "xpGained": "XP Gained",
+    "progression": "📈 Progression",
+    "achieved": "achieved",
+    "analysis": "📊 Analysis",
+    "successRate": "Success rate",
+    "correctAnswers": "Correct answers",
+    "wrongAnswers": "Wrong answers",
+    "tipsWinner": "💡 Tips to keep going",
+    "tipsLoser": "💡 Tips to improve",
+    "performanceTop": "You're in the top! 🏅",
+    "performanceBetter": "You can do better! 💪",
+    "performanceSubWinner": "{name}, you have a great grasp of this topic.",
+    "performanceSubLoser": "{name}, review and retry this quiz!",
+    "performance": "Performance",
+    "nextStep": "🎯 Next step",
+    "replay": "🔄 Play again",
+    "explore": "🔍 Explore other quizzes",
+    "backDashboard": "🏠 Back to Dashboard",
+    "msg100Title": "Perfect, {name}! 🏆",
+    "msg100Sub": "Flawless score — you're unbeatable!",
+    "msg100Badge": "Legendary",
+    "msg80Title": "Excellent, {name}! 🎉",
+    "msg80Sub": "Great performance, keep it up!",
+    "msg80Badge": "Expert",
+    "msg50Title": "Well done, {name}! 👍",
+    "msg50Sub": "You passed, keep pushing!",
+    "msg50Badge": "Passing",
+    "msg25Title": "Could do better, {name} 😅",
+    "msg25Sub": "Review and retry, you'll get there!",
+    "msg25Badge": "Insufficient",
+    "msg0Title": "Keep going, {name}! 😢",
+    "msg0Sub": "Don't give up! Next time will be better!",
+    "msg0Badge": "To review",
+    "tipWinner1": "Keep up the momentum! 🚀",
+    "tipWinner2": "Try a harder quiz 💪",
+    "tipWinner3": "Share your score with friends 🎊",
+    "tipLoser1": "Review the material before retrying 📚",
+    "tipLoser2": "Use hints next time 💡",
+    "tipLoser3": "Start with an easier quiz 🎯"
   }
+
+
+
 
 }
 

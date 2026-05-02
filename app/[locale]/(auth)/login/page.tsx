@@ -13,10 +13,12 @@ import { useAuth } from '@/lib/auth'
 import { useRouter } from 'next/navigation'
 import logo from '@/public/panda-logo.png'
 import { useAntdApp } from '@/hooks/useAntdApp'
-import { useTranslations } from 'next-intl'
+import { useTranslations, useLocale } from 'next-intl' // ✅ useLocale ajouté
+import { createBrowserClient } from '@supabase/ssr'
 
 const LoginPage = () => {
   const t = useTranslations('login')
+  const locale = useLocale() // ✅ AJOUTÉ ICI
 
   const loginSchema = yup.object({
     email: yup.string().required(t('emailError')).email(t('emailInvalid')),
@@ -35,13 +37,39 @@ const LoginPage = () => {
   const onSubmit = async (values: any) => {
     setLoading(true)
     try {
-      const { error } = await signIn(values.email, values.password)
+      const { data, error } = await signIn(values.email, values.password)
+
       if (error) {
         message.error(error.message)
-      } else {
-        message.success(t('loginSuccess'))
-        router.push('/dashboard')
+        return
       }
+
+      const userId = data?.user?.id
+      if (!userId) {
+        message.error('Erreur lors de la récupération du compte.')
+        return
+      }
+
+      const supabase = createBrowserClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+      )
+
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('role')
+        .eq('id', userId)
+        .single()
+
+      message.success(t('loginSuccess'))
+
+      // ✅ Redirection avec locale
+      if (profile?.role === 'admin') {
+        window.location.href = `/${locale}/admin/dashboard`
+      } else {
+        window.location.href = `/${locale}/dashboard`
+      }
+
     } catch (error: unknown) {
       message.error((error as { message: string }).message || 'An error occurred.')
     } finally {
@@ -123,7 +151,6 @@ const LoginPage = () => {
 
             <Card className="border border-slate-200 shadow-lg shadow-cyan-400/30 rounded-xl dark:bg-slate-900/70">
               <Form autoComplete="off" layout="vertical" className="space-y-2" onFinish={handleSubmit(onSubmit)}>
-
                 <Form.Item
                   label={t('email')}
                   validateStatus={errors.email ? 'error' : undefined}
@@ -194,7 +221,7 @@ const LoginPage = () => {
                 className="h-[58px] rounded-[16px] font-bold text-[16px] !bg-gradient-to-r !from-cyan-500 !to-[#00D4D0] border-0 shadow-[0_10px_30px_rgba(6,182,212,0.4)] !text-white tracking-[0.02em] hover:scale-[1.03] transition-all duration-300"
                 type="link"
                 block
-                onClick={() => router.push('/register')}
+                onClick={() => router.push(`/${locale}/register`)}
               >
                 {t('noAccount')}
               </Button>
@@ -206,7 +233,6 @@ const LoginPage = () => {
               </Text>
             </Card>
           </div>
-
         </div>
       </div>
     </div>
