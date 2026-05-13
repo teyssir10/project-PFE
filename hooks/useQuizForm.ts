@@ -1,57 +1,104 @@
 import { useState } from "react";
 import { message } from "antd";
-import { DEFAULT_FORM_STATE, Difficulty, QuizFormState } from "@/types/aiquiz";
+import { DEFAULT_FORM_STATE, QuizFormState } from "@/types/aiquiz";
+
+// ─── Type pour une question générée ──────────────────────────────────────────
+export interface GeneratedQuestion {
+  question: string;
+  options: string[];
+  correct_answer: string;
+  explanation: string;
+}
 
 export function useQuizForm() {
   const [form, setForm] = useState<QuizFormState>(DEFAULT_FORM_STATE);
   const [loading, setLoading] = useState(false);
   const [step, setStep] = useState(1);
+  const [generatedQuestions, setGeneratedQuestions] = useState<GeneratedQuestion[]>([]);
+  const [error, setError] = useState<string | null>(null);
 
+  // ── Mettre à jour le formulaire ────────────────────────────────────────────
   const update = (fields: Partial<QuizFormState>) =>
     setForm((prev) => ({ ...prev, ...fields }));
+
+  // ── Ajouter un tag au prompt ───────────────────────────────────────────────
   const handleTagClick = (text: string) => {
     update({ prompt: form.prompt ? form.prompt + " " + text : text });
   };
 
+  // ── Calculer les valeurs finales ───────────────────────────────────────────
   const numQuestionsValue =
-    form.numQuestions === "other" ? form.customQuestions : Number(form.numQuestions);
+    form.numQuestions === "other"
+      ? form.customQuestions ?? 5
+      : Number(form.numQuestions);
 
   const timerValue =
-    form.timer === "other" ? form.customTimer : Number(form.timer);
+    form.timer === "other"
+      ? form.customTimer ?? 30
+      : Number(form.timer);
 
+  // ── Générer le quiz via OpenAI ─────────────────────────────────────────────
   const generateQuiz = async () => {
+    // Validation
     if (!form.title && !form.prompt) {
-      message.warning("Please enter a title or prompt.");
+      message.warning("Veuillez entrer un titre ou une description.");
       return;
     }
 
     setLoading(true);
     setStep(2);
+    setError(null);
+    setGeneratedQuestions([]);
 
     try {
-      const systemPrompt = `You are a quiz generator. Return ONLY JSON array.\nRules:\n- ${numQuestionsValue} questions\n- Difficulty: ${form.difficulty}\n- Category: ${form.category}\n- Language: ${form.language}\n- Each question has 4 options`;
-
       const res = await fetch("/api/quiz", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           title: form.title,
           prompt: form.prompt,
-          systemPrompt,
+          category: form.category,
+          difficulty: form.difficulty,
+          numQuestions: numQuestionsValue,
           timer: timerValue,
+          language: form.language,
         }),
       });
 
       const data = await res.json();
-      message.success("Quiz generated successfully!");
+
+      if (!res.ok || !data.success) {
+        // Erreur retournée par l'API
+        throw new Error(data.error ?? "Erreur lors de la génération.");
+      }
+
+      // ✅ Extraire les questions depuis la réponse
+      const questions: GeneratedQuestion[] = data.data?.questions ?? [];
+
+      if (questions.length === 0) {
+        throw new Error("Aucune question générée. Réessayez.");
+      }
+
+      setGeneratedQuestions(questions);
       setStep(3);
-      console.log(data);
-    } catch {
-      message.error("Failed to generate quiz.");
+      message.success(`✅ ${questions.length} questions générées avec succès !`);
+
+    } catch (err: any) {
+      const errorMessage = err.message ?? "Échec de la génération du quiz.";
+      setError(errorMessage);
+      message.error(errorMessage);
       setStep(1);
     } finally {
       setLoading(false);
     }
+  };
+
+  // ── Reset complet ──────────────────────────────────────────────────────────
+  const resetQuiz = () => {
+    setForm(DEFAULT_FORM_STATE);
+    setGeneratedQuestions([]);
+    setStep(1);
+    setError(null);
   };
 
   return {
@@ -61,5 +108,10 @@ export function useQuizForm() {
     step,
     handleTagClick,
     generateQuiz,
+    resetQuiz,
+    generatedQuestions,
+    numQuestionsValue,
+    timerValue,
+    error,
   };
 }

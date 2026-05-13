@@ -2,11 +2,10 @@
 
 import React from 'react'
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { usePathname,useParams } from 'next/navigation'
 import {
   LogoutOutlined, HomeOutlined, LineChartOutlined, SettingOutlined,
-  FileAddOutlined, UsergroupAddOutlined,
-  TrophyOutlined, PlusOutlined, AppstoreOutlined
+  UsergroupAddOutlined, TrophyOutlined, PlusOutlined, AppstoreOutlined
 } from '@ant-design/icons'
 import { useAuth } from '@/lib/auth'
 import Image from 'next/image'
@@ -32,28 +31,30 @@ const LogoSection = ({ platform }: { platform: string }) => (
 function NavLinks({ onClickItem }: { onClickItem?: () => void }) {
   const t = useTranslations('sidebar')
   const pathname = usePathname()
+  const params = useParams()
+  const locale = (params?.locale as string) || 'fr'
 
   const navSections = [
     {
       label: t('main'),
       items: [
-        { icon: HomeOutlined, label: t('dashboard'), href: '/dashboard' },
+        { icon: HomeOutlined, label: t('dashboard'), href: `/${locale}/dashboard` },
       ]
     },
     {
       label: t('play'),
       items: [
-        { icon: AppstoreOutlined, label: t('browseQuizzes'), href: '/browse-quiz' },
-        { icon: PlusOutlined, label: t('createQuiz'), href: '/create-quiz' },
-        { icon: LineChartOutlined, label: t('analytics'), href: '/analytics' },
-        { icon: UsergroupAddOutlined, label: t('multiplayer'), href: '/multiplayer' },
-        { icon: TrophyOutlined, label: t('leaderboard'), href: '/leaderboard' },
+        { icon: AppstoreOutlined,     label: t('browseQuizzes'), href: `/${locale}/browse-quiz`  },
+        { icon: PlusOutlined,         label: t('createQuiz'),    href: `/${locale}/create-quiz`  },
+        { icon: LineChartOutlined,    label: t('analytics'),     href: `/${locale}/analytics`    },
+        { icon: UsergroupAddOutlined, label: t('multiplayer'),   href: `/${locale}/multiplayer`  },
+        { icon: TrophyOutlined,       label: t('leaderboard'),   href: `/${locale}/leaderboard`  },
       ]
     },
     {
       label: t('account'),
       items: [
-        { icon: SettingOutlined, label: t('settings'), href: '/settings' },
+        { icon: SettingOutlined, label: t('settings'), href: `/${locale}/settings`      },
       ]
     },
   ]
@@ -104,7 +105,7 @@ function LogoutButton({ onClick }: { onClick?: () => void }) {
   const username = user?.user_metadata?.firstName || user?.email?.split('@')[0]
 
   return (
-    <div className="sticky px-4 py-6 border-t border-gray-100 dark:border-slate-700 space-y-3">
+    <div className="px-4 py-6 border-t border-gray-100 dark:border-slate-700 space-y-3">
       <div className="flex items-center gap-3 px-2">
         <div className="w-8 h-8 rounded-full bg-gradient-to-br from-cyan-500 to-teal-400 flex items-center justify-center text-white font-bold text-sm">
           {username?.charAt(0).toUpperCase()}
@@ -133,18 +134,20 @@ export function sidebar({ children }: { children: React.ReactNode }) {
   const t = useTranslations('sidebar')
 
   return (
-    <div className="flex h-screen bg-gray-50 dark:bg-slate-900">
-      <aside className="hidden md:flex w-64
+   
+    <div className="flex h-screen overflow-hidden bg-gray-50 dark:bg-slate-900">
+      <aside className="hidden md:flex w-64 flex-col flex-shrink-0
         bg-white dark:bg-slate-800
         border-r border-gray-100 dark:border-slate-700
-        flex-col h-screen shadow-sm">
-        <div className="h-16 px-6 py-3 border-b border-gray-100 dark:border-slate-700">
+        shadow-sm">
+        <div className="h-16 px-6 py-3 border-b border-gray-100 dark:border-slate-700 flex-shrink-0">
           <LogoSection platform={t('platform')} />
         </div>
         <NavLinks />
         <LogoutButton />
       </aside>
 
+      
       <main
         className="flex-1 overflow-auto relative"
         style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' } as React.CSSProperties}

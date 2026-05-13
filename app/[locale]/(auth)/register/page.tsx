@@ -4,8 +4,8 @@ import { useState } from 'react'
 import Image from 'next/image'
 import * as yup from 'yup'
 import { useAntdApp } from '@/hooks/useAntdApp'
-import { MailOutlined, LockOutlined, UserOutlined, SunOutlined, MoonOutlined } from '@ant-design/icons'
-import { Button, Card, Divider, Form, Input } from 'antd'
+import { MailOutlined, LockOutlined, UserOutlined, SunOutlined, MoonOutlined, GlobalOutlined, EnvironmentOutlined } from '@ant-design/icons'
+import { Button, Card, Divider, Form, Input, Select } from 'antd'
 import Text from 'antd/es/typography/Text'
 import Title from 'antd/es/typography/Title'
 import { useForm, Controller } from 'react-hook-form'
@@ -16,6 +16,27 @@ import { useTheme } from 'next-themes'
 import logo from '@/public/panda-logo.png'
 import { supabase } from '@/lib/supabase'
 import { useTranslations } from 'next-intl'
+
+
+const COUNTRIES = [
+  { value: "Algeria", label: "🇩🇿 Algeria" },
+  { value: "Tunisia", label: "🇹🇳 Tunisia" },
+  { value: "Morocco", label: "🇲🇦 Morocco" },
+  { value: "Egypt", label: "🇪🇬 Egypt" },
+  { value: "France", label: "🇫🇷 France" },
+  { value: "Germany", label: "🇩🇪 Germany" },
+  { value: "Spain", label: "🇪🇸 Spain" },
+  { value: "Italy", label: "🇮🇹 Italy" },
+  { value: "UK", label: "🇬🇧 United Kingdom" },
+  { value: "USA", label: "🇺🇸 United States" },
+  { value: "Canada", label: "🇨🇦 Canada" },
+  { value: "Brazil", label: "🇧🇷 Brazil" },
+  { value: "Saudi Arabia", label: "🇸🇦 Saudi Arabia" },
+  { value: "UAE", label: "🇦🇪 UAE" },
+  { value: "Qatar", label: "🇶🇦 Qatar" },
+  { value: "Turkey", label: "🇹🇷 Turkey" },
+  { value: "Other", label: "🌐 Other" },
+]
 
 const RegisterPage = () => {
   const t = useTranslations('register')
@@ -29,6 +50,8 @@ const RegisterPage = () => {
     confirmPassword: yup.string()
       .oneOf([yup.ref('password')], t('passwordMatch'))
       .required(t('confirmPasswordError')),
+    country: yup.string().optional(),
+    region: yup.string().optional(),
   })
 
   const [loading, setLoading] = useState(false)
@@ -47,7 +70,12 @@ const RegisterPage = () => {
       const { error } = await signUp(
         values.email,
         values.password,
-        { firstname: values.firstName, lastname: values.lastName }
+        {
+          firstname: values.firstName,
+          lastname: values.lastName,
+          country: values.country ?? null,
+          region: values.region ?? null,
+        }
       )
       if (error) {
         message.error(error.message)
@@ -83,7 +111,7 @@ const RegisterPage = () => {
       <div className="relative z-10 flex items-center justify-center h-screen overflow-hidden px-6">
         <div className="w-full max-w-7xl grid grid-cols-1 md:grid-cols-2 gap-16 items-center mx-auto">
 
-          {/* LEFT SIDE */}
+        
           <div className="hidden md:flex flex-col justify-center space-y-12 relative sticky top-0 h-screen">
             <div className="absolute -top-20 -left-20 w-72 h-72 bg-cyan-400/30 dark:bg-cyan-500/10 blur-3xl rounded-full" />
             <div className="absolute bottom-0 right-0 w-72 h-72 bg-[#00D4D0]/30 dark:bg-[#00D4D0]/10 blur-3xl rounded-full" />
@@ -132,7 +160,7 @@ const RegisterPage = () => {
             </div>
           </div>
 
-          {/* REGISTER CARD */}
+       
           <div
             className="w-full max-w-md px-4 overflow-y-auto h-screen py-10"
             style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' } as React.CSSProperties}
@@ -169,6 +197,7 @@ const RegisterPage = () => {
               <Card className="!border !border-slate-200 dark:!border-gray-700 !shadow-lg shadow-cyan-400/30 !rounded-xl dark:!bg-gray-900">
                 <Form autoComplete="off" layout="vertical" className="space-y-2" onFinish={handleSubmit(onSubmit)}>
 
+              
                   <div className="flex gap-3">
                     <Form.Item
                       label={<span className="dark:text-gray-300">{t('firstName')}</span>}
@@ -178,7 +207,7 @@ const RegisterPage = () => {
                     >
                       <Controller name="firstName" control={control} render={({ field }) => (
                         <Input {...field} prefix={<UserOutlined className="text-slate-400" />} size="large"
-                          className="rounded-lg h-[56px] text-sm border-gray-200 dark:!border-gray-600 dark:!bg-gray-800 dark:!text-white focus:border-cyan-500 transition-all"
+                          className="rounded-lg h-[56px] text-sm border-gray-200 dark:!border-gray-600 dark:!bg-gray-800 dark:!text-white"
                           placeholder={t('firstName')} />
                       )} />
                     </Form.Item>
@@ -191,12 +220,13 @@ const RegisterPage = () => {
                     >
                       <Controller name="lastName" control={control} render={({ field }) => (
                         <Input {...field} prefix={<UserOutlined className="text-slate-400" />} size="large"
-                          className="rounded-lg h-[56px] text-sm border-gray-200 dark:!border-gray-600 dark:!bg-gray-800 dark:!text-white focus:border-cyan-500 transition-all"
+                          className="rounded-lg h-[56px] text-sm border-gray-200 dark:!border-gray-600 dark:!bg-gray-800 dark:!text-white"
                           placeholder={t('lastName')} />
                       )} />
                     </Form.Item>
                   </div>
 
+                 
                   <Form.Item
                     label={<span className="dark:text-gray-300">{t('email')}</span>}
                     validateStatus={errors.email ? 'error' : undefined}
@@ -204,11 +234,48 @@ const RegisterPage = () => {
                   >
                     <Controller name="email" control={control} render={({ field }) => (
                       <Input {...field} autoComplete="new-password" prefix={<MailOutlined className="text-slate-400" />}
-                        size="large" className="rounded-lg h-[56px] text-sm border-gray-200 dark:!border-gray-600 dark:!bg-gray-800 dark:!text-white focus:border-cyan-500 transition-all"
+                        size="large" className="rounded-lg h-[56px] text-sm border-gray-200 dark:!border-gray-600 dark:!bg-gray-800 dark:!text-white"
                         placeholder="you@example.com" />
                     )} />
                   </Form.Item>
 
+                  <div className="flex gap-3">
+                    <Form.Item
+                      label={<span className="dark:text-gray-300">{t('country') ?? 'Country'}</span>}
+                      className="flex-1"
+                    >
+                      <Controller name="country" control={control} render={({ field }) => (
+                        <Select
+                          {...field}
+                          size="large"
+                          placeholder="Select country"
+                          showSearch
+                          optionFilterProp="label"
+                          options={COUNTRIES}
+                          className="!h-[56px] w-full"
+                          popupClassName="dark:!bg-gray-800"
+                          suffixIcon={<GlobalOutlined className="text-slate-400" />}
+                        />
+                      )} />
+                    </Form.Item>
+
+                    <Form.Item
+                      label={<span className="dark:text-gray-300">{t('region') ?? 'Region'}</span>}
+                      className="flex-1"
+                    >
+                      <Controller name="region" control={control} render={({ field }) => (
+                        <Input
+                          {...field}
+                          prefix={<EnvironmentOutlined className="text-slate-400" />}
+                          size="large"
+                          className="rounded-lg h-[56px] text-sm border-gray-200 dark:!border-gray-600 dark:!bg-gray-800 dark:!text-white"
+                          placeholder="e.g. Tunis, Paris..."
+                        />
+                      )} />
+                    </Form.Item>
+                  </div>
+
+               
                   <Form.Item
                     label={<span className="dark:text-gray-300">{t('password')}</span>}
                     validateStatus={errors.password ? 'error' : undefined}
@@ -216,11 +283,12 @@ const RegisterPage = () => {
                   >
                     <Controller name="password" control={control} render={({ field }) => (
                       <Input.Password {...field} autoComplete="new-password" prefix={<LockOutlined className="text-slate-400" />}
-                        size="large" className="rounded-lg h-[56px] text-sm border-gray-200 dark:!border-gray-600 dark:!bg-gray-800 dark:!text-white focus:border-cyan-500 transition-all"
+                        size="large" className="rounded-lg h-[56px] text-sm border-gray-200 dark:!border-gray-600 dark:!bg-gray-800 dark:!text-white"
                         placeholder="••••••••" />
                     )} />
                   </Form.Item>
 
+              
                   <Form.Item
                     label={<span className="dark:text-gray-300">{t('confirmPassword')}</span>}
                     validateStatus={errors.confirmPassword ? 'error' : undefined}
@@ -228,17 +296,19 @@ const RegisterPage = () => {
                   >
                     <Controller name="confirmPassword" control={control} render={({ field }) => (
                       <Input.Password {...field} prefix={<LockOutlined className="text-slate-400" />}
-                        size="large" className="rounded-lg h-[56px] text-sm border-gray-200 dark:!border-gray-600 dark:!bg-gray-800 dark:!text-white focus:border-cyan-500 transition-all"
+                        size="large" className="rounded-lg h-[56px] text-sm border-gray-200 dark:!border-gray-600 dark:!bg-gray-800 dark:!text-white"
                         placeholder="••••••••" />
                     )} />
                   </Form.Item>
 
+                 
                   <Button onClick={handleGoogleLogin} size="large" block
                     className="!h-[58px] !rounded-[16px] font-bold text-[16px] border !border-slate-200 dark:!border-gray-600 dark:!bg-gray-800 dark:!text-[#00D4D0] !transition-all !duration-300 mb-3 !text-[#00D4D0]">
                     <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="google" className="w-5 h-5 inline mr-2" />
                     {t('google')}
                   </Button>
 
+                 
                   <Button type="primary" htmlType="submit" size="large" loading={loading} block
                     className="h-[58px] rounded-[16px] font-bold text-[16px] !bg-gradient-to-r !from-cyan-500 !to-[#00D4D0] border-0 shadow-[0_10px_30px_rgba(6,182,212,0.4)] tracking-[0.02em] hover:scale-[1.03] transition-all duration-300">
                     {t('signUp')}
@@ -255,7 +325,6 @@ const RegisterPage = () => {
               </Card>
             )}
           </div>
-
         </div>
       </div>
     </div>

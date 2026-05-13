@@ -2,8 +2,9 @@
 
 import { useSearchParams, useRouter, useParams } from "next/navigation";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useAuth } from "@/lib/auth";
+import { supabase } from "@/lib/supabase";
 import winnerPanda from "@/public/winner-panda.png";
 import cryPanda    from "@/public/cry-panda.png";
 import { useTranslations } from "next-intl";
@@ -27,6 +28,65 @@ export default function ResultsPage() {
   const [displayPct, setDisplayPct]     = useState(0);
   const [visible, setVisible]           = useState(false);
 
+  // ── Ref pour éviter double appel en StrictMode ─────────────────────────
+  const saved = useRef(false);
+
+  // ── Sauvegarder résultat + incrémenter players ─────────────────────────
+ useEffect(() => {
+  if (!user || !id) return;
+
+  // Clé unique pour ce quiz + user + session
+  const lockKey = `quiz_saved_${id}_${user.id}_${score}_${total}`;
+  
+  // Si déjà sauvegardé dans cette session → stop
+  if (sessionStorage.getItem(lockKey)) return;
+  sessionStorage.setItem(lockKey, "1");
+
+  const saveResult = async () => {
+    try {
+      // 1. Ajouter dans quiz_history
+      await supabase.from("quiz_history").insert({
+        user_id:   user.id,
+        quiz_id:   id,
+        score:     score,
+        played_at: new Date().toISOString(),
+      });
+
+      // 2. Incrémenter players du quiz
+      await supabase.rpc("increment_players", { quiz_id: id });
+
+      // 3. Mettre à jour stats du user
+      const xpGained = score * 10;
+      const { data: userData } = await supabase
+        .from("users")
+        .select("total_score, quizzes_played, accuracy")
+        .eq("id", user.id)
+        .single();
+
+      if (userData) {
+        const newPlayed   = (userData.quizzes_played ?? 0) + 1;
+        const newScore    = (userData.total_score ?? 0) + xpGained;
+        const newAccuracy = Math.round(
+          ((userData.accuracy ?? 0) * (newPlayed - 1) + percentage) / newPlayed
+        );
+
+        await supabase.from("users").update({
+          total_score:    newScore,
+          quizzes_played: newPlayed,
+          accuracy:       newAccuracy,
+        }).eq("id", user.id);
+      }
+    } catch (err) {
+      console.error("Erreur sauvegarde résultat:", err);
+      // En cas d'erreur, retirer le verrou pour permettre retry
+      sessionStorage.removeItem(lockKey);
+    }
+  };
+
+  saveResult();
+}, [user, id, score, total]);
+
+  // ── Animation compteur ─────────────────────────────────────────────────
   useEffect(() => {
     setTimeout(() => setVisible(true), 100);
     let cur = 0;
@@ -58,10 +118,10 @@ export default function ResultsPage() {
     : [t("tipLoser1"),  t("tipLoser2"),  t("tipLoser3")];
 
   const stats = [
-    { label: t("correct"),  value: score,          icon: "✅", border: "border-emerald-200 dark:border-emerald-800", text: "text-emerald-500",                                                                          bg: "bg-emerald-50 dark:bg-emerald-900/20" },
-    { label: t("wrong"),    value: wrong,           icon: "❌", border: "border-rose-200 dark:border-rose-800",       text: "text-rose-500",                                                                            bg: "bg-rose-50 dark:bg-rose-900/20" },
-    { label: t("total"),    value: total,           icon: "📝", border: "border-slate-200 dark:border-slate-700",     text: "text-slate-600 dark:text-slate-300",                                                       bg: "bg-slate-50 dark:bg-slate-800/50" },
-    { label: t("xpGained"), value: `+${score * 10}`, icon: "⚡", border: isWinner ? "border-cyan-200 dark:border-cyan-800" : "border-pink-200 dark:border-pink-800", text: isWinner ? "text-cyan-500" : "text-pink-500", bg: isWinner ? "bg-cyan-50 dark:bg-cyan-900/20" : "bg-pink-50 dark:bg-pink-900/20" },
+    { label: t("correct"),  value: score,            icon: "✅", border: "border-emerald-200 dark:border-emerald-800", text: "text-emerald-500",                                                                            bg: "bg-emerald-50 dark:bg-emerald-900/20" },
+    { label: t("wrong"),    value: wrong,             icon: "❌", border: "border-rose-200 dark:border-rose-800",       text: "text-rose-500",                                                                              bg: "bg-rose-50 dark:bg-rose-900/20" },
+    { label: t("total"),    value: total,             icon: "📝", border: "border-slate-200 dark:border-slate-700",     text: "text-slate-600 dark:text-slate-300",                                                         bg: "bg-slate-50 dark:bg-slate-800/50" },
+    { label: t("xpGained"), value: `+${score * 10}`, icon: "⚡", border: isWinner ? "border-cyan-200 dark:border-cyan-800" : "border-pink-200 dark:border-pink-800", text: isWinner ? "text-cyan-500" : "text-pink-500",   bg: isWinner ? "bg-cyan-50 dark:bg-cyan-900/20" : "bg-pink-50 dark:bg-pink-900/20" },
   ];
 
   const analysisItems = [
@@ -72,7 +132,6 @@ export default function ResultsPage() {
 
   return (
     <div className="min-h-screen relative overflow-x-hidden">
-
       {/* Background */}
       <div className="fixed inset-0 pointer-events-none z-0">
         {isWinner ? (<>
@@ -92,12 +151,10 @@ export default function ResultsPage() {
         {/* HERO */}
         <div className={`w-full rounded-3xl overflow-hidden border-2 ${isWinner ? "border-teal-200 dark:border-teal-800" : "border-rose-200 dark:border-rose-800"}`}>
           <div className={`h-2 w-full bg-gradient-to-r ${isWinner ? "from-cyan-400 to-teal-500" : "from-rose-400 to-pink-500"}`} />
-
           <div className="bg-white dark:bg-slate-900 px-8 py-6 flex items-center gap-8">
             <div className="shrink-0" style={{ animation: isWinner ? "float 3s ease-in-out infinite" : "sway 2.5s ease-in-out infinite" }}>
               <Image src={isWinner ? winnerPanda : cryPanda} alt={isWinner ? "Winner panda" : "Cry panda"} width={120} height={120} className="drop-shadow-xl" priority />
             </div>
-
             <div className="flex-1 space-y-1">
               <p className="text-xs font-bold text-gray-400 dark:text-slate-500 uppercase tracking-widest">{t("title")}</p>
               <h1 className={`text-3xl font-black leading-tight ${isWinner ? "text-teal-600 dark:text-teal-400" : "text-rose-500 dark:text-rose-400"}`}>
@@ -119,7 +176,6 @@ export default function ResultsPage() {
                 </div>
               </div>
             </div>
-
             <div className="shrink-0 flex flex-col items-center gap-3">
               <div className="relative">
                 <svg width="110" height="110" viewBox="0 0 160 160">
@@ -160,7 +216,6 @@ export default function ResultsPage() {
 
         {/* TWO COLUMNS */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-
           {/* LEFT */}
           <div className="space-y-6">
             <div className="bg-white dark:bg-slate-900 rounded-2xl border border-gray-100 dark:border-slate-800 shadow-sm p-6 space-y-3">

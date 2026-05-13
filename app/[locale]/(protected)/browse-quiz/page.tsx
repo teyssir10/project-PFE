@@ -4,28 +4,36 @@ import React, { useState, useEffect } from "react";
 import QuizCard from "@/components/UI/QuizCard/quiz-card";
 import { SearchOutlined } from "@ant-design/icons";
 import { useRouter } from "next/navigation";
-import { fetchQuizzes } from "@/lib/api/quiz";
+import { fetchQuizzes, deleteQuiz } from "@/lib/api/quiz";
 import { fetchFavorites, addFavorite, removeFavorite } from "@/lib/api/favorites";
 import { useAuth } from "@/lib/auth";
-import { Spin } from "antd";
-import { useTranslations } from "next-intl";
+import { Modal, Spin, message } from "antd";
+import { useTranslations, useLocale } from "next-intl";
+import { useQuizModeStore } from "@/store/useQuizModeStore";
 
 export default function QuizPage() {
   const t = useTranslations("browsePage");
   const router = useRouter();
+  const locale = useLocale();
+  const { user } = useAuth();
+  const { setMode } = useQuizModeStore();
+
   const [search, setSearch] = useState("");
   const [tab, setTab] = useState("all");
-  const [favorites, setFavorites] = useState<string[]>([]);
-  const { user } = useAuth();
   const [quizzes, setQuizzes] = useState<any[]>([]);
+  const [favorites, setFavorites] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
 
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [deletingQuiz, setDeletingQuiz] = useState<any>(null);
+  const [deleteLoading, setDeleteLoading] = useState(false);
+
   const tabs = [
-    { key: "all", label: t("tabAll") },
+    { key: "all",       label: t("tabAll") },
     { key: "community", label: t("tabCommunity") },
-    { key: "my", label: t("tabMy") },
+    { key: "my",        label: t("tabMy") },
     { key: "favorites", label: t("tabFavorites") },
-    { key: "recently", label: t("tabRecently") },
+    { key: "recently",  label: t("tabRecently") },
   ];
 
   useEffect(() => {
@@ -60,13 +68,43 @@ export default function QuizPage() {
     }
   };
 
+  // ── Edit → force mode manual + redirige vers create-quiz ──────────────────
+  const handleOpenEdit = (quiz: any) => {
+    setMode("manual");
+    router.push(`/${locale}/create-quiz?edit=${quiz.id}`);
+  };
+
+  // ── Delete ─────────────────────────────────────────────────────────────────
+  const handleOpenDelete = (quiz: any) => {
+    setDeletingQuiz(quiz);
+    setDeleteModalOpen(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!deletingQuiz) return;
+    setDeleteLoading(true);
+    try {
+      await deleteQuiz(deletingQuiz.id);
+      setQuizzes((prev) => prev.filter((q) => q.id !== deletingQuiz.id));
+      message.success("Quiz deleted successfully");
+      setDeleteModalOpen(false);
+    } catch (err) {
+      console.error(err);
+      message.error("Failed to delete quiz");
+    } finally {
+      setDeleteLoading(false);
+    }
+  };
+
+  // ── Filter ─────────────────────────────────────────────────────────────────
   const filtered = quizzes.filter((q) => {
-    const matchSearch = q.title.toLowerCase().includes(search.toLowerCase());
-    if (tab === "all") return matchSearch;
+    if (!q) return false;
+    const matchSearch = (q.title ?? "").toLowerCase().includes(search.toLowerCase());
+    if (tab === "all")       return matchSearch;
     if (tab === "community") return matchSearch && q.is_community;
-    if (tab === "my") return matchSearch && q.creator_id === user?.id;
+    if (tab === "my")        return matchSearch && q.creator_id === user?.id;
     if (tab === "favorites") return matchSearch && favorites.includes(q.id);
-    if (tab === "recently") return matchSearch && q.recently_played_by?.includes(user?.id || "");
+    if (tab === "recently")  return matchSearch && q.recently_played_by?.includes(user?.id ?? "");
     return true;
   });
 
@@ -99,12 +137,15 @@ export default function QuizPage() {
       {/* Tabs */}
       <div className="flex gap-6 border-b border-gray-200 dark:border-slate-700">
         {tabs.map((item) => (
-          <button key={item.key} onClick={() => setTab(item.key)}
+          <button
+            key={item.key}
+            onClick={() => setTab(item.key)}
             className={`pb-2 text-sm font-medium transition ${
               tab === item.key
                 ? "text-cyan-500 border-b-2 border-cyan-500"
                 : "text-gray-500 dark:text-gray-400"
-            }`}>
+            }`}
+          >
             {item.label}
             {item.key === "favorites" && favorites.length > 0 && (
               <span className="ml-1.5 bg-red-500 text-white text-xs px-1.5 py-0.5 rounded-full">
@@ -116,14 +157,12 @@ export default function QuizPage() {
       </div>
 
       {/* Count */}
-      <div>
-        <p className="text-sm text-gray-500 dark:text-gray-400">
-          {t("showing")}{" "}
-          <span className="font-bold text-cyan-900 dark:text-white">
-            {filtered.length} {t("quizzes")}
-          </span>
-        </p>
-      </div>
+      <p className="text-sm text-gray-500 dark:text-gray-400">
+        {t("showing")}{" "}
+        <span className="font-bold text-cyan-900 dark:text-white">
+          {filtered.length} {t("quizzes")}
+        </span>
+      </p>
 
       {/* Banner */}
       <div className="bg-gradient-to-r from-cyan-600 to-teal-500 text-white p-6 rounded-xl flex justify-between items-center">
@@ -133,12 +172,12 @@ export default function QuizPage() {
         </div>
         <div className="flex gap-3">
           <button
-            onClick={() => router.push("/create-quiz")}
+            onClick={() => router.push(`/${locale}/create-quiz`)}
             className="text-white px-4 py-2 rounded-lg font-semibold border border-white hover:bg-white/10 transition">
             {t("aiGenerate")}
           </button>
           <button
-            onClick={() => router.push("/create-quiz")}
+            onClick={() => router.push(`/${locale}/create-quiz`)}
             className="border border-white px-4 py-2 rounded-lg hover:bg-white/10 transition">
             {t("manual")}
           </button>
@@ -164,10 +203,34 @@ export default function QuizPage() {
               quiz={{ ...quiz, creator: quiz.creator_name, questionCount: quiz.question_count }}
               isFavorite={favorites.includes(quiz.id)}
               onToggleFavorite={toggleFavorite}
+              isOwner={quiz.creator_id === user?.id}
+              onEdit={handleOpenEdit}
+              onDelete={handleOpenDelete}
             />
           ))}
         </div>
       )}
+
+      {/* Delete Modal */}
+      <Modal
+        open={deleteModalOpen}
+        onCancel={() => setDeleteModalOpen(false)}
+        onOk={handleConfirmDelete}
+        okText="Delete"
+        cancelText="Cancel"
+        confirmLoading={deleteLoading}
+        okButtonProps={{ danger: true }}
+        title="🗑️ Delete quiz"
+      >
+        <p className="text-gray-500 mt-2">
+          Are you sure you want to delete{" "}
+          <span className="font-semibold text-gray-800 dark:text-white">
+            {deletingQuiz?.title}
+          </span>
+          ? This action cannot be undone.
+        </p>
+      </Modal>
+
     </div>
   );
 }

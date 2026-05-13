@@ -152,42 +152,50 @@
     "passwordError": "Veuillez entrer votre mot de passe",
     "passwordMin": "Le mot de passe doit contenir au moins 6 caractères",
     "passwordMatch": "Les mots de passe ne correspondent pas",
-    "confirmPasswordError": "Veuillez confirmer votre mot de passe"
+    "confirmPasswordError": "Veuillez confirmer votre mot de passe",
+    "country": "Pays",
+"region": "Région"
   },
+
   "dashboard": {
     "welcome": "Bon retour,",
-    "subtitle": "Prêt à vous challenger aujourd'hui ?",
-    "recentActivity": "Activité Récente",
+    "subtitle": "Prêt à te challenger aujourd'hui ?",
+    "browseQuizzes": "Parcourir les quiz",
+    "generateAI": "Générer avec l'IA",
+    "recentActivity": "Activité récente",
+    "recommended": "Recommandés pour toi",
     "noActivity": "Aucune activité pour l'instant",
-    "noActivitySub": "Jouez votre premier quiz pour le voir ici",
-    "recommended": "Recommandé pour Vous",
+    "noActivitySub": "Joue ton premier quiz pour le voir ici",
     "noRecommended": "Aucune recommandation pour l'instant",
-    "getMore": "Plus de Recommandations",
     "questions": "questions",
+    "getMore": "Obtenir plus de recommandations",
     "justNow": "À l'instant",
-    "hoursAgo": "il y a {hours}h",
+    "hoursAgo": "Il y a {hours}h",
     "yesterday": "Hier",
-    "daysAgo": "il y a {days} jours"
-  },
-  "stats": {
-    "quizzesPlayed": "Quiz Joués",
-    "avgScore": "Score Moy.",
-    "totalPoints": "Points Totaux",
-    "globalRank": "Rang Global",
-    "thisWeek": "+{count} cette semaine",
-    "avgPercent": "{avg}% moy.",
-    "pointsWeek": "+{points} cette semaine",
-    "notRanked": "Non classé"
+    "daysAgo": "Il y a {days} jours"
   },
   "quickActions": {
-    "title": "Actions Rapides",
-    "startQuiz": "Démarrer Quiz",
-    "startQuizSub": "Commencer maintenant",
-    "playFriends": "Jouer entre amis",
-    "playFriendsSub": "Défier vos amis",
-    "generateAI": "Générer avec IA",
-    "generateAISub": "Créer instantanément"
+    "title": "Actions rapides",
+    "startQuiz": "Démarrer",
+    "startQuizSub": "Jouer maintenant",
+    "playFriends": "Amis",
+    "playFriendsSub": "Défier tes amis",
+    "createQuiz": "Créer",
+    "createQuizSub": "Mode manuel",
+    "generateAI": "IA",
+    "generateAISub": "Générer vite"
   },
+  "stats": {
+    "quizzesPlayed": "Quiz joués",
+    "avgScore": "Score moyen",
+    "totalPoints": "Points totaux",
+    "globalRank": "Classement mondial",
+    "thisWeek": "+{count} cette semaine",
+    "avgPercent": "{avg}% en moyenne",
+    "pointsWeek": "+{points} pts cette semaine",
+    "notRanked": "Non classé"
+  },
+
    "sidebar": {
     "platform": "Plateforme Quiz IA",
     "main": "PRINCIPAL",
@@ -204,6 +212,7 @@
   },
   "topbar": {
     "notifications": "Notifications",
+    "settings": "Paramètres",
     "notif1": "Nouveau défi de Ahmed !",
     "notif2": "Vous avez atteint le rang #42 mondial",
     "notif3": "Le rapport hebdomadaire est prêt",
@@ -410,7 +419,7 @@
     "timeExpired": "Temps écoulé — cette question est verrouillée.",
     "typePlaceholder": "Tapez votre réponse ici...",
     "correctAnswer": "Bonne réponse !",
-    "wrongAnswer": "Mauvaise réponse. La bonne réponse était :",
+    "wrongAnswer": "Mauvaise réponse.",
     "currentScore": "Score actuel :",
     "correct": "correct",
     "useHint": "Utiliser l'indice",
@@ -477,7 +486,136 @@
     "tipLoser1": "Relis le cours avant de retenter 📚",
     "tipLoser2": "Utilise les indices la prochaine fois 💡",
     "tipLoser3": "Commence par un quiz plus facile 🎯"
-  }
+  },
+ 
+  "leaderboard": {
+    "title": "Classement",
+    "subtitle": "Meilleurs joueurs classés par performance",
+    "loading": "Chargement du classement...",
+    "error": "Impossible de charger le classement. Veuillez réessayer.",
+    "filter_score": "Score",
+    "filter_accuracy": "Précision",
+    "filter_quizzes": "Quiz joués",
+    "top10_title": "Top 10 Joueurs",
+    "col_player": "Joueur",
+    "col_country": "Pays",
+    "col_quizzes": "Quiz",
+    "col_score": "Score",
+    "col_accuracy": "Précision",
+    "search_placeholder": "Rechercher par nom...",
+    "all_countries": "Tous les pays",
+    "showing_results": "{count} joueurs trouvés",
+    "no_results": "Aucun joueur ne correspond à votre recherche",
+    "anonymous": "Anonyme",
+    "you": "Vous"
+  },
+   "settings": {
+    "title": "Paramètres",
+    "subtitle": "Gérez votre compte et vos préférences",
+    "save": "Enregistrer",
+    "saved": "Enregistré !",
+    "saveError": "Une erreur est survenue",
+    "nav": {
+      "profile": "Profil",
+      "security": "Sécurité",
+      "language": "Langue",
+      "appearance": "Apparence",
+      "notifications": "Notifications"
+    },
+    "profile": {
+      "firstName": "Prénom",
+      "lastName": "Nom",
+      "email": "Email",
+      "bio": "Bio"
+    },
+    "security": {
+      "currentPwd": "Mot de passe actuel",
+      "newPwd": "Nouveau mot de passe",
+      "confirmPwd": "Confirmer le mot de passe",
+      "changeBtn": "Changer le mot de passe",
+      "pwdMismatch": "Les mots de passe ne correspondent pas",
+      "pwdTooShort": "Minimum 6 caractères",
+      "pwdChanged": "Mot de passe modifié !",
+      "dangerZone": "Zone dangereuse",
+      "logout": "Se déconnecter"
+    },
+    "appearance": {
+      "light": "Mode clair",
+      "dark": "Mode sombre",
+      "themeSub": "Changer le thème de l'interface"
+    },
+    "notifPrefs": {
+      "welcome": "Messages de bienvenue",
+      "welcomeSub": "Recevoir un message lors de l'inscription",
+      "trophy": "Trophées et classements",
+      "trophySub": "Être notifié de vos récompenses",
+      "multiplayer": "Invitations multijoueur",
+      "multiplayerSub": "Recevoir les invitations de vos amis",
+      "ai": "Quiz générés par IA",
+      "aiSub": "Être notifié quand un quiz IA est prêt"
+    }},
+      "notifications": {
+    "title": "Notifications",
+    "unreadCount": "{count} non lues",
+    "markAllRead": "Tout marquer comme lu",
+    "all": "Toutes",
+    "unread": "Non lues",
+    "read": "Lues",
+    "empty": "Aucune notification",
+    "emptySub": "Tu n'as aucune notification pour l'instant",
+    "justNow": "À l'instant",
+    "minsAgo": "Il y a {mins} min",
+    "hoursAgo": "Il y a {hours}h",
+    "yesterday": "Hier",
+    "daysAgo": "Il y a {days} jours"
+  },
+  
+  "profile": {
+    "editProfile": "Modifier le profil",
+    "saveChanges": "Enregistrer les modifications",
+    "saveSuccess": "Profil mis à jour avec succès !",
+    "saveError": "Une erreur est survenue. Veuillez réessayer.",
+
+    "userInfo": "Informations utilisateur",
+    "username": "Nom d'utilisateur",
+    "email": "Email",
+    "country": "Pays",
+    "region": "Région",
+    "memberSince": "Membre depuis",
+    "quizzesPlayed": "Quiz joués",
+    "totalScore": "Score total",
+    "accuracy": "Précision",
+    "notSpecified": "Non renseigné",
+    "countryNotSet": "Pays non défini",
+
+    "firstName": "Prénom",
+    "lastName": "Nom",
+    "newPassword": "Nouveau mot de passe",
+    "confirmPassword": "Confirmer le mot de passe",
+
+    "achievements": "Succès",
+    "unlocked": "Débloqué",
+
+    "performance": "Performance",
+    "successRate": "Taux de réussite",
+    "completionRate": "Taux de complétion",
+
+    "recentQuizzes": "Quiz récents",
+    "noQuizzes": "Aucun quiz joué pour l'instant. Lancez votre premier quiz !",
+    "justNow": "À l'instant",
+    "yesterday": "Hier",
+
+    "globalRanking": "Classement mondial",
+    "globalRank": "Rang mondial",
+    "totalPoints": "Points totaux"
+  },
+  "leaderboard": {
+  "rank": "Rang",
+  "user": "Utilisateur",
+  "score": "Score", 
+  "quizzes": "Quiz"
+}
+
 
 
 
