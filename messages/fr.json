@@ -1,0 +1,663 @@
+{
+  "hero": {
+    "badge": "Apprentissage par IA",
+    "title1": "Créer des Quiz",
+    "title2": "Incroyables",
+    "title3": "en Secondes",
+    "description": "Laissez l'intelligence artificielle générer des quiz engageants et personnalisés adaptés à n'importe quel sujet. Parfait pour les enseignants, étudiants et apprenants.",
+    "getStarted": "Commencer",
+    "learnMore": "En savoir plus",
+    "stats": { "quizzes": "Quiz Créés", "users": "Utilisateurs Actifs", "satisfaction": "Satisfaction" },
+    "question": "Question 1 sur 10",
+    "questionText": "Où vivent la plupart des pandas dans le monde ?",
+    "nextQuestion": "Question suivante"
+  },
+  "features": {
+    "title": "Fonctionnalités Puissantes",
+    "subtitle": "Tout ce dont vous avez besoin pour créer, gérer et analyser des quiz engageants.",
+    "ai": { "title": "Génération par IA", "description": "L'IA avancée crée des quiz parfaitement adaptés à partir de n'importe quel contenu en quelques secondes." },
+    "fast": { "title": "Ultra Rapide", "description": "Obtenez des résultats en millisecondes grâce à notre moteur de traitement optimisé." },
+    "analytics": { "title": "Analytiques Détaillées", "description": "Suivez les performances et obtenez des insights sur les schémas d'apprentissage." },
+    "secure": { "title": "Sécurisé et Privé", "description": "Vos données sont chiffrées et jamais partagées avec des tiers." },
+    "sharing": { "title": "Partage Facile", "description": "Partagez des quiz avec étudiants ou collègues avec un seul lien." },
+    "design": { "title": "Design Personnalisable", "description": "Personnalisez vos quiz avec des thèmes et une image de marque sur mesure." }
+  },
+  "steps": {
+    "title": "Comment ça marche",
+    "subtitle": "Commencez en 3 étapes simples et débutez votre parcours d'apprentissage",
+    "step1": { "title": "Choisir un Sujet", "description": "Sélectionnez parmi des centaines de catégories de quiz dans différentes matières et niveaux de difficulté." },
+    "step2": { "title": "Passer le Quiz", "description": "Répondez à des questions générées par IA qui s'adaptent à votre niveau. Obtenez un retour instantané sur chaque réponse." },
+    "step3": { "title": "Suivre les Progrès", "description": "Consultez des analytiques détaillées, gagnez des badges et rivalisez sur les classements avec d'autres apprenants." }
+  },
+  "categories": {
+    "title": "Explorer les Catégories",
+    "subtitle": "Choisissez parmi notre collection diversifiée de catégories de quiz et commencez à apprendre aujourd'hui",
+    "quizzes": "Quiz",
+    "startQuiz": "Commencer",
+    "history": "Histoire", "science": "Science", "geography": "Géographie",
+    "art": "Art", "technology": "Technologie", "sports": "Sports",
+    "movies": "Films", "music": "Musique", "math": "Maths",
+    "language": "Langues", "space": "Espace", "animals": "Animaux",
+    "food": "Nourriture", "gaming": "Jeux vidéo", "business": "Business",
+    "health": "Santé", "culture": "Culture", "nature": "Nature",
+    "politics": "Politique", "literature": "Littérature"
+  },
+  "leaderboard": {
+    "title": "Classement des Meilleurs",
+    "subtitle": "Rejoignez les meilleurs et voyez comment vous vous classez par rapport aux autres apprenants",
+    "rank": "Rang", "user": "Utilisateur", "score": "Score", "quizzes": "Quiz"
+  },
+  "cta": {
+    "badge": "Commencer Aujourd'hui",
+    "title": "Prêt à Transformer Votre Expérience d'Apprentissage ?",
+    "subtitle": "Rejoignez des milliers d'enseignants et d'étudiants qui utilisent QuizAI pour créer des quiz engageants et intelligents.",
+    "button": "Créer Votre Premier Quiz"
+  },
+
+  "contact": {
+    "title": "Nous sommes là",
+    "titleHighlight": "pour vous aider.",
+    "subtitle": "Que vous ayez des questions sur nos fonctionnalités, besoin d'assistance technique ou souhaitiez partager vos retours, notre équipe est prête à vous aider.",
+    "email": "Email",
+    "emailSub": "Notre équipe répond en 24h",
+    "helpCenter": "Centre d'aide",
+    "helpSub": "Parcourez notre FAQ et documentation",
+    "helpLink": "Aller au centre d'aide →",
+    "formTitle": "Envoyez-nous un message",
+    "fullName": "Nom complet",
+    "namePlaceholder": "Votre nom",
+    "emailLabel": "Email",
+    "subject": "Sujet",
+    "selectSubject": "Choisir un sujet",
+    "generalQuestion": "Question générale",
+    "technicalSupport": "Support technique",
+    "billing": "Facturation",
+    "feedback": "Retour d'expérience",
+    "message": "Message",
+    "messagePlaceholder": "Comment pouvons-nous vous aider ?",
+    "send": "Envoyer le message",
+    "success": "✓ Message envoyé ! Nous vous répondrons bientôt."
+  },
+  "navbar": {
+    "home": "Accueil",
+    "features": "Fonctionnalités",
+    "howItWorks": "Comment ça marche",
+    "categories": "Catégories",
+    "leaderboard": "Classement",
+    "login": "Connexion",
+    "register": "S'inscrire",
+    "logout": "Déconnexion",
+    "dashboard": "Tableau de bord"
+  },
+  "footer": {
+    "description": "Donner aux apprenants du monde entier le pouvoir d'apprendre grâce à l'IA.",
+    "company": "Entreprise",
+    "support": "Support",
+    "contactUs": "Nous contacter",
+    "helpCenter": "Centre d'aide",
+    "privacyPolicy": "Politique de confidentialité",
+    "rights": "Tous droits réservés."
+  },
+
+  "login": {
+    "tagline": "Créez des quiz intelligents en quelques secondes grâce à l'IA et suivez votre parcours d'apprentissage avec des analyses puissantes.",
+    "fast": "Ultra Rapide",
+    "fastDesc": "Générez des quiz instantanément avec la technologie IA avancée.",
+    "smart": "Apprentissage Intelligent",
+    "smartDesc": "Des quiz adaptatifs adaptés à chaque niveau d'apprenant.",
+    "analytics": "Analytiques Avancées",
+    "analyticsDesc": "Suivez vos progrès et améliorez vos connaissances efficacement.",
+    "welcome": "Bon Retour 👋",
+    "welcomeSub": "Connectez-vous pour accéder à vos quiz",
+    "email": "Email",
+    "password": "Mot de passe",
+    "signIn": "Se connecter",
+    "or": "Ou",
+    "google": "Continuer avec Google",
+    "noAccount": "Pas de compte ? S'inscrire",
+    "demo": "Compte démo :",
+    "loginSuccess": "Connecté avec succès !",
+    "emailError": "Veuillez entrer votre email",
+    "emailInvalid": "Veuillez entrer un email valide",
+    "passwordError": "Veuillez entrer votre mot de passe",
+    "passwordMin": "Le mot de passe doit contenir au moins 6 caractères"
+  },
+  "register": {
+    "tagline": "Créez des quiz intelligents en quelques secondes grâce à l'IA et suivez votre parcours d'apprentissage.",
+    "fast": "Ultra Rapide",
+    "fastDesc": "Générez des quiz instantanément avec la technologie IA avancée.",
+    "smart": "Apprentissage Intelligent",
+    "smartDesc": "Des quiz adaptatifs adaptés à chaque niveau d'apprenant.",
+    "analytics": "Analytiques Avancées",
+    "analyticsDesc": "Suivez vos progrès et améliorez vos connaissances efficacement.",
+    "title": "Créer un Compte ✍️",
+    "subtitle": "Inscrivez-vous pour créer et passer des quiz",
+    "firstName": "Prénom",
+    "lastName": "Nom",
+    "email": "Email",
+    "password": "Mot de passe",
+    "confirmPassword": "Confirmer le mot de passe",
+    "signUp": "S'inscrire",
+    "or": "Ou",
+    "google": "Continuer avec Google",
+    "hasAccount": "Déjà un compte ? Se connecter",
+    "successTitle": "Compte créé avec succès !",
+    "successText": "Vérifiez votre email pour confirmer votre compte avant de vous connecter.",
+    "emailSent": "Email de confirmation envoyé",
+    "goToLogin": "Aller à la page de connexion →",
+    "firstNameError": "Veuillez entrer votre prénom",
+    "lastNameError": "Veuillez entrer votre nom",
+    "emailError": "Veuillez entrer votre email",
+    "emailInvalid": "Veuillez entrer un email valide",
+    "passwordError": "Veuillez entrer votre mot de passe",
+    "passwordMin": "Le mot de passe doit contenir au moins 6 caractères",
+    "passwordMatch": "Les mots de passe ne correspondent pas",
+    "confirmPasswordError": "Veuillez confirmer votre mot de passe"
+  },
+  "dashboard": {
+    "welcome": "Bon retour,",
+    "subtitle": "Prêt à vous challenger aujourd'hui ?",
+    "recentActivity": "Activité Récente",
+    "noActivity": "Aucune activité pour l'instant",
+    "noActivitySub": "Jouez votre premier quiz pour le voir ici",
+    "recommended": "Recommandé pour Vous",
+    "noRecommended": "Aucune recommandation pour l'instant",
+    "getMore": "Plus de Recommandations",
+    "questions": "questions",
+    "justNow": "À l'instant",
+    "hoursAgo": "il y a {hours}h",
+    "yesterday": "Hier",
+    "daysAgo": "il y a {days} jours"
+  },
+  "stats": {
+    "quizzesPlayed": "Quiz Joués",
+    "avgScore": "Score Moy.",
+    "totalPoints": "Points Totaux",
+    "globalRank": "Rang Global",
+    "thisWeek": "+{count} cette semaine",
+    "avgPercent": "{avg}% moy.",
+    "pointsWeek": "+{points} cette semaine",
+    "notRanked": "Non classé"
+  },
+  "quickActions": {
+    "title": "Actions Rapides",
+    "startQuiz": "Démarrer Quiz",
+    "startQuizSub": "Commencer maintenant",
+    "playFriends": "Jouer entre amis",
+    "playFriendsSub": "Défier vos amis",
+    "generateAI": "Générer avec IA",
+    "generateAISub": "Créer instantanément"
+  },
+   "sidebar": {
+    "platform": "Plateforme Quiz IA",
+    "main": "PRINCIPAL",
+    "play": "JOUER",
+    "account": "COMPTE",
+    "dashboard": "Tableau de bord",
+    "browseQuizzes": "Explorer les Quiz",
+    "createQuiz": "Créer un Quiz",
+    "analytics": "Analytiques",
+    "multiplayer": "Multijoueur",
+    "leaderboard": "Classement",
+    "settings": "Paramètres",
+    "logout": "Déconnexion"
+  },
+  "topbar": {
+    "notifications": "Notifications",
+    "notif1": "Nouveau défi de Ahmed !",
+    "notif2": "Vous avez atteint le rang #42 mondial",
+    "notif3": "Le rapport hebdomadaire est prêt",
+    "minutesAgo": "il y a 2 min",
+    "hourAgo": "il y a 1 heure",
+    "yesterday": "Hier",
+    "profile": "Profil",
+    "logout": "Déconnexion",
+    "aiGenerate": "Générer par IA",
+    "manual": "Manuel",
+    "generateQuiz": "Générer Quiz IA"
+  },
+  "stepper": {
+    "aiStep1": "Configurer le quiz",
+    "aiStep2": "Génération",
+    "aiStep3": "Réviser et publier",
+    "manualStep1": "Infos du quiz",
+    "manualStep2": "Créer les questions",
+    "manualStep3": "Réviser et publier",
+    "stepOf": "Étape {current} sur {total}",
+    "saveDraft": "Enregistrer le brouillon",
+    "reviewPublish": "Réviser et Publier"
+  },
+   "aiQuiz": {
+    "badge": "Créateur de Quiz IA",
+    "title1": "Créer Votre",
+    "title2": "Quiz",
+    "description": "Créez des quiz puissants en quelques secondes grâce à l'IA, ou concevez-les manuellement avec un contrôle total. Tout est conçu pour rendre la création de quiz",
+    "descriptionHighlight": "simple, rapide et agréable.",
+    "describeTitle": "Décrivez Votre Quiz",
+    "describeSub": "Soyez précis pour de meilleurs résultats IA",
+    "quizTitle": "Titre du Quiz",
+    "quizTitlePlaceholder": "ex. Maîtrise JavaScript ES6",
+    "aiPrompt": "Prompt IA",
+    "aiPromptPlaceholder": "Décrivez les sujets, sous-sujets, style...",
+    "settingsTitle": "Paramètres du Quiz",
+    "settingsSub": "Configurer la structure et la difficulté",
+    "category": "Catégorie",
+    "language": "Langue",
+    "difficulty": "Difficulté",
+    "numQuestions": "Nombre de Questions",
+    "timer": "Minuterie (minutes)",
+    "other": "Autre",
+    "customPlaceholder": "Personnalisé...",
+    "generating": "Génération...",
+    "generate": "✨ Générer le Quiz",
+    "previewTitle": "Aperçu du Quiz",
+    "previewSub": "Les questions générées apparaissent ici",
+    "statusGenerating": "Génération...",
+    "statusWaiting": "En attente",
+    "noQuizYet": "Aucun quiz généré",
+    "noQuizSub": "Remplissez le formulaire et cliquez sur",
+    "noQuizBtn": "Générer le Quiz",
+    "noQuizSub2": "pour créer vos questions instantanément."
+  },
+  
+  "manualQuiz": {
+    "step": "Étape 1 sur 3",
+    "title": "Paramètres du Quiz",
+    "subtitle": "Configurez les détails avant d'ajouter des questions",
+    "basicInfo": "Informations de base",
+    "difficulty": "Difficulté",
+    "category": "Catégorie",
+    "coverImage": "Image de couverture",
+    "optional": "optionnel",
+    "timePerQuestion": "Temps par question",
+    "summary": "Résumé",
+    "summaryTitle": "Titre",
+    "summaryDifficulty": "Difficulté",
+    "summaryCategory": "Catégorie",
+    "summaryTimer": "Minuterie",
+    "summaryCover": "Couverture",
+    "uploaded": "✓ Téléchargé",
+    "perQuestion": "s par question",
+    "back": "← Retour",
+    "continue": "Continuer vers les Questions",
+    "alertTitle": "Veuillez entrer un titre de quiz"
+  },
+  "categorySelector": {
+    "science": "🔬 Science",
+    "history": "📜 Histoire",
+    "tech": "💻 Technologie",
+    "math": "➗ Mathématiques",
+    "language": "🗣️ Langue",
+    "culture": "🎨 Culture & Arts",
+    "sport": "⚽ Sport",
+    "music": "🎵 Musique",
+    "geo": "🌍 Géographie",
+    "cinema": "🎬 Cinéma",
+    "custom": "✏️ Personnalisé...",
+    "customPlaceholder": "Tapez votre propre catégorie..."
+  },
+  "coverImage": {
+    "clickOrDrag": "Cliquez ou glissez pour télécharger",
+    "fileInfo": "PNG ou JPG, jusqu'à 2MB",
+    "change": "Changer",
+    "remove": "Supprimer",
+    "sizeError": "L'image doit être inférieure à 2MB"
+  },
+  "difficulty": {
+    "easy": "Facile",
+    "easyDesc": "Pour débutants",
+    "medium": "Moyen",
+    "mediumDesc": "Un peu challengeant",
+    "hard": "Difficile",
+    "hardDesc": "Niveau avancé",
+    "mixed": "Mixte",
+    "mixedDesc": "Tous niveaux"
+  },
+  "quizInfo": {
+    "titleLabel": "Titre du Quiz",
+    "titlePlaceholder": "Entrez le titre de votre quiz ici...",
+    "required": "Requis pour continuer",
+    "descLabel": "Description",
+    "descOptional": "(optionnel)",
+    "descPlaceholder": "De quoi parle ce quiz ? Donnez un indice aux participants..."
+  },
+  "timer": {
+    "custom": "Personnalisé",
+    "placeholder": "ex. 75",
+    "seconds": "secondes",
+    "currently": "Actuellement :",
+    "perQuestion": "s par question"
+  },
+  
+  "questionEditor": {
+    "questionLabel": "Question",
+    "questionPlaceholder": "Tapez votre question ici...",
+    "studentAnswer": "Les étudiants taperont leur propre réponse",
+    "correctAnswer": "Bonne Réponse",
+    "correctAnswerRequired": "* requis",
+    "correctAnswerPlaceholder": "Tapez la bonne réponse attendue...",
+    "caseInsensitive": "💡 La comparaison sera insensible à la casse",
+    "hint": "Indice",
+    "hintOptional": "(optionnel)",
+    "hintPlaceholder": "Donnez aux étudiants un indice pour trouver la réponse...",
+    "deleteQuestion": "Supprimer cette question"
+  },
+  "optionsList": {
+    "answersLabel": "Réponses —",
+    "answersHint": "cliquez sur le cercle pour marquer la bonne réponse",
+    "optionPlaceholder": "Option {letter}...",
+    "addOption": "Ajouter une option"
+  },
+  "typeTabs": {
+    "multiple": "Choix multiple",
+    "truefalse": "Vrai / Faux",
+    "short": "Réponse courte"
+  },
+  "settingsCard": {
+    "title": "Paramètres de la question",
+    "points": "🏆 Valeur des points",
+    "noPoints": "Sans points",
+    "noPointsDesc": "Non noté",
+    "standard": "Standard",
+    "standardDesc": "1× points",
+    "double": "Double",
+    "doubleDesc": "2× points"
+  },
+  "quizSidebar": {
+    "back": "Retour",
+    "titlePlaceholder": "Titre du quiz...",
+    "questions": "question",
+    "questionsPlural": "questions",
+    "untitled": "Question sans titre",
+    "addQuestion": "Ajouter une question"
+  },
+  "manualQuizEditor": {
+    "step": "Étape 2 sur 3 — Créer les Questions",
+    "question": "Question",
+    "of": "sur",
+    "mustLogin": "Vous devez être connecté",
+    "fillTexts": "Veuillez remplir tous les textes des questions",
+    "selectCorrect": "Veuillez sélectionner une bonne réponse pour chaque question",
+    "enterShortAnswer": "Veuillez entrer la bonne réponse pour les questions à réponse courte",
+    "saveSuccess": "Quiz sauvegardé avec succès ! 🎉",
+    "saveError": "Erreur : "
+  },
+  
+  "browsePage": {
+    "searchPlaceholder": "Rechercher des quiz...",
+    "tabAll": "Tous les quiz",
+    "tabCommunity": "Communauté",
+    "tabMy": "Mes quiz",
+    "tabFavorites": "Favoris",
+    "tabRecently": "Récemment joués",
+    "showing": "Affichage de",
+    "quizzes": "quiz",
+    "bannerTitle": "Vous voulez créer votre propre quiz ?",
+    "bannerSub": "Générez instantanément avec l'IA",
+    "aiGenerate": "Générer par IA",
+    "manual": "Manuel",
+    "emptyFavTitle": "Aucun favori pour l'instant",
+    "emptyFavSub": "Cliquez sur le cœur d'un quiz pour le sauvegarder ici",
+    "emptySearchTitle": "Aucun quiz trouvé",
+    "emptySearchSub": "Essayez une autre recherche"
+  
+},
+
+  "quizPlay": {
+    "noQuestions": "Aucune question trouvée pour ce quiz.",
+    "question": "Question",
+    "score": "Score",
+    "timeExpired": "Temps écoulé — cette question est verrouillée.",
+    "typePlaceholder": "Tapez votre réponse ici...",
+    "correctAnswer": "Bonne réponse !",
+    "wrongAnswer": "Mauvaise réponse. La bonne réponse était :",
+    "currentScore": "Score actuel :",
+    "correct": "correct",
+    "useHint": "Utiliser l'indice",
+    "skip": "Passer →",
+    "confirm": "✅ Confirmer la réponse",
+    "next": "Question suivante →",
+    "finish": "🎉 Terminer",
+    "quizNotFound": "Quiz introuvable.",
+    "goBack": "Retour"
+  },
+  "quizSidebarPlay": {
+    "questions": "Questions",
+    "answered": "Répondues",
+    "skipped": "Passées",
+    "remaining": "Restantes",
+    "progress": "Progression"
+  },
+  "quizHeader": {
+    "sec": "sec",
+    "exit": "Quitter le quiz"
+  },
+  
+  "results": {
+    "title": "Résultats du Quiz",
+    "correct": "correctes",
+    "wrong": "fausses",
+    "total": "total",
+    "xpGained": "XP Gagné",
+    "progression": "📈 Progression",
+    "achieved": "réussi",
+    "analysis": "📊 Analyse",
+    "successRate": "Taux de réussite",
+    "correctAnswers": "Bonnes réponses",
+    "wrongAnswers": "Mauvaises réponses",
+    "tipsWinner": "💡 Conseils pour continuer",
+    "tipsLoser": "💡 Conseils pour progresser",
+    "performanceTop": "Tu es dans le top ! 🏅",
+    "performanceBetter": "Tu peux faire mieux ! 💪",
+    "performanceSubWinner": "{name}, tu maîtrises bien ce sujet.",
+    "performanceSubLoser": "{name}, révise et retente ce quiz !",
+    "performance": "Performance",
+    "nextStep": "🎯 Prochaine étape",
+    "replay": "🔄 Rejouer ce quiz",
+    "explore": "🔍 Explorer d'autres quiz",
+    "backDashboard": "🏠 Retour au Dashboard",
+    "msg100Title": "Parfait, {name} ! 🏆",
+    "msg100Sub": "Score absolu — tu es imbattable !",
+    "msg100Badge": "Légendaire",
+    "msg80Title": "Excellent, {name} ! 🎉",
+    "msg80Sub": "Très belle performance, continue !",
+    "msg80Badge": "Expert",
+    "msg50Title": "Bien joué, {name} ! 👍",
+    "msg50Sub": "Tu passes la barre, encore un effort !",
+    "msg50Badge": "Passable",
+    "msg25Title": "Peut mieux faire, {name} 😅",
+    "msg25Sub": "Révise et retente, tu vas y arriver !",
+    "msg25Badge": "Insuffisant",
+    "msg0Title": "Courage, {name} ! 😢",
+    "msg0Sub": "Ne lâche pas ! La prochaine sera la bonne !",
+    "msg0Badge": "À revoir",
+    "tipWinner1": "Continue sur cette lancée ! 🚀",
+    "tipWinner2": "Essaie un quiz plus difficile 💪",
+    "tipWinner3": "Partage ton score avec tes amis 🎊",
+    "tipLoser1": "Relis le cours avant de retenter 📚",
+    "tipLoser2": "Utilise les indices la prochaine fois 💡",
+    "tipLoser3": "Commence par un quiz plus facile 🎯"
+  },
+  "multiplayer": {
+    "title": {
+      "prefix": "Mode",
+      "highlight": "Multijoueur"
+    },
+    "subtitle": "Défiez vos amis en temps réel et dominez le classement",
+
+    "join": {
+      "title": "Rejoindre une salle",
+      "subtitle": "Entrer dans une partie existante",
+      "codeLabel": "Code de la salle",
+      "codePlaceholder": "ABC123",
+      "button": "Rejoindre",
+      "connecting": "Connexion...",
+      "errorEmpty": "Veuillez entrer un code de salle",
+      "errorNotFound": "Salle introuvable. Vérifiez le code.",
+      "errorStarted": "Cette salle a déjà commencé."
+    },
+
+    "create": {
+      "title": "Créer une salle",
+      "subtitle": "Hébergez votre propre partie",
+      "description": "Choisissez un quiz et invitez vos amis avec un code unique. Lancez la partie quand tout le monde est prêt.",
+      "steps": {
+        "chooseQuiz": "Choisir un quiz",
+        "shareCode": "Partager le code",
+        "startGame": "Lancer la partie"
+      },
+      "button": "Choisir un quiz →"
+    },
+
+    "stats": {
+      "realTime": "Temps réel",
+      "maxPlayers": "Jusqu'à 50 joueurs",
+      "leaderboard": "Classement en direct"
+    }
+  },
+  "lobby": {
+    "header": {
+      "label": "Salle d'attente",
+      "hostTitle": "Vous êtes l'hôte 👑",
+      "guestTitle": "En attente du lancement...",
+      "playerCount": "{count, plural, one {# joueur} other {# joueurs}}"
+    },
+
+    "share": {
+      "codeLabel": "Code de la salle",
+      "codeHint": "Partagez ce code avec vos amis",
+      "qrLabel": "QR Code",
+      "qrHint": "Scanner pour rejoindre",
+      "linkLabel": "Lien d'invitation",
+      "copy": "Copier",
+      "copied": "✓ Copié"
+    },
+
+    "players": {
+      "title": "Joueurs ({count})",
+      "waiting": "{count} en attente",
+      "empty": "En attente de joueurs...",
+      "you": "Vous",
+      "host": "Hôte",
+      "waitingStatus": "En attente"
+    },
+
+    "actions": {
+      "closeRoom": "Fermer la salle",
+      "leave": "Quitter",
+      "waitingForHost": "En attente du lancement par l'hôte...",
+      "waitingForPlayers": "En attente d'au moins un joueur...",
+      "playersInRoom": "{count, plural, one {# joueur dans la salle} other {# joueurs dans la salle}}",
+      "startGame": "🚀 Lancer la partie",
+      "starting": "Lancement..."
+    },
+
+    "confirm": {
+      "hostTitle": "Fermer la salle ?",
+      "guestTitle": "Quitter la salle ?",
+      "hostMessage": "Tous les joueurs seront expulsés et la salle sera fermée définitivement.",
+      "guestMessage": "Vous serez retiré de la salle d'attente. Vous pourrez rejoindre une autre partie.",
+      "cancel": "Annuler",
+      "processing": "En cours…",
+      "hostConfirm": "Fermer la salle",
+      "guestConfirm": "Quitter"
+    }
+  
+},
+
+  "quizPlay": {
+    "question": "Question",
+    "go": "GO!",
+    "multiplayer": "Multijoueur",
+    "pts": "pts",
+    "timeExpired": "Temps écoulé ! Vous n'avez pas répondu à temps.",
+    "wrongAnswer": "Mauvaise réponse",
+    "confirm": "Confirmer",
+    "waitingForHost": "En attente de l'hôte...",
+    "waitingForPlayers": "En attente des joueurs... ({count} au total)",
+    "finish": "🎉 Terminer",
+    "nextQuestion": "Question suivante →"
+  },
+      "finalLeaderboard": {
+      "title": "Résultats Finaux",
+      "pandaAlt": "Panda gagnant",
+      "pts": "pts",
+      "playerCount": "{count, plural, one {# joueur} other {# joueurs}}",
+      "rankingLabel": "Classement",
+      "you": "Vous",
+      "tied": "Égalité",
+      "exploreQuizzes": "Explorer les quiz",
+      "dashboard": "Tableau de bord →",
+      "result": {
+        "tieLine1": "Égalité —",
+        "tieLine2": "Vous gagnez tous les deux !",
+        "wonLine1": "Félicitations !",
+        "wonLine2": "Vous avez gagné !",
+        "2ndLine1": "Presque !",
+        "2ndLine2": "2ème place !",
+        "3rdLine1": "Bien joué !",
+        "3rdLine2": "3ème place !",
+        "defaultLine1": "Bonne partie !",
+        "defaultLine2": "#{rank}ème place"
+      }
+    },
+     "leaderboardPhase": {
+      "pandasAlt": "Deux pandas",
+      "pts": "pts",
+      "you": "Vous",
+      "myRankLabel": "Mon rang",
+      "rankingLabel": "Classement",
+      "title": {
+        "finished": "Quiz terminé",
+        "live": {
+          "prefix": "Classement",
+          "highlight": "en direct"
+        }
+      }
+    },
+    "leaderboardPhase": {
+      "pandasAlt": "Deux pandas",
+      "pts": "pts",
+      "you": "Vous",
+      "myRankLabel": "Mon rang",
+      "rankingLabel": "Classement",
+      "title": {
+        "finished": "Quiz terminé",
+        "live": {
+          "prefix": "Classement",
+          "highlight": "en direct"
+        }
+      },
+      "feedback": {
+        "timeUpEyebrow": "Temps écoulé",
+        "timeUpHeadline": "Aucune réponse",
+        "lastAnswerEyebrow": "Dernière réponse",
+        "correctHeadline": "Bonne réponse !",
+        "wrongHeadline": "Mauvaise réponse",
+        "pointsEarned": "+{pts} points gagnés",
+        "zeroPoints": "0 point pour cette question"
+      },
+      "countdown": {
+        "finished": "Merci d'avoir joué !",
+        "next": "Prochaine question dans quelques instants…"
+      }
+    },
+    "quizCard": {
+      "featured": "À la une",
+      "new": "Nouveau",
+      "saved": "Sauvegardé",
+      "by": "par",
+      "questions": "{count} questions",
+      "duration": "{min} min",
+      "played": "{count} joués",
+      "playNow": "Jouer maintenant",
+      "createRoom": "Créer une salle",
+      "difficulty": {
+        "easy": "Facile",
+        "medium": "Moyen",
+        "hard": "Difficile",
+        "mixed": "Mixte"
+      }
+    }
+
+  }

@@ -1,6 +1,6 @@
 "use client";
 
-type State = "default" | "correct" | "wrong";
+type State = "default" | "correct" | "wrong" | "selected" | "reveal"; // ✅ ajouté
 
 type Props = {
   label: string;
@@ -15,6 +15,10 @@ const stateStyles: Record<State, { card: string; label: string; icon?: string }>
     card:  "border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 hover:border-cyan-400 hover:shadow-md hover:shadow-cyan-100 dark:hover:shadow-cyan-900/20 hover:-translate-y-0.5",
     label: "bg-gray-100 dark:bg-slate-800 text-gray-500 dark:text-slate-400 group-hover:bg-cyan-500 group-hover:text-white",
   },
+  selected: {
+    card:  "border-cyan-400 bg-cyan-50 dark:bg-cyan-900/20 shadow-md shadow-cyan-100 dark:shadow-cyan-900/20",
+    label: "bg-cyan-500 text-white shadow-sm",
+  },
   correct: {
     card:  "border-emerald-400 bg-gradient-to-r from-emerald-50 to-teal-50 dark:from-emerald-900/20 dark:to-teal-900/20 shadow-md shadow-emerald-100 dark:shadow-emerald-900/20",
     label: "bg-gradient-to-br from-emerald-400 to-teal-500 text-white shadow-sm",
@@ -25,20 +29,20 @@ const stateStyles: Record<State, { card: string; label: string; icon?: string }>
     label: "bg-gradient-to-br from-red-400 to-rose-500 text-white shadow-sm",
     icon:  "✗",
   },
+  // ✅ NOUVEAU : bonne réponse révélée quand l'utilisateur a choisi la mauvaise
+  reveal: {
+    card:  "border-emerald-300 bg-gradient-to-r from-emerald-50/60 to-teal-50/60 dark:from-emerald-900/10 dark:to-teal-900/10 shadow-sm shadow-emerald-100 dark:shadow-emerald-900/10",
+    label: "bg-gradient-to-br from-emerald-300 to-teal-400 text-white shadow-sm",
+    icon:  "✓",
+  },
 };
 
 export default function OptionCard({ label, text, state, onClick, disabled }: Props) {
   const s = stateStyles[state];
 
-  const handleClick = () => {
-    // ✅ Double protection — bloque le clic si disabled, peu importe le DOM
-    if (disabled) return;
-    onClick();
-  };
-
   return (
     <div
-      onClick={handleClick}
+      onClick={() => { if (!disabled) onClick(); }}
       className={`
         group w-full flex items-center gap-4 px-5 py-4 rounded-2xl border-2 text-left transition-all duration-200
         ${s.card}
@@ -51,12 +55,20 @@ export default function OptionCard({ label, text, state, onClick, disabled }: Pr
         {s.icon ?? label}
       </span>
 
-      <span className="text-sm font-semibold text-gray-800 dark:text-slate-200 flex-1">
+      <span className={`text-sm font-semibold flex-1 ${
+        state === "reveal"
+          ? "text-emerald-700 dark:text-emerald-300"
+          : "text-gray-800 dark:text-slate-200"
+      }`}>
         {text}
       </span>
 
       {s.icon && (
-        <span className={`text-lg font-bold ${state === "correct" ? "text-emerald-500" : "text-red-400"}`}>
+        <span className={`text-lg font-bold ${
+          state === "correct" || state === "reveal"
+            ? "text-emerald-500"
+            : "text-red-400"
+        }`}>
           {s.icon}
         </span>
       )}

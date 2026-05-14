@@ -18,7 +18,7 @@ export async function saveQuiz({
   userId,
   userFirstname = "",
   userLastname = "",
-  quizDifficulty, 
+  quizDifficulty,
   coverImage,
   getEffectiveTimeLimit,
 }: SaveQuizParams): Promise<void> {
@@ -55,6 +55,7 @@ export async function saveQuiz({
         points: q.points,
         difficulty: q.difficulty,
         explanation: q.explanation || null,
+        correct_answer: q.type === "short" ? (q.correctAnswer?.trim() || null) : null, // 👈 NOUVEAU
         order_index: i,
       } as any)
       .select()

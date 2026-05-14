@@ -11,6 +11,7 @@ export interface Question {
   type: QuestionType;
   options: Option[];
   correctOptionId: string | null;
+  correctAnswer: string;       
   timeLimit: string;
   customTime: string;
   points: string;
@@ -49,25 +50,30 @@ export const defaultQuestion = (): Question => ({
     { id: crypto.randomUUID(), text: "" },
   ],
   correctOptionId: null,
+  correctAnswer: "",             
   timeLimit: "30",
   customTime: "",
   points: "Standard (1x)",
   difficulty: "Easy",
   explanation: "",
 });
+
 // ─── PLAY PAGE TYPES ───────────────────────────────────
 
 export interface PlayOption {
   id: string;
   text: string;
-  is_correct: boolean;     
+  is_correct: boolean;
   question_id: string;
 }
+
 export interface PlayQuestion {
   id: string;
   text: string;
+  type: string;                  
   hint?: string | null;
   explanation?: string | null;
+  correct_answer?: string | null;
   quiz_id: string;
   options: PlayOption[];
 }
@@ -77,6 +83,51 @@ export interface QuizFull {
   title: string;
   category: string;
   difficulty: string;
-  time_per_question: number; 
+  time_per_question: number;
   questions: PlayQuestion[];
 }
+//Multiplayer Page Types
+export interface Player {
+  userId: string;
+  name: string;
+  score: number;
+  rank: number;
+  isMe: boolean;
+}
+
+export interface Props {
+  quiz: QuizFull;
+  roomId: string;
+}
+export interface leaderProps {
+  leaderboard: Player[];
+  myRank: number;
+  totalScore: number;
+  quizTitle: string;
+}
+export type Phase = "countdown" | "playing" | "leaderboard" | "finished";
+export interface LeaderboardPhaseProps {
+  wasCorrect: boolean | null;
+  lastScoreEarned: number;
+  myRank: number;
+  leaderboard: Player[];
+  isLast: boolean;
+}
+export type Rank = {
+  avatar:    string;
+  score:     string;
+  bar:       string;
+  track:     string;
+  rowAccent: string;
+  rowBg:     string;
+  rankNum:   string;
+};
+export type LobbyPlayer = {
+  id: string;
+  user_id: string;
+  room_id: string;
+  score: number;
+  joined_at: string;
+  displayName: string;
+  displayInitial: string;
+};

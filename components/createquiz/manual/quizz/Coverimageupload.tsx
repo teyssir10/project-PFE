@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
+import { useTranslations } from "next-intl";
 
 interface CoverImageUploadProps {
   value: string | null;
@@ -8,12 +9,13 @@ interface CoverImageUploadProps {
 }
 
 export default function CoverImageUpload({ value, onChange }: CoverImageUploadProps) {
+  const t = useTranslations("coverImage");
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isDragging, setIsDragging] = useState(false);
 
   const handleFile = (file: File) => {
     if (!file.type.startsWith("image/")) return;
-    if (file.size > 2 * 1024 * 1024) { alert("Image must be under 2MB"); return; }
+    if (file.size > 2 * 1024 * 1024) { alert(t("sizeError")); return; }
     const reader = new FileReader();
     reader.onload = (e) => onChange(e.target?.result as string);
     reader.readAsDataURL(file);
@@ -34,11 +36,9 @@ export default function CoverImageUpload({ value, onChange }: CoverImageUploadPr
         onDragLeave={() => setIsDragging(false)}
         onDrop={handleDrop}
         className={`relative cursor-pointer rounded-xl border-2 border-dashed transition-all duration-200 overflow-hidden ${
-          isDragging
-            ? "border-cyan-400 bg-cyan-50 dark:bg-cyan-500/10"
-            : value
-              ? "border-gray-200 dark:border-slate-700"
-              : "border-gray-200 hover:border-cyan-300 bg-gray-50 dark:border-slate-700 dark:hover:border-slate-500 dark:bg-slate-800/50"
+          isDragging ? "border-cyan-400 bg-cyan-50 dark:bg-cyan-500/10"
+          : value ? "border-gray-200 dark:border-slate-700"
+          : "border-gray-200 hover:border-cyan-300 bg-gray-50 dark:border-slate-700 dark:hover:border-slate-500 dark:bg-slate-800/50"
         }`}
         style={{ minHeight: 130 }}
       >
@@ -47,19 +47,13 @@ export default function CoverImageUpload({ value, onChange }: CoverImageUploadPr
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={value} alt="Cover" className="w-full h-36 object-cover" />
             <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-3">
-              <button
-                type="button"
-                onClick={(e) => { e.stopPropagation(); fileInputRef.current?.click(); }}
-                className="px-3 py-1.5 rounded-lg bg-white/20 hover:bg-white/30 text-white text-xs font-semibold backdrop-blur-sm transition"
-              >
-                Change
+              <button type="button" onClick={(e) => { e.stopPropagation(); fileInputRef.current?.click(); }}
+                className="px-3 py-1.5 rounded-lg bg-white/20 hover:bg-white/30 text-white text-xs font-semibold backdrop-blur-sm transition">
+                {t("change")}
               </button>
-              <button
-                type="button"
-                onClick={(e) => { e.stopPropagation(); onChange(null); }}
-                className="px-3 py-1.5 rounded-lg bg-rose-500/80 hover:bg-rose-500 text-white text-xs font-semibold transition"
-              >
-                Remove
+              <button type="button" onClick={(e) => { e.stopPropagation(); onChange(null); }}
+                className="px-3 py-1.5 rounded-lg bg-rose-500/80 hover:bg-rose-500 text-white text-xs font-semibold transition">
+                {t("remove")}
               </button>
             </div>
           </div>
@@ -71,18 +65,13 @@ export default function CoverImageUpload({ value, onChange }: CoverImageUploadPr
                   d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
               </svg>
             </div>
-            <span className="text-sm font-medium text-gray-500 dark:text-slate-400">Click or drag to upload</span>
-            <span className="text-xs text-gray-400 dark:text-slate-500">PNG or JPG, up to 2MB</span>
+            <span className="text-sm font-medium text-gray-500 dark:text-slate-400">{t("clickOrDrag")}</span>
+            <span className="text-xs text-gray-400 dark:text-slate-500">{t("fileInfo")}</span>
           </div>
         )}
       </div>
-      <input
-        ref={fileInputRef}
-        type="file"
-        accept="image/png,image/jpeg,image/jpg"
-        className="hidden"
-        onChange={(e) => { const f = e.target.files?.[0]; if (f) handleFile(f); }}
-      />
+      <input ref={fileInputRef} type="file" accept="image/png,image/jpeg,image/jpg" className="hidden"
+        onChange={(e) => { const f = e.target.files?.[0]; if (f) handleFile(f); }} />
     </div>
   );
 }

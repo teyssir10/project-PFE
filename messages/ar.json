@@ -1,0 +1,651 @@
+{
+  "hero": {
+    "badge": "تعلم بالذكاء الاصطناعي",
+    "title1": "أنشئ اختبارات",
+    "title2": "مذهلة",
+    "title3": "في ثوانٍ",
+    "description": "دع الذكاء الاصطناعي يولد اختبارات جذابة ومخصصة تناسب أي موضوع. مثالي للمعلمين والطلاب والمتعلمين.",
+    "getStarted": "ابدأ الآن",
+    "learnMore": "اعرف أكثر",
+    "stats": { "quizzes": "اختبار تم إنشاؤه", "users": "مستخدم نشط", "satisfaction": "رضا" },
+    "question": "السؤال 1 من 10",
+    "questionText": "أين تعيش معظم الباندا في العالم؟",
+    "nextQuestion": "السؤال التالي"
+  },
+  "features": {
+    "title": "مميزات قوية",
+    "subtitle": "كل ما تحتاجه لإنشاء وإدارة وتحليل اختبارات جذابة.",
+    "ai": { "title": "توليد بالذكاء الاصطناعي", "description": "يقوم الذكاء الاصطناعي بإنشاء اختبارات مخصصة من أي محتوى في ثوانٍ." },
+    "fast": { "title": "سريع للغاية", "description": "احصل على نتائج في ميلي ثانية مع محرك المعالجة المحسّن لدينا." },
+    "analytics": { "title": "تحليلات مفصلة", "description": "تتبع الأداء واحصل على رؤى حول أنماط التعلم." },
+    "secure": { "title": "آمن وخاص", "description": "بياناتك مشفرة ولا تُشارك أبداً مع أطراف ثالثة." },
+    "sharing": { "title": "مشاركة سهلة", "description": "شارك الاختبارات مع الطلاب أو الزملاء برابط واحد." },
+    "design": { "title": "تصميم قابل للتخصيص", "description": "خصص اختباراتك بثيمات وعلامة تجارية مخصصة." }
+  },
+  "steps": {
+    "title": "كيف يعمل",
+    "subtitle": "ابدأ في 3 خطوات بسيطة وابدأ رحلة تعلمك",
+    "step1": { "title": "اختر موضوعاً", "description": "اختر من بين مئات فئات الاختبارات عبر مواضيع ومستويات صعوبة مختلفة." },
+    "step2": { "title": "خذ الاختبار", "description": "أجب على أسئلة مولّدة بالذكاء الاصطناعي تتكيف مع مستواك. احصل على ردود فعل فورية." },
+    "step3": { "title": "تتبع التقدم", "description": "اعرض تحليلات مفصلة واكسب شارات وتنافس على لوحات المتصدرين." }
+  },
+  "categories": {
+    "title": "استكشف فئات الاختبارات",
+    "subtitle": "اختر من مجموعتنا المتنوعة من فئات الاختبارات وابدأ التعلم اليوم",
+    "quizzes": "اختبار",
+    "startQuiz": "ابدأ",
+    "history": "التاريخ", "science": "العلوم", "geography": "الجغرافيا",
+    "art": "الفن", "technology": "التكنولوجيا", "sports": "الرياضة",
+    "movies": "الأفلام", "music": "الموسيقى", "math": "الرياضيات",
+    "language": "اللغات", "space": "الفضاء", "animals": "الحيوانات",
+    "food": "الطعام", "gaming": "الألعاب", "business": "الأعمال",
+    "health": "الصحة", "culture": "الثقافة", "nature": "الطبيعة",
+    "politics": "السياسة", "literature": "الأدب"
+  },
+  "leaderboard": {
+    "title": "لوحة المتصدرين",
+    "subtitle": "انضم إلى أفضل المتعلمين وانظر كيف تتصنف مقارنة بالآخرين",
+    "rank": "الترتيب", "user": "المستخدم", "score": "النقاط", "quizzes": "اختبارات"
+  },
+  "cta": {
+    "badge": "ابدأ اليوم",
+    "title": "هل أنت مستعد لتحويل تجربة تعلمك؟",
+    "subtitle": "انضم إلى آلاف المعلمين والطلاب الذين يستخدمون QuizAI لإنشاء اختبارات جذابة وذكية.",
+    "button": "أنشئ أول اختبار لك"
+  },
+
+  "contact": {
+    "title": "نحن هنا",
+    "titleHighlight": "لدعمك.",
+    "subtitle": "سواء كان لديك أسئلة حول ميزاتنا أو تحتاج إلى مساعدة تقنية أو تريد مشاركة ملاحظاتك، فريقنا مستعد للمساعدة.",
+    "email": "البريد الإلكتروني",
+    "emailSub": "يرد فريقنا خلال 24 ساعة",
+    "helpCenter": "مركز المساعدة",
+    "helpSub": "تصفح الأسئلة الشائعة والوثائق",
+    "helpLink": "الذهاب إلى مركز المساعدة →",
+    "formTitle": "أرسل لنا رسالة",
+    "fullName": "الاسم الكامل",
+    "namePlaceholder": "اسمك",
+    "emailLabel": "البريد الإلكتروني",
+    "subject": "الموضوع",
+    "selectSubject": "اختر موضوعاً",
+    "generalQuestion": "سؤال عام",
+    "technicalSupport": "الدعم التقني",
+    "billing": "الفواتير",
+    "feedback": "ملاحظات",
+    "message": "الرسالة",
+    "messagePlaceholder": "كيف يمكننا مساعدتك؟",
+    "send": "إرسال الرسالة",
+    "success": "✓ تم إرسال الرسالة! سنرد عليك قريباً."
+  },
+  "navbar": {
+    "home": "الرئيسية",
+    "features": "المميزات",
+    "howItWorks": "كيف يعمل",
+    "categories": "الفئات",
+    "leaderboard": "المتصدرون",
+    "login": "تسجيل الدخول",
+    "register": "إنشاء حساب",
+    "logout": "تسجيل الخروج",
+    "dashboard": "لوحة التحكم"
+  },
+  "footer": {
+    "description": "تمكين المتعلمين في جميع أنحاء العالم بالتعليم الشخصي المدعوم بالذكاء الاصطناعي.",
+    "company": "الشركة",
+    "support": "الدعم",
+    "contactUs": "تواصل معنا",
+    "helpCenter": "مركز المساعدة",
+    "privacyPolicy": "سياسة الخصوصية",
+    "rights": "جميع الحقوق محفوظة."
+  },
+  "login": {
+    "tagline": "أنشئ اختبارات ذكية في ثوانٍ باستخدام الذكاء الاصطناعي وتتبع رحلة تعلمك بتحليلات قوية.",
+    "fast": "سريع للغاية",
+    "fastDesc": "أنشئ اختبارات فوراً بتقنية الذكاء الاصطناعي المتقدمة.",
+    "smart": "تعلم ذكي",
+    "smartDesc": "اختبارات تكيفية مصممة لكل مستوى من مستويات المتعلم.",
+    "analytics": "تحليلات متقدمة",
+    "analyticsDesc": "تتبع تقدمك وحسّن معرفتك بفعالية.",
+    "welcome": "مرحباً بعودتك 👋",
+    "welcomeSub": "سجّل دخولك للوصول إلى اختباراتك",
+    "email": "البريد الإلكتروني",
+    "password": "كلمة المرور",
+    "signIn": "تسجيل الدخول",
+    "or": "أو",
+    "google": "المتابعة مع Google",
+    "noAccount": "ليس لديك حساب؟ سجّل الآن",
+    "demo": "حساب تجريبي:",
+    "loginSuccess": "تم تسجيل الدخول بنجاح!",
+    "emailError": "الرجاء إدخال بريدك الإلكتروني",
+    "emailInvalid": "الرجاء إدخال بريد إلكتروني صحيح",
+    "passwordError": "الرجاء إدخال كلمة المرور",
+    "passwordMin": "يجب أن تكون كلمة المرور 6 أحرف على الأقل"
+  },
+  "register": {
+    "tagline": "أنشئ اختبارات ذكية في ثوانٍ باستخدام الذكاء الاصطناعي وتتبع رحلة تعلمك.",
+    "fast": "سريع للغاية",
+    "fastDesc": "أنشئ اختبارات فوراً بتقنية الذكاء الاصطناعي المتقدمة.",
+    "smart": "تعلم ذكي",
+    "smartDesc": "اختبارات تكيفية مصممة لكل مستوى من مستويات المتعلم.",
+    "analytics": "تحليلات متقدمة",
+    "analyticsDesc": "تتبع تقدمك وحسّن معرفتك بفعالية.",
+    "title": "إنشاء حساب ✍️",
+    "subtitle": "سجّل للإنشاء واجتياز الاختبارات",
+    "firstName": "الاسم الأول",
+    "lastName": "اسم العائلة",
+    "email": "البريد الإلكتروني",
+    "password": "كلمة المرور",
+    "confirmPassword": "تأكيد كلمة المرور",
+    "signUp": "إنشاء حساب",
+    "or": "أو",
+    "google": "المتابعة مع Google",
+    "hasAccount": "لديك حساب بالفعل؟ تسجيل الدخول",
+    "successTitle": "تم إنشاء الحساب بنجاح!",
+    "successText": "تحقق من بريدك الإلكتروني لتأكيد حسابك قبل تسجيل الدخول.",
+    "emailSent": "تم إرسال بريد التأكيد",
+    "goToLogin": "الذهاب إلى صفحة تسجيل الدخول →",
+    "firstNameError": "الرجاء إدخال اسمك الأول",
+    "lastNameError": "الرجاء إدخال اسم عائلتك",
+    "emailError": "الرجاء إدخال بريدك الإلكتروني",
+    "emailInvalid": "الرجاء إدخال بريد إلكتروني صحيح",
+    "passwordError": "الرجاء إدخال كلمة المرور",
+    "passwordMin": "يجب أن تكون كلمة المرور 6 أحرف على الأقل",
+    "passwordMatch": "كلمات المرور غير متطابقة",
+    "confirmPasswordError": "الرجاء تأكيد كلمة المرور"
+  },
+   "dashboard": {
+    "welcome": "مرحباً بعودتك،",
+    "subtitle": "هل أنت مستعد لتحدي نفسك اليوم؟",
+    "recentActivity": "النشاط الأخير",
+    "noActivity": "لا يوجد نشاط بعد",
+    "noActivitySub": "العب أول اختبار لرؤيته هنا",
+    "recommended": "موصى به لك",
+    "noRecommended": "لا توجد توصيات بعد",
+    "getMore": "المزيد من التوصيات",
+    "questions": "أسئلة",
+    "justNow": "الآن",
+    "hoursAgo": "منذ {hours} ساعة",
+    "yesterday": "أمس",
+    "daysAgo": "منذ {days} أيام"
+  },
+  "stats": {
+    "quizzesPlayed": "الاختبارات",
+    "avgScore": "متوسط النقاط",
+    "totalPoints": "مجموع النقاط",
+    "globalRank": "الترتيب العالمي",
+    "thisWeek": "+{count} هذا الأسبوع",
+    "avgPercent": "{avg}% متوسط",
+    "pointsWeek": "+{points} هذا الأسبوع",
+    "notRanked": "غير مصنف"
+  },
+  "quickActions": {
+    "title": "إجراءات سريعة",
+    "startQuiz": "ابدأ اختباراً",
+    "startQuizSub": "انطلق الآن",
+    "playFriends": "العب مع أصدقاء",
+    "playFriendsSub": "تحدّ أصدقاءك",
+    "generateAI": "أنشئ بالذكاء الاصطناعي",
+    "generateAISub": "أنشئ فوراً"
+  },
+  "sidebar": {
+    "platform": "منصة الاختبارات الذكية",
+    "main": "الرئيسية",
+    "play": "اللعب",
+    "account": "الحساب",
+    "dashboard": "لوحة التحكم",
+    "browseQuizzes": "تصفح الاختبارات",
+    "createQuiz": "إنشاء اختبار",
+    "analytics": "التحليلات",
+    "multiplayer": "متعدد اللاعبين",
+    "leaderboard": "المتصدرون",
+    "settings": "الإعدادات",
+    "logout": "تسجيل الخروج"
+  },
+  "topbar": {
+    "notifications": "الإشعارات",
+    "notif1": "تحدي جديد من أحمد!",
+    "notif2": "لقد وصلت إلى المرتبة #42 عالمياً",
+    "notif3": "التقرير الأسبوعي جاهز",
+    "minutesAgo": "منذ دقيقتين",
+    "hourAgo": "منذ ساعة",
+    "yesterday": "أمس",
+    "profile": "الملف الشخصي",
+    "logout": "تسجيل الخروج",
+    "aiGenerate": "توليد بالذكاء الاصطناعي",
+    "manual": "يدوي",
+    "generateQuiz": "توليد اختبار بالذكاء الاصطناعي"
+  },
+  "stepper": {
+    "aiStep1": "ضبط الاختبار",
+    "aiStep2": "جارٍ التوليد",
+    "aiStep3": "مراجعة ونشر",
+    "manualStep1": "معلومات الاختبار",
+    "manualStep2": "إنشاء الأسئلة",
+    "manualStep3": "مراجعة ونشر",
+    "stepOf": "الخطوة {current} من {total}",
+    "saveDraft": "حفظ المسودة",
+    "reviewPublish": "مراجعة ونشر"
+  },
+  "aiQuiz": {
+    "badge": "منشئ الاختبارات بالذكاء الاصطناعي",
+    "title1": "أنشئ",
+    "title2": "اختبارك",
+    "description": "أنشئ اختبارات قوية في ثوانٍ باستخدام الذكاء الاصطناعي، أو صممها يدوياً بتحكم كامل. كل شيء مصمم لجعل إنشاء الاختبارات",
+    "descriptionHighlight": "بسيطاً وسريعاً وممتعاً.",
+    "describeTitle": "صف اختبارك",
+    "describeSub": "كن محدداً للحصول على نتائج أفضل من الذكاء الاصطناعي",
+    "quizTitle": "عنوان الاختبار",
+    "quizTitlePlaceholder": "مثال: إتقان JavaScript ES6",
+    "aiPrompt": "موجّه الذكاء الاصطناعي",
+    "aiPromptPlaceholder": "صف الموضوعات والأنماط...",
+    "settingsTitle": "إعدادات الاختبار",
+    "settingsSub": "ضبط الهيكل والصعوبة",
+    "category": "الفئة",
+    "language": "اللغة",
+    "difficulty": "الصعوبة",
+    "numQuestions": "عدد الأسئلة",
+    "timer": "المؤقت (دقائق)",
+    "other": "أخرى",
+    "customPlaceholder": "مخصص...",
+    "generating": "جارٍ التوليد...",
+    "generate": "✨ توليد الاختبار",
+    "previewTitle": "معاينة الاختبار",
+    "previewSub": "الأسئلة المولّدة تظهر هنا",
+    "statusGenerating": "جارٍ التوليد...",
+    "statusWaiting": "في الانتظار",
+    "noQuizYet": "لم يتم توليد اختبار بعد",
+    "noQuizSub": "املأ النموذج وانقر على",
+    "noQuizBtn": "توليد الاختبار",
+    "noQuizSub2": "لإنشاء أسئلتك فوراً."
+  },
+  
+  "manualQuiz": {
+    "step": "الخطوة 1 من 3",
+    "title": "إعدادات الاختبار",
+    "subtitle": "اضبط تفاصيل اختبارك قبل إضافة الأسئلة",
+    "basicInfo": "المعلومات الأساسية",
+    "difficulty": "الصعوبة",
+    "category": "الفئة",
+    "coverImage": "صورة الغلاف",
+    "optional": "اختياري",
+    "timePerQuestion": "الوقت لكل سؤال",
+    "summary": "ملخص",
+    "summaryTitle": "العنوان",
+    "summaryDifficulty": "الصعوبة",
+    "summaryCategory": "الفئة",
+    "summaryTimer": "المؤقت",
+    "summaryCover": "الغلاف",
+    "uploaded": "✓ تم الرفع",
+    "perQuestion": "ث لكل سؤال",
+    "back": "→ رجوع",
+    "continue": "المتابعة إلى الأسئلة",
+    "alertTitle": "الرجاء إدخال عنوان الاختبار"
+  },
+  "categorySelector": {
+    "science": "🔬 العلوم",
+    "history": "📜 التاريخ",
+    "tech": "💻 التكنولوجيا",
+    "math": "➗ الرياضيات",
+    "language": "🗣️ اللغة",
+    "culture": "🎨 الثقافة والفنون",
+    "sport": "⚽ الرياضة",
+    "music": "🎵 الموسيقى",
+    "geo": "🌍 الجغرافيا",
+    "cinema": "🎬 السينما",
+    "custom": "✏️ مخصص...",
+    "customPlaceholder": "اكتب فئتك الخاصة..."
+  },
+  "coverImage": {
+    "clickOrDrag": "انقر أو اسحب للرفع",
+    "fileInfo": "PNG أو JPG، حتى 2MB",
+    "change": "تغيير",
+    "remove": "إزالة",
+    "sizeError": "يجب أن تكون الصورة أقل من 2MB"
+  },
+  "difficulty": {
+    "easy": "سهل",
+    "easyDesc": "مناسب للمبتدئين",
+    "medium": "متوسط",
+    "mediumDesc": "تحدٍّ معقول",
+    "hard": "صعب",
+    "hardDesc": "مستوى متقدم",
+    "mixed": "مختلط",
+    "mixedDesc": "جميع المستويات"
+  },
+  "quizInfo": {
+    "titleLabel": "عنوان الاختبار",
+    "titlePlaceholder": "أدخل عنوان اختبارك هنا...",
+    "required": "مطلوب للمتابعة",
+    "descLabel": "الوصف",
+    "descOptional": "(اختياري)",
+    "descPlaceholder": "عمّ يدور هذا الاختبار؟ أعطِ المشاركين تلميحاً..."
+  },
+  "timer": {
+    "custom": "مخصص",
+    "placeholder": "مثال: 75",
+    "seconds": "ثانية",
+    "currently": "حالياً:",
+    "perQuestion": "ث لكل سؤال"
+  },
+  
+  "questionEditor": {
+    "questionLabel": "السؤال",
+    "questionPlaceholder": "اكتب سؤالك هنا...",
+    "studentAnswer": "سيكتب الطلاب إجابتهم الخاصة",
+    "correctAnswer": "الإجابة الصحيحة",
+    "correctAnswerRequired": "* مطلوب",
+    "correctAnswerPlaceholder": "اكتب الإجابة الصحيحة المتوقعة...",
+    "caseInsensitive": "💡 المقارنة لن تفرق بين الأحرف الكبيرة والصغيرة",
+    "hint": "تلميح",
+    "hintOptional": "(اختياري)",
+    "hintPlaceholder": "أعطِ الطلاب تلميحاً للعثور على الإجابة...",
+    "deleteQuestion": "حذف هذا السؤال"
+  },
+  "optionsList": {
+    "answersLabel": "الإجابات —",
+    "answersHint": "انقر على الدائرة لتحديد الإجابة الصحيحة",
+    "optionPlaceholder": "الخيار {letter}...",
+    "addOption": "إضافة خيار"
+  },
+  "typeTabs": {
+    "multiple": "اختيار متعدد",
+    "truefalse": "صح / خطأ",
+    "short": "إجابة قصيرة"
+  },
+  "settingsCard": {
+    "title": "إعدادات السؤال",
+    "points": "🏆 قيمة النقاط",
+    "noPoints": "بدون نقاط",
+    "noPointsDesc": "غير مقيّم",
+    "standard": "عادي",
+    "standardDesc": "1× نقاط",
+    "double": "مضاعف",
+    "doubleDesc": "2× نقاط"
+  },
+  "quizSidebar": {
+    "back": "رجوع",
+    "titlePlaceholder": "عنوان الاختبار...",
+    "questions": "سؤال",
+    "questionsPlural": "أسئلة",
+    "untitled": "سؤال بدون عنوان",
+    "addQuestion": "إضافة سؤال"
+  },
+  "manualQuizEditor": {
+    "step": "الخطوة 2 من 3 — إنشاء الأسئلة",
+    "question": "السؤال",
+    "of": "من",
+    "mustLogin": "يجب أن تكون مسجل الدخول",
+    "fillTexts": "يرجى ملء جميع نصوص الأسئلة",
+    "selectCorrect": "يرجى اختيار إجابة صحيحة لكل سؤال",
+    "enterShortAnswer": "يرجى إدخال الإجابة الصحيحة للأسئلة ذات الإجابة القصيرة",
+    "saveSuccess": "تم حفظ الاختبار بنجاح! 🎉",
+    "saveError": "خطأ: "
+  },
+  
+  "browsePage": {
+    "searchPlaceholder": "ابحث عن اختبارات...",
+    "tabAll": "جميع الاختبارات",
+    "tabCommunity": "المجتمع",
+    "tabMy": "اختباراتي",
+    "tabFavorites": "المفضلة",
+    "tabRecently": "تم لعبها مؤخراً",
+    "showing": "عرض",
+    "quizzes": "اختبار",
+    "bannerTitle": "هل تريد إنشاء اختبارك الخاص؟",
+    "bannerSub": "أنشئ فوراً باستخدام الذكاء الاصطناعي",
+    "aiGenerate": "توليد بالذكاء الاصطناعي",
+    "manual": "يدوي",
+    "emptyFavTitle": "لا توجد مفضلة بعد",
+    "emptyFavSub": "انقر على القلب في أي اختبار لحفظه هنا",
+    "emptySearchTitle": "لم يتم العثور على اختبارات",
+    "emptySearchSub": "جرّب بحثاً مختلفاً"
+  },
+  
+  "quizPlay": {
+    "noQuestions": "لم يتم العثور على أسئلة لهذا الاختبار.",
+    "question": "السؤال",
+    "score": "النتيجة",
+    "timeExpired": "انتهى الوقت — هذا السؤال مقفل.",
+    "typePlaceholder": "اكتب إجابتك هنا...",
+    "correctAnswer": "إجابة صحيحة!",
+    "wrongAnswer": "إجابة خاطئة. الإجابة الصحيحة كانت:",
+    "currentScore": "النتيجة الحالية:",
+    "correct": "صحيح",
+    "useHint": "استخدام التلميح",
+    "skip": "تخطي →",
+    "confirm": "✅ تأكيد الإجابة",
+    "next": "السؤال التالي →",
+    "finish": "🎉 إنهاء",
+    "quizNotFound": "الاختبار غير موجود.",
+    "goBack": "رجوع"
+  },
+  "quizSidebarPlay": {
+    "questions": "الأسئلة",
+    "answered": "تمت الإجابة",
+    "skipped": "تم التخطي",
+    "remaining": "المتبقية",
+    "progress": "التقدم"
+  },
+  "quizHeader": {
+    "sec": "ثانية",
+    "exit": "الخروج من الاختبار"
+  },
+  
+  "results": {
+    "title": "نتائج الاختبار",
+    "correct": "صحيحة",
+    "wrong": "خاطئة",
+    "total": "المجموع",
+    "xpGained": "XP مكتسب",
+    "progression": "📈 التقدم",
+    "achieved": "محقق",
+    "analysis": "📊 التحليل",
+    "successRate": "معدل النجاح",
+    "correctAnswers": "الإجابات الصحيحة",
+    "wrongAnswers": "الإجابات الخاطئة",
+    "tipsWinner": "💡 نصائح للاستمرار",
+    "tipsLoser": "💡 نصائح للتحسين",
+    "performanceTop": "أنت في القمة! 🏅",
+    "performanceBetter": "يمكنك فعل أفضل! 💪",
+    "performanceSubWinner": "{name}، أنت تتقن هذا الموضوع جيداً.",
+    "performanceSubLoser": "{name}، راجع وأعد المحاولة!",
+    "performance": "الأداء",
+    "nextStep": "🎯 الخطوة التالية",
+    "replay": "🔄 إعادة اللعب",
+    "explore": "🔍 استكشف اختبارات أخرى",
+    "backDashboard": "🏠 العودة للوحة التحكم",
+    "msg100Title": "مثالي، {name}! 🏆",
+    "msg100Sub": "نتيجة مثالية — أنت لا يُقهر!",
+    "msg100Badge": "أسطوري",
+    "msg80Title": "ممتاز، {name}! 🎉",
+    "msg80Sub": "أداء رائع، استمر!",
+    "msg80Badge": "خبير",
+    "msg50Title": "أحسنت، {name}! 👍",
+    "msg50Sub": "لقد اجتزت الحد، استمر في المحاولة!",
+    "msg50Badge": "مقبول",
+    "msg25Title": "يمكن أن تفعل أفضل، {name} 😅",
+    "msg25Sub": "راجع وأعد المحاولة، ستنجح!",
+    "msg25Badge": "غير كافٍ",
+    "msg0Title": "تشجع، {name}! 😢",
+    "msg0Sub": "لا تستسلم! المرة القادمة ستكون أفضل!",
+    "msg0Badge": "يحتاج مراجعة",
+    "tipWinner1": "استمر في هذا الزخم! 🚀",
+    "tipWinner2": "جرّب اختباراً أصعب 💪",
+    "tipWinner3": "شارك نتيجتك مع أصدقائك 🎊",
+    "tipLoser1": "راجع المادة قبل إعادة المحاولة 📚",
+    "tipLoser2": "استخدم التلميحات في المرة القادمة 💡",
+    "tipLoser3": "ابدأ باختبار أسهل 🎯"
+  },
+  "multiplayer": {
+    "title": {
+      "prefix": "وضع",
+      "highlight": "متعدد اللاعبين"
+    },
+    "subtitle": "تحدَّ أصدقاءك في الوقت الفعلي واستحوذ على المرتبة الأولى",
+
+    "join": {
+      "title": "الانضمام إلى غرفة",
+      "subtitle": "الدخول إلى لعبة موجودة",
+      "codeLabel": "رمز الغرفة",
+      "codePlaceholder": "ABC123",
+      "button": "انضمام",
+      "connecting": "جارٍ الاتصال...",
+      "errorEmpty": "يرجى إدخال رمز الغرفة",
+      "errorNotFound": "الغرفة غير موجودة. تحقق من الرمز.",
+      "errorStarted": "بدأت هذه الغرفة بالفعل."
+    },
+
+    "create": {
+      "title": "إنشاء غرفة",
+      "subtitle": "استضف لعبتك الخاصة",
+      "description": "اختر اختباراً وادعُ أصدقاءك برمز فريد. ابدأ اللعبة عندما يكون الجميع مستعداً.",
+      "steps": {
+        "chooseQuiz": "اختر اختباراً",
+        "shareCode": "شارك الرمز",
+        "startGame": "ابدأ اللعبة"
+      },
+      "button": "اختر اختباراً ←"
+    },
+
+    "stats": {
+      "realTime": "الوقت الفعلي",
+      "maxPlayers": "حتى 50 لاعباً",
+      "leaderboard": "لوحة المتصدرين المباشرة"
+    }
+},
+  "lobby": {
+    "header": {
+      "label": "غرفة الانتظار",
+      "hostTitle": "أنت المضيف 👑",
+      "guestTitle": "في انتظار بدء اللعبة...",
+      "playerCount": "{count, plural, one {# لاعب} other {# لاعبين}}"
+    },
+
+    "share": {
+      "codeLabel": "رمز الغرفة",
+      "codeHint": "شارك هذا الرمز مع أصدقائك",
+      "qrLabel": "رمز QR",
+      "qrHint": "امسح للانضمام",
+      "linkLabel": "رابط الدعوة",
+      "copy": "نسخ",
+      "copied": "✓ تم النسخ"
+    },
+
+    "players": {
+      "title": "اللاعبون ({count})",
+      "waiting": "{count} في الانتظار",
+      "empty": "في انتظار انضمام اللاعبين...",
+      "you": "أنت",
+      "host": "المضيف",
+      "waitingStatus": "في الانتظار"
+    },
+
+    "actions": {
+      "closeRoom": "إغلاق الغرفة",
+      "leave": "مغادرة",
+      "waitingForHost": "في انتظار أن يبدأ المضيف اللعبة...",
+      "waitingForPlayers": "في انتظار انضمام لاعب واحد على الأقل...",
+      "playersInRoom": "{count, plural, one {# لاعب في الغرفة} other {# لاعبين في الغرفة}}",
+      "startGame": "🚀 ابدأ اللعبة",
+      "starting": "جارٍ التشغيل..."
+    },
+
+    "confirm": {
+      "hostTitle": "إغلاق الغرفة؟",
+      "guestTitle": "مغادرة الغرفة؟",
+      "hostMessage": "سيتم إخراج جميع اللاعبين وإغلاق الغرفة نهائياً.",
+      "guestMessage": "ستغادر غرفة الانتظار ويمكنك الانضمام إلى لعبة أخرى.",
+      "cancel": "إلغاء",
+      "processing": "جارٍ التنفيذ…",
+      "hostConfirm": "إغلاق الغرفة",
+      "guestConfirm": "مغادرة"
+    }
+  
+},
+
+  "quizPlay": {
+    "question": "سؤال",
+    "go": "انطلق!",
+    "multiplayer": "متعدد اللاعبين",
+    "pts": "نقطة",
+    "timeExpired": "انتهى الوقت! لم تُجب في الوقت المحدد.",
+    "wrongAnswer": "إجابة خاطئة",
+    "confirm": "تأكيد",
+    "waitingForHost": "في انتظار المضيف...",
+    "waitingForPlayers": "في انتظار اللاعبين... ({count} إجمالاً)",
+    "finish": "🎉 إنهاء",
+    "nextQuestion": "السؤال التالي ←"
+},
+    "finalLeaderboard": {
+      "title": "النتائج النهائية",
+      "pandaAlt": "باندا الفائز",
+      "pts": "نقطة",
+      "playerCount": "{count, plural, one {# لاعب} other {# لاعبين}}",
+      "rankingLabel": "الترتيب",
+      "you": "أنت",
+      "tied": "تعادل",
+      "exploreQuizzes": "استكشف الاختبارات",
+      "dashboard": "← لوحة التحكم",
+      "result": {
+        "tieLine1": "تعادل —",
+        "tieLine2": "كلاكما فائز!",
+        "wonLine1": "تهانينا!",
+        "wonLine2": "لقد فزت!",
+        "2ndLine1": "كدت تفوز!",
+        "2ndLine2": "المركز الثاني!",
+        "3rdLine1": "أحسنت!",
+        "3rdLine2": "المركز الثالث!",
+        "defaultLine1": "لعبة رائعة!",
+        "defaultLine2": "المركز #{rank}"
+      }
+    },
+    "leaderboardPhase": {
+      "pandasAlt": "باندا اثنان",
+      "pts": "نقطة",
+      "you": "أنت",
+      "myRankLabel": "ترتيبي",
+      "rankingLabel": "الترتيب",
+      "title": {
+        "finished": "انتهى الاختبار",
+        "live": {
+          "prefix": "الترتيب",
+          "highlight": "المباشر"
+        }
+      },
+      "feedback": {
+        "timeUpEyebrow": "انتهى الوقت",
+        "timeUpHeadline": "لا توجد إجابة",
+        "lastAnswerEyebrow": "آخر إجابة",
+        "correctHeadline": "إجابة صحيحة!",
+        "wrongHeadline": "إجابة خاطئة",
+        "pointsEarned": "+{pts} نقطة مكتسبة",
+        "zeroPoints": "0 نقطة لهذا السؤال"
+      },
+      "countdown": {
+        "finished": "شكراً على مشاركتك!",
+        "next": "السؤال التالي قادم…"
+      }
+    },
+        "quizCard": {
+      "featured": "مميز",
+      "new": "جديد",
+      "saved": "محفوظ",
+      "by": "بقلم",
+      "questions": "{count} أسئلة",
+      "duration": "{min} دقيقة",
+      "played": "لعب {count}",
+      "playNow": "العب الآن",
+      "createRoom": "إنشاء غرفة",
+      "difficulty": {
+        "easy": "سهل",
+        "medium": "متوسط",
+        "hard": "صعب",
+        "mixed": "مختلط"
+      }
+    }
+
+
+
+
+
+}

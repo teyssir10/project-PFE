@@ -2,6 +2,7 @@
 
 import { Form, Input } from "antd";
 import { SUGGESTIONS } from "@/types/aiquiz";
+import { useTranslations } from "next-intl";
 
 const { TextArea } = Input;
 
@@ -13,13 +14,9 @@ interface DescribeCardProps {
   onTagClick: (tag: string) => void;
 }
 
-export default function DescribeCard({
-  title,
-  prompt,
-  onTitleChange,
-  onPromptChange,
-  onTagClick,
-}: DescribeCardProps) {
+export default function DescribeCard({ title, prompt, onTitleChange, onPromptChange, onTagClick }: DescribeCardProps) {
+  const t = useTranslations("aiQuiz");
+
   return (
     <div className="bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 shadow-sm transition-colors duration-300">
       {/* Header */}
@@ -28,8 +25,8 @@ export default function DescribeCard({
           ✍️
         </div>
         <div>
-          <p className="text-sm font-semibold text-gray-800 dark:text-white">Describe Your Quiz</p>
-          <p className="text-[11px] text-gray-400 dark:text-slate-400">Be specific for better AI results</p>
+          <p className="text-sm font-semibold text-gray-800 dark:text-white">{t("describeTitle")}</p>
+          <p className="text-[11px] text-gray-400 dark:text-slate-400">{t("describeSub")}</p>
         </div>
       </div>
 
@@ -38,25 +35,25 @@ export default function DescribeCard({
         <Form layout="vertical">
           <Form.Item className="!mb-4">
             <label className="block text-[10px] font-bold text-gray-400 dark:text-slate-500 tracking-widest uppercase mb-1.5">
-              Quiz Title
+              {t("quizTitle")}
             </label>
             <Input
               value={title}
               onChange={(e) => onTitleChange(e.target.value)}
-              placeholder="e.g. JavaScript ES6 Mastery"
+              placeholder={t("quizTitlePlaceholder")}
               className="!rounded-xl !border-gray-200 dark:!border-slate-600 !py-2.5 !text-sm !bg-gray-50 dark:!bg-slate-700 dark:!text-white focus:!border-cyan-400 hover:!bg-white dark:hover:!bg-slate-600 transition-colors"
             />
           </Form.Item>
 
           <Form.Item className="!mb-3">
             <label className="block text-[10px] font-bold text-gray-400 dark:text-slate-500 tracking-widest uppercase mb-1.5">
-              AI Prompt
+              {t("aiPrompt")}
             </label>
             <TextArea
               rows={4}
               value={prompt}
               onChange={(e) => onPromptChange(e.target.value)}
-              placeholder="Describe topics, subtopics, style..."
+              placeholder={t("aiPromptPlaceholder")}
               className="!rounded-xl !border-gray-200 dark:!border-slate-600 !text-sm !bg-gray-50 dark:!bg-slate-700 dark:!text-white focus:!border-cyan-400 hover:!bg-white dark:hover:!bg-slate-600 transition-colors resize-none"
             />
           </Form.Item>
@@ -64,12 +61,8 @@ export default function DescribeCard({
           {/* Tags suggestions */}
           <div className="flex flex-wrap gap-1.5">
             {SUGGESTIONS.map((s, i) => (
-              <button
-                key={i}
-                type="button"
-                onClick={() => onTagClick(s)}
-                className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-medium bg-gray-100 dark:bg-slate-700 text-gray-500 dark:text-slate-400 hover:bg-cyan-50 dark:hover:bg-cyan-900/30 hover:text-cyan-600 dark:hover:text-cyan-400 border border-transparent hover:border-cyan-200 dark:hover:border-cyan-700 transition-all"
-              >
+              <button key={i} type="button" onClick={() => onTagClick(s)}
+                className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-medium bg-gray-100 dark:bg-slate-700 text-gray-500 dark:text-slate-400 hover:bg-cyan-50 dark:hover:bg-cyan-900/30 hover:text-cyan-600 dark:hover:text-cyan-400 border border-transparent hover:border-cyan-200 dark:hover:border-cyan-700 transition-all">
                 + {s}
               </button>
             ))}

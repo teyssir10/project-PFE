@@ -4,8 +4,10 @@ import { RiseOutlined, ThunderboltOutlined, TrophyOutlined, GlobalOutlined } fro
 import { Card, Spin } from 'antd';
 import { supabase } from '@/lib/supabase';
 import { useAuth } from '@/lib/auth';
+import { useTranslations } from 'next-intl';
 
 const Stats = () => {
+  const t = useTranslations('stats');
   const { user } = useAuth();
   const [loading, setLoading] = useState(true);
   const [stats, setStats] = useState({
@@ -14,10 +16,10 @@ const Stats = () => {
     totalPoints: 0,
     globalRank: 0,
     trend: {
-      quizzes: '+0 this week',
-      score: '+0% vs last week',
-      points: '+0 today',
-      rank: '↑ 0 positions',
+      quizzes: '',
+      score: '',
+      points: '',
+      rank: '',
     }
   });
 
@@ -27,26 +29,22 @@ const Stats = () => {
     const fetchStats = async () => {
       setLoading(true);
 
-      
       const { data: history } = await supabase
         .from('quiz_history')
         .select('score, played_at')
         .eq('user_id', user.id);
 
-    
       const oneWeekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
       const thisWeek = history?.filter(h =>
         new Date(h.played_at) > oneWeekAgo
       ) || [];
 
-    
       const quizzesPlayed = history?.length || 0;
       const totalPoints = history?.reduce((sum, h) => sum + (h.score || 0), 0) || 0;
       const avgScore = quizzesPlayed > 0
         ? Math.round(totalPoints / quizzesPlayed)
         : 0;
 
-    
       const { data: allUsers } = await supabase
         .from('quiz_history')
         .select('user_id, score');
@@ -56,9 +54,9 @@ const Stats = () => {
         userTotals[h.user_id] = (userTotals[h.user_id] || 0) + h.score;
       });
 
-      const sortedUsers = Object.entries(userTotals)
-        .sort((a, b) => b[1] - a[1]);
+      const sortedUsers = Object.entries(userTotals).sort((a, b) => b[1] - a[1]);
       const rank = sortedUsers.findIndex(([id]) => id === user.id) + 1;
+      const weekPoints = thisWeek.reduce((s, h) => s + h.score, 0);
 
       setStats({
         quizzesPlayed,
@@ -66,10 +64,10 @@ const Stats = () => {
         totalPoints,
         globalRank: rank || 0,
         trend: {
-          quizzes: `+${thisWeek.length} this week`,
-          score: `${avgScore}% avg`,
-          points: `+${thisWeek.reduce((s, h) => s + h.score, 0)} this week`,
-          rank: rank > 0 ? `#${rank} globally` : 'Not ranked',
+          quizzes: t('thisWeek', { count: thisWeek.length }),
+          score: t('avgPercent', { avg: avgScore }),
+          points: t('pointsWeek', { points: weekPoints }),
+          rank: rank > 0 ? `#${rank}` : t('notRanked'),
         }
       });
 
@@ -81,25 +79,25 @@ const Stats = () => {
 
   const statsItems = [
     {
-      label: 'Quizzes Played',
+      label: t('quizzesPlayed'),
       value: stats.quizzesPlayed.toString(),
       trend: stats.trend.quizzes,
       icon: <ThunderboltOutlined className="text-base text-cyan-500" />
     },
     {
-      label: 'Avg. Score',
+      label: t('avgScore'),
       value: `${stats.avgScore}%`,
       trend: stats.trend.score,
       icon: <RiseOutlined className="text-base text-teal-500" />
     },
     {
-      label: 'Total Points',
+      label: t('totalPoints'),
       value: stats.totalPoints.toLocaleString(),
       trend: stats.trend.points,
       icon: <TrophyOutlined className="text-base text-cyan-600" />
     },
     {
-      label: 'Global Rank',
+      label: t('globalRank'),
       value: stats.globalRank > 0 ? `#${stats.globalRank}` : '-',
       trend: stats.trend.rank,
       icon: <GlobalOutlined className="text-base text-teal-600" />
@@ -125,14 +123,13 @@ const Stats = () => {
       {statsItems.map((stat, i) => (
         <Card
           key={i}
-          className="!rounded-lg !shadow-sm 
-            !bg-gradient-to-br !from-[#D6EEF5] !to-cyan-200 
+          className="!rounded-lg !shadow-sm
+            !bg-gradient-to-br !from-[#D6EEF5] !to-cyan-200
             dark:!from-slate-800 dark:!to-slate-700
             hover:!shadow-md transition-all duration-300"
           bodyStyle={{ padding: '14px 10px' }}
         >
           <div className="flex items-center gap-2">
-            
             <div className="flex items-center gap-2 shrink-0">
               <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-teal-400 to-cyan-400 flex items-center justify-center">
                 {stat.icon}
@@ -141,11 +138,7 @@ const Stats = () => {
                 {stat.value}
               </p>
             </div>
-
-            
             <div className="w-px h-8 bg-cyan-300/50 dark:bg-slate-500 shrink-0" />
-
-            
             <div className="flex flex-col min-w-0">
               <p className="text-gray-600 dark:text-gray-400 text-[11px] font-semibold truncate">
                 {stat.label}
