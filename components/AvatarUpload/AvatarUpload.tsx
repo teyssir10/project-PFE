@@ -41,7 +41,9 @@ export default function AvatarUpload({
 
     try {
       const ext = file.name.split(".").pop();
-      const filePath = `avatars/${user.id}.${ext}`;
+
+      // ✅ FIX: filePath sans sous-dossier "avatars/" — le bucket s'appelle déjà "avatars"
+      const filePath = `${user.id}.${ext}`;
 
       const { error: uploadError } = await supabase.storage
         .from("avatars")
@@ -52,14 +54,15 @@ export default function AvatarUpload({
       const { data } = supabase.storage.from("avatars").getPublicUrl(filePath);
       const publicUrl = `${data.publicUrl}?t=${Date.now()}`;
 
+      // Met à jour les métadonnées auth
       const { error: updateError } = await supabase.auth.updateUser({
         data: { avatar_url: publicUrl },
       });
-
       if (updateError) throw updateError;
 
+      // ✅ FIX: table "users" au lieu de "profiles"
       await supabase
-        .from("profiles")
+        .from("users")
         .update({ avatar_url: publicUrl })
         .eq("id", user.id);
 
@@ -82,7 +85,7 @@ export default function AvatarUpload({
       onClick={handleClick}
       title="Click to change profile picture"
     >
-      {/* Avatar image or panda default */}
+      {/* Avatar */}
       <div
         className="w-full h-full rounded-full overflow-hidden border-4 border-white dark:border-slate-700 shadow-lg"
         style={{ width: size, height: size }}
@@ -109,8 +112,13 @@ export default function AvatarUpload({
 
       {/* Online dot */}
       <div
-        className="absolute bottom-1 right-1 w-4 h-4 bg-green-400 rounded-full border-2 border-white dark:border-slate-800"
-        style={{ bottom: size * 0.05, right: size * 0.05 }}
+        className="absolute bg-green-400 rounded-full border-2 border-white dark:border-slate-800"
+        style={{
+          width:  size * 0.18,
+          height: size * 0.18,
+          bottom: size * 0.04,
+          right:  size * 0.04,
+        }}
       />
 
       {/* Hover overlay */}

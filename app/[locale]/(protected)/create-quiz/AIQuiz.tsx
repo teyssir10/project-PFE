@@ -8,11 +8,25 @@ import DescribeCard from "@/components/createquiz/AIquiz/DecribeCard";
 import SettingsCard from "@/components/createquiz/AIquiz/SettingsCard";
 import PreviewPanel from "@/components/createquiz/AIquiz/PreviewPanel";
 import { useTranslations } from "next-intl";
+import { useAuth } from "@/lib/auth";
+import { supabase } from "@/lib/supabase";
+import { message } from "antd";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function AIQuiz() {
   const t = useTranslations("aiQuiz");
   const tStepper = useTranslations("stepper");
-  const { form, update, loading, step, handleTagClick, generateQuiz } = useQuizForm();
+  const { user } = useAuth();
+  const router = useRouter();
+  const [publishing, setPublishing] = useState(false);
+  const [generatedImageUrl, setGeneratedImageUrl] = useState<string | null>(null);
+
+  const {
+    form, update, loading, step, handleTagClick,
+    generateQuiz, generatedQuestions, resetQuiz,
+    numQuestionsValue, timerValue,
+  } = useQuizForm();
 
   const AI_STEPS = [
     { id: 1, label: tStepper("aiStep1") },
@@ -20,15 +34,78 @@ export default function AIQuiz() {
     { id: 3, label: tStepper("aiStep3") },
   ];
 
+  const handlePublish = async () => {
+    if (!user) { message.error("Vous devez être connecté."); return; }
+    if (generatedQuestions.length === 0) { message.warning("Générez d'abord les questions."); return; }
+
+    setPublishing(true);
+    try {
+      const { data: quiz, error: quizError } = await supabase
+        .from("quizzes")
+        .insert({
+          title: form.title,
+          difficulty: form.difficulty,
+          question_count: generatedQuestions.length,
+          time_per_question: timerValue,
+          is_published: true,
+          status: "published",
+          players: 0,
+          creator_id: user.id,
+          creator_name: user.user_metadata?.firstname ?? user.email?.split("@")[0],
+          cover_image: generatedImageUrl ?? null,
+          source: "ai", // ← quiz créé par IA
+        })
+        .select()
+        .single();
+
+      if (quizError) throw quizError;
+
+      const questionsToInsert = generatedQuestions.map((q, index) => ({
+        quiz_id: quiz.id,
+        text: q.question,
+        explanation: q.explanation,
+        order_index: index,
+        type: "multiple",
+        time_limit: String(timerValue),
+        points: "Standard (1x)",
+        difficulty: form.difficulty,
+      }));
+
+      const { data: insertedQuestions, error: questionsError } = await supabase
+        .from("questions")
+        .insert(questionsToInsert)
+        .select();
+
+      if (questionsError) throw questionsError;
+
+      const optionsToInsert = insertedQuestions.flatMap((dbQ, index) => {
+        const originalQ = generatedQuestions[index];
+        return originalQ.options.map((opt) => ({
+          question_id: dbQ.id,
+          text: opt,
+          is_correct: opt === originalQ.correct_answer,
+        }));
+      });
+
+      const { error: optionsError } = await supabase.from("options").insert(optionsToInsert);
+      if (optionsError) throw optionsError;
+
+      message.success("✅ Quiz publié avec succès !");
+      router.push("/browse-quiz");
+
+    } catch (err: any) {
+      console.error(err);
+      message.error(err.message ?? "Erreur lors de la publication.");
+    } finally {
+      setPublishing(false);
+    }
+  };
+
   return (
     <div className="min-h-screen pb-14 bg-[#F4F6FA] dark:bg-slate-900 font-sans transition-colors duration-300">
-
-      {/* Barre accent top */}
       <div className="h-[3px] w-full bg-gradient-to-r from-cyan-400 via-teal-400 to-cyan-500" />
 
       <div className="max-w-7xl mx-auto px-6 py-10">
-
-        {/* Header */}
         <div className="mb-4">
           <span className="mb-2 inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-cyan-100 dark:bg-cyan-900/40 text-cyan-600 dark:text-cyan-400 text-xs font-semibold tracking-wide uppercase">
             {t("badge")}
@@ -45,10 +122,7 @@ export default function AIQuiz() {
           </p>
         </div>
 
-        {/* Layout principal */}
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-5">
-
-          {/* Colonne gauche */}
           <div className="lg:col-span-2 flex flex-col gap-5">
             <DescribeCard
               title={form.title}
@@ -65,17 +139,33 @@ export default function AIQuiz() {
             />
           </div>
 
-          {/* Colonne droite — preview */}
           <div className="lg:col-span-3 relative">
             <div className="absolute -top-56 right-1 z-10 pointer-events-none">
               <Image src={panda} alt="panda" className="w-70 h-70 object-contain drop-shadow-md" />
             </div>
-            <PreviewPanel loading={loading} />
+            <PreviewPanel
+              loading={loading}
+              questions={generatedQuestions}
+              onReset={resetQuiz}
+              quizTitle={form.title}
+              onImageGenerated={(url) => setGeneratedImageUrl(url)}
+            />
           </div>
         </div>
       </div>
 
-      <StepperBar currentStep={step} steps={AI_STEPS} />
+      <StepperBar
+        currentStep={step}
+        steps={AI_STEPS}
+        skipAIReview
+        onPublish={handlePublish}
+        draftData={{
+          title:           form.title,
+          difficulty:      form.difficulty,
+          questions:       generatedQuestions,
+          timePerQuestion: timerValue,
+        }}
+      />
     </div>
   );
 }

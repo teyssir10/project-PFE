@@ -42,11 +42,7 @@
     "health": "الصحة", "culture": "الثقافة", "nature": "الطبيعة",
     "politics": "السياسة", "literature": "الأدب"
   },
-  "leaderboard": {
-    "title": "لوحة المتصدرين",
-    "subtitle": "انضم إلى أفضل المتعلمين وانظر كيف تتصنف مقارنة بالآخرين",
-    "rank": "الترتيب", "user": "المستخدم", "score": "النقاط", "quizzes": "اختبارات"
-  },
+ 
   "cta": {
     "badge": "ابدأ اليوم",
     "title": "هل أنت مستعد لتحويل تجربة تعلمك؟",
@@ -151,42 +147,50 @@
     "passwordError": "الرجاء إدخال كلمة المرور",
     "passwordMin": "يجب أن تكون كلمة المرور 6 أحرف على الأقل",
     "passwordMatch": "كلمات المرور غير متطابقة",
-    "confirmPasswordError": "الرجاء تأكيد كلمة المرور"
+    "confirmPasswordError": "الرجاء تأكيد كلمة المرور",
+    "country": "الدولة",
+    "region": "المنطقة"
   },
-   "dashboard": {
+   
+  "dashboard": {
     "welcome": "مرحباً بعودتك،",
     "subtitle": "هل أنت مستعد لتحدي نفسك اليوم؟",
+    "browseQuizzes": "تصفح الاختبارات",
+    "generateAI": "توليد بالذكاء الاصطناعي",
     "recentActivity": "النشاط الأخير",
-    "noActivity": "لا يوجد نشاط بعد",
-    "noActivitySub": "العب أول اختبار لرؤيته هنا",
     "recommended": "موصى به لك",
+    "noActivity": "لا يوجد نشاط بعد",
+    "noActivitySub": "العب أول اختبار لترى نشاطك هنا",
     "noRecommended": "لا توجد توصيات بعد",
-    "getMore": "المزيد من التوصيات",
     "questions": "أسئلة",
+    "getMore": "الحصول على المزيد من التوصيات",
     "justNow": "الآن",
     "hoursAgo": "منذ {hours} ساعة",
     "yesterday": "أمس",
     "daysAgo": "منذ {days} أيام"
   },
+  "quickActions": {
+    "title": "إجراءات سريعة",
+    "startQuiz": "ابدأ",
+    "startQuizSub": "العب الآن",
+    "playFriends": "أصدقاء",
+    "playFriendsSub": "تحدَّ أصدقاءك",
+    "createQuiz": "إنشاء",
+    "createQuizSub": "وضع يدوي",
+    "generateAI": "ذكاء اصطناعي",
+    "generateAISub": "توليد سريع"
+  },
   "stats": {
-    "quizzesPlayed": "الاختبارات",
+    "quizzesPlayed": "الاختبارات المُلعَبة",
     "avgScore": "متوسط النقاط",
     "totalPoints": "مجموع النقاط",
     "globalRank": "الترتيب العالمي",
     "thisWeek": "+{count} هذا الأسبوع",
     "avgPercent": "{avg}% متوسط",
-    "pointsWeek": "+{points} هذا الأسبوع",
-    "notRanked": "غير مصنف"
+    "pointsWeek": "+{points} نقطة هذا الأسبوع",
+    "notRanked": "غير مصنَّف"
   },
-  "quickActions": {
-    "title": "إجراءات سريعة",
-    "startQuiz": "ابدأ اختباراً",
-    "startQuizSub": "انطلق الآن",
-    "playFriends": "العب مع أصدقاء",
-    "playFriendsSub": "تحدّ أصدقاءك",
-    "generateAI": "أنشئ بالذكاء الاصطناعي",
-    "generateAISub": "أنشئ فوراً"
-  },
+
   "sidebar": {
     "platform": "منصة الاختبارات الذكية",
     "main": "الرئيسية",
@@ -203,6 +207,7 @@
   },
   "topbar": {
     "notifications": "الإشعارات",
+    "settings": "الإعدادات",
     "notif1": "تحدي جديد من أحمد!",
     "notif2": "لقد وصلت إلى المرتبة #42 عالمياً",
     "notif3": "التقرير الأسبوعي جاهز",
@@ -408,7 +413,7 @@
     "timeExpired": "انتهى الوقت — هذا السؤال مقفل.",
     "typePlaceholder": "اكتب إجابتك هنا...",
     "correctAnswer": "إجابة صحيحة!",
-    "wrongAnswer": "إجابة خاطئة. الإجابة الصحيحة كانت:",
+    "wrongAnswer": "إجابة خاطئة.",
     "currentScore": "النتيجة الحالية:",
     "correct": "صحيح",
     "useHint": "استخدام التلميح",
@@ -642,7 +647,136 @@
         "hard": "صعب",
         "mixed": "مختلط"
       }
+    },
+       "leaderboard": {
+    "title": "لوحة المتصدرين",
+    "subtitle": "أفضل اللاعبين مرتبين حسب الأداء",
+    "loading": "جارٍ تحميل الترتيب...",
+    "error": "تعذر تحميل لوحة المتصدرين. حاول مرة أخرى.",
+    "filter_score": "النقاط",
+    "filter_accuracy": "الدقة",
+    "filter_quizzes": "الاختبارات",
+    "top10_title": "أفضل 10 لاعبين",
+    "col_player": "اللاعب",
+    "col_country": "الدولة",
+    "col_quizzes": "الاختبارات",
+    "col_score": "النقاط",
+    "col_accuracy": "الدقة",
+    "search_placeholder": "البحث بالاسم...",
+    "all_countries": "جميع الدول",
+    "showing_results": "{count} لاعب موجود",
+    "no_results": "لا يوجد لاعبون يطابقون بحثك",
+    "anonymous": "مجهول",
+    "you": "أنت"
+  },
+   "settings": {
+    "title": "الإعدادات",
+    "subtitle": "إدارة حسابك وتفضيلاتك",
+    "save": "حفظ",
+    "saved": "تم الحفظ!",
+    "saveError": "حدث خطأ ما",
+    "nav": {
+      "profile": "الملف الشخصي",
+      "security": "الأمان",
+      "language": "اللغة",
+      "appearance": "المظهر",
+      "notifications": "الإشعارات"
+    },
+    "profile": {
+      "firstName": "الاسم الأول",
+      "lastName": "اسم العائلة",
+      "email": "البريد الإلكتروني",
+      "bio": "نبذة"
+    },
+    "security": {
+      "currentPwd": "كلمة المرور الحالية",
+      "newPwd": "كلمة المرور الجديدة",
+      "confirmPwd": "تأكيد كلمة المرور",
+      "changeBtn": "تغيير كلمة المرور",
+      "pwdMismatch": "كلمتا المرور غير متطابقتين",
+      "pwdTooShort": "6 أحرف على الأقل",
+      "pwdChanged": "تم تغيير كلمة المرور!",
+      "dangerZone": "منطقة الخطر",
+      "logout": "تسجيل الخروج"
+    },
+    "appearance": {
+      "light": "الوضع الفاتح",
+      "dark": "الوضع الداكن",
+      "themeSub": "تغيير مظهر الواجهة"
+    },
+    "notifPrefs": {
+      "welcome": "رسائل الترحيب",
+      "welcomeSub": "تلقي رسالة عند التسجيل",
+      "trophy": "الجوائز والتصنيفات",
+      "trophySub": "إشعار بمكافآتك",
+      "multiplayer": "دعوات اللعب الجماعي",
+      "multiplayerSub": "تلقي دعوات الأصدقاء",
+      "ai": "الاختبارات المولدة بالذكاء الاصطناعي",
+      "aiSub": "إشعار عند جاهزية اختبار ذكاء اصطناعي"
     }
+  },
+   "notifications": {
+    "title": "الإشعارات",
+    "unreadCount": "{count} غير مقروءة",
+    "markAllRead": "تحديد الكل كمقروء",
+    "all": "الكل",
+    "unread": "غير مقروءة",
+    "read": "مقروءة",
+    "empty": "لا توجد إشعارات",
+    "emptySub": "ليس لديك أي إشعارات حتى الآن",
+    "justNow": "الآن",
+    "minsAgo": "منذ {mins} دقيقة",
+    "hoursAgo": "منذ {hours} ساعة",
+    "yesterday": "أمس",
+    "daysAgo": "منذ {days} أيام"
+  },
+  
+  "profile": {
+    "editProfile": "تعديل الملف الشخصي",
+    "saveChanges": "حفظ التغييرات",
+    "saveSuccess": "تم تحديث الملف الشخصي بنجاح!",
+    "saveError": "حدث خطأ ما. يرجى المحاولة مجدداً.",
+
+    "userInfo": "معلومات المستخدم",
+    "username": "اسم المستخدم",
+    "email": "البريد الإلكتروني",
+    "country": "البلد",
+    "region": "المنطقة",
+    "memberSince": "عضو منذ",
+    "quizzesPlayed": "الاختبارات المُنجزة",
+    "totalScore": "مجموع النقاط",
+    "accuracy": "الدقة",
+    "notSpecified": "غير محدد",
+    "countryNotSet": "البلد غير محدد",
+
+    "firstName": "الاسم الأول",
+    "lastName": "اسم العائلة",
+    "newPassword": "كلمة المرور الجديدة",
+    "confirmPassword": "تأكيد كلمة المرور",
+
+    "achievements": "الإنجازات",
+    "unlocked": "مفتوح",
+
+    "performance": "الأداء",
+    "successRate": "معدل النجاح",
+    "completionRate": "معدل الإتمام",
+
+    "recentQuizzes": "الاختبارات الأخيرة",
+    "noQuizzes": "لم تُنجز أي اختبار بعد. ابدأ اختبارك الأول!",
+    "justNow": "الآن",
+    "yesterday": "أمس",
+
+    "globalRanking": "التصنيف العالمي",
+    "globalRank": "الترتيب العالمي",
+    "totalPoints": "إجمالي النقاط"
+  },
+  "leaderboard": {
+  "rank": "Rank",
+  "user": "User", 
+  "score": "Score",
+  "quizzes": "Quizzes"
+}
+
 
 
 

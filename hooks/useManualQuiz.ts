@@ -3,9 +3,11 @@ import { Question, QuestionType, defaultQuestion } from "@/types/quiz";
 import { useQuizStore } from "@/store/useQuizStore";
 
 export function useQuizEditor() {
-  const { title: savedTitle } = useQuizStore();
+  const { title: savedTitle, timePerQuestion } = useQuizStore();
 
-  const [questions, setQuestions] = useState<Question[]>([defaultQuestion()]);
+  const [questions, setQuestions] = useState<Question[]>([
+    defaultQuestion(timePerQuestion)
+  ]);
   const [activeId, setActiveId] = useState<string>(questions[0].id);
   const [quizTitle, setQuizTitle] = useState(savedTitle || "Untitled Quiz");
 
@@ -19,7 +21,7 @@ export function useQuizEditor() {
   };
 
   const addQuestion = () => {
-    const newQ = defaultQuestion();
+    const newQ = defaultQuestion(timePerQuestion);
     setQuestions((prev) => [...prev, newQ]);
     setActiveId(newQ.id);
   };
@@ -90,6 +92,7 @@ export function useQuizEditor() {
 
   return {
     questions,
+    setQuestions,   // ← exporté
     activeId,
     setActiveId,
     quizTitle,

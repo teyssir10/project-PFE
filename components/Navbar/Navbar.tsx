@@ -31,82 +31,146 @@ const Navbar = () => {
   };
 
   const menuItems = [
-    { key: "home", label: <span onClick={() => scrollTo("home")}>{t('home')}</span> },
-    { key: "features", label: <span onClick={() => scrollTo("features")}>{t('features')}</span> },
-    { key: "steps", label: <span onClick={() => scrollTo("steps")}>{t('howItWorks')}</span> },
-    { key: "categories", label: <span onClick={() => scrollTo("categories")}>{t('categories')}</span> },
-    { key: "leaderboard", label: <span onClick={() => scrollTo("leaderboard")}>{t('leaderboard')}</span> },
+    { key: "home",        label: t('home')       },
+    { key: "features",    label: t('features')   },
+    { key: "steps",       label: t('howItWorks') },
+    { key: "categories",  label: t('categories') },
+    { key: "leaderboard", label: t('leaderboard')},
   ];
 
   return (
-    <nav className="sticky top-0 z-50 backdrop-blur-xl bg-white/70 dark:bg-slate-900/70 border-b border-gray-200/60 dark:border-gray-800 shadow-sm transition-all duration-300">
-      <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-10">
-        <div className="flex justify-between items-center h-16">
+    <nav className="sticky top-0 z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-b border-gray-100 dark:border-slate-800 shadow-sm">
+      <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between gap-6">
 
-          {/* LOGO */}
-          <div className="flex items-center gap-3 cursor-pointer transition-transform duration-200 hover:scale-105">
-            <div className="w-10 h-10 flex items-center justify-center rounded-xl font-extrabold shadow-md">
-              <Image src={logo} alt="PandaBrain AI logo" width={100} height={100} />
+        {/* ── LOGO ── */}
+        <Link href="/" className="flex items-center gap-2.5 flex-shrink-0 hover:opacity-80 transition-opacity">
+          <Image src={logo} alt="PandoMind" width={36} height={36} />
+          <span className="text-lg font-extrabold text-gray-900 dark:text-white">
+            Pando<span className="text-cyan-500">Mind</span>
+          </span>
+        </Link>
+
+        {/* ── MENU DESKTOP ── */}
+        <div className="hidden md:flex items-center gap-1">
+          {menuItems.map((item) => (
+            <button
+              key={item.key}
+              onClick={() => scrollTo(item.key)}
+              className="px-4 py-2 rounded-lg text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-cyan-500 dark:hover:text-cyan-400 hover:bg-cyan-50 dark:hover:bg-cyan-900/20 transition-all"
+            >
+              {item.label}
+            </button>
+          ))}
+        </div>
+
+        {/* ── RIGHT ACTIONS ── */}
+        <div className="hidden md:flex items-center gap-2 flex-shrink-0">
+
+          {/* Séparateur */}
+          <LanguageSwitcher />
+          <div className="w-px h-5 bg-gray-200 dark:bg-slate-700 mx-1" />
+          {mounted && <LightToDark />}
+          <div className="w-px h-5 bg-gray-200 dark:bg-slate-700 mx-1" />
+
+          {user ? (
+            <>
+              <Button
+                icon={<FileSearchOutlined />}
+                onClick={() => router.push("/dashboard")}
+                className="!h-9 !px-4 !rounded-xl !text-sm !font-semibold !text-cyan-600 !border-cyan-200 dark:!border-cyan-800 hover:!bg-cyan-50 dark:hover:!bg-cyan-900/20 transition-all"
+              >
+                {t('dashboard')}
+              </Button>
+              <Button
+                icon={<LogoutOutlined />}
+                onClick={signOut}
+                className="!h-9 !px-4 !rounded-xl !text-sm !font-semibold !text-white !bg-gradient-to-r !from-cyan-500 !to-teal-400 !border-0 hover:!opacity-90 transition-all shadow-sm shadow-cyan-200"
+              >
+                {t('logout')}
+              </Button>
+            </>
+          ) : (
+            <>
+              <Link href="/login">
+                <Button
+                  icon={<LoginOutlined />}
+                  className="!h-9 !px-4 !rounded-xl !text-sm !font-semibold !text-cyan-600 !border-cyan-200 dark:!border-cyan-800 hover:!bg-cyan-50 dark:hover:!bg-cyan-900/20 transition-all"
+                >
+                  {t('login')}
+                </Button>
+              </Link>
+              <Link href="/register">
+                <Button
+                  icon={<UserAddOutlined />}
+                  className="!h-9 !px-4 !rounded-xl !text-sm !font-semibold !text-white !bg-gradient-to-r !from-cyan-500 !to-teal-400 !border-0 hover:!opacity-90 transition-all shadow-sm shadow-cyan-200"
+                >
+                  {t('register')}
+                </Button>
+              </Link>
+            </>
+          )}
+        </div>
+
+        {/* ── BURGER MOBILE ── */}
+        <button
+          className="md:hidden w-9 h-9 flex items-center justify-center rounded-lg border border-gray-200 dark:border-slate-700 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-800 transition-all"
+          onClick={() => setMenuOpen(!menuOpen)}
+        >
+          {menuOpen ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+        </button>
+      </div>
+
+      {/* ── MOBILE MENU ── */}
+      {menuOpen && (
+        <div className="md:hidden px-6 pb-4 border-t border-gray-100 dark:border-slate-800 bg-white dark:bg-slate-900">
+          <div className="flex flex-col pt-3 gap-1">
+            {menuItems.map((item) => (
+              <button
+                key={item.key}
+                onClick={() => { scrollTo(item.key); setMenuOpen(false); }}
+                className="w-full text-left px-4 py-2.5 rounded-xl text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-cyan-500 hover:bg-cyan-50 dark:hover:bg-cyan-900/20 transition-all"
+              >
+                {item.label}
+              </button>
+            ))}
+          </div>
+
+          <div className="flex flex-col gap-2 mt-4 pt-4 border-t border-gray-100 dark:border-slate-800">
+            <div className="flex items-center gap-2 mb-2">
+              <LanguageSwitcher />
+              {mounted && <LightToDark />}
             </div>
-            <h1 className="text-xl font-extrabold text-gray-900 dark:text-white tracking-tight">
-              PandoMind <span className="text-cyan-500">AI</span>
-            </h1>
-          </div>
-
-          {/* MENU DESKTOP */}
-          <div className="hidden md:flex items-center">
-            <Menu
-              mode="horizontal"
-              items={menuItems}
-              onClick={(e) => scrollTo(e.key)}
-              className="bg-transparent border-none !text-sm font-medium text-gray-700 dark:text-white tracking-tight [&_.ant-menu-item]:px-3"
-              style={{ background: 'transparent' }}
-            />
-          </div>
-
-          {/* RIGHT ACTIONS */}
-          <div className="hidden md:flex items-center gap-2">
-            <LanguageSwitcher />
-            {mounted && <LightToDark />}
             {user ? (
               <>
                 <Button
-                  icon={<LogoutOutlined />}
-                  onClick={signOut}
-                  className="px-6 py-2 rounded-full font-semibold !text-white
-                    !bg-gradient-to-r !from-cyan-500 !via-cyan-400 !to-[#00D4D0]
-                    !border-0 shadow-md hover:shadow-lg hover:scale-105
-                    transition-all duration-300 shadow-cyan-300/50"
-                >
-                  {t('logout')}
-                </Button>
-                <Button
-                  icon={<FileSearchOutlined />}
-                  onClick={() => router.push("/dashboard")}
-                  className="px-6 py-2 rounded-full font-semibold !text-cyan-500
-                    shadow-md hover:shadow-lg hover:scale-105 transition-all duration-300"
+                  block icon={<FileSearchOutlined />}
+                  onClick={() => { router.push("/dashboard"); setMenuOpen(false); }}
+                  className="!h-10 !rounded-xl !font-semibold !text-cyan-600 !border-cyan-200"
                 >
                   {t('dashboard')}
+                </Button>
+                <Button
+                  block icon={<LogoutOutlined />}
+                  onClick={() => { signOut(); setMenuOpen(false); }}
+                  className="!h-10 !rounded-xl !font-semibold !text-white !bg-gradient-to-r !from-cyan-500 !to-teal-400 !border-0"
+                >
+                  {t('logout')}
                 </Button>
               </>
             ) : (
               <>
-                <Link href="/login">
-                  <Button
+                <Link href="/login" onClick={() => setMenuOpen(false)}>
+                  <Button block
+                    className="!h-10 !rounded-xl !font-semibold !text-cyan-600 !border-cyan-200"
                     icon={<LoginOutlined />}
-                    type="text"
-                    className="px-6 py-2 rounded-full font-semibold !text-cyan-500 shadow-md"
                   >
                     {t('login')}
                   </Button>
                 </Link>
-                <Link href="/register">
-                  <Button
+                <Link href="/register" onClick={() => setMenuOpen(false)}>
+                  <Button block
+                    className="!h-10 !rounded-xl !font-semibold !text-white !bg-gradient-to-r !from-cyan-500 !to-teal-400 !border-0"
                     icon={<UserAddOutlined />}
-                    type="primary"
-                    className="px-6 py-2 rounded-full font-semibold
-                      !bg-gradient-to-r !from-cyan-500 !to-[#00D4D0]
-                      !border-0 text-white shadow-md"
                   >
                     {t('register')}
                   </Button>
@@ -114,57 +178,8 @@ const Navbar = () => {
               </>
             )}
           </div>
-
-          {/* Burger mobile */}
-          <button className="md:hidden text-2xl" onClick={() => setMenuOpen(!menuOpen)}>
-            {menuOpen ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-          </button>
         </div>
-
-        {/* Mobile menu */}
-        {menuOpen && (
-          <div className="md:hidden pb-4 border-t border-gray-200">
-            <Menu
-              mode="vertical"
-              items={menuItems}
-              className="bg-transparent border-0"
-              style={{ background: 'transparent' }}
-            />
-            <div className="flex flex-col gap-2 mt-4">
-              {user ? (
-                <Button block icon={<LogoutOutlined />} onClick={signOut}
-                  className="rounded-full font-semibold !text-white
-                    !bg-gradient-to-r !from-cyan-500 !to-[#00D4D0] !border-0 shadow-md">
-                  {t('logout')}
-                </Button>
-              ) : (
-                <>
-                  <Link href="/login">
-                    <Button block type="text"
-                      className="rounded-full font-semibold !text-cyan-500 shadow-md">
-                      {t('login')}
-                    </Button>
-                  </Link>
-                  <Button
-                    icon={<FileSearchOutlined />}
-                    onClick={() => router.push("/dashboard")}
-                    className="px-6 py-2 rounded-full font-semibold !text-cyan-500 shadow-md">
-                    {t('dashboard')}
-                  </Button>
-                  <Link href="/register">
-                    <Button block type="primary"
-                      className="rounded-full font-semibold
-                        !bg-gradient-to-r !from-blue-400 !to-cyan-500
-                        !border-0 text-white shadow-md">
-                      {t('register')}
-                    </Button>
-                  </Link>
-                </>
-              )}
-            </div>
-          </div>
-        )}
-      </div>
+      )}
     </nav>
   );
 };

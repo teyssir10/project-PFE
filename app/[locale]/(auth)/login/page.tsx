@@ -1,5 +1,5 @@
-'use client'
 
+'use client'
 import { useState } from 'react'
 import Image from 'next/image'
 import * as yup from 'yup'
@@ -13,12 +13,12 @@ import { useAuth } from '@/lib/auth'
 import { useRouter } from 'next/navigation'
 import logo from '@/public/panda-logo.png'
 import { useAntdApp } from '@/hooks/useAntdApp'
-import { useTranslations, useLocale } from 'next-intl' // ✅ useLocale ajouté
+import { useTranslations, useLocale } from 'next-intl' 
 import { createBrowserClient } from '@supabase/ssr'
 
 const LoginPage = () => {
   const t = useTranslations('login')
-  const locale = useLocale() // ✅ AJOUTÉ ICI
+  const locale = useLocale() 
 
   const loginSchema = yup.object({
     email: yup.string().required(t('emailError')).email(t('emailInvalid')),
@@ -63,7 +63,7 @@ const LoginPage = () => {
 
       message.success(t('loginSuccess'))
 
-      // ✅ Redirection avec locale
+     
       if (profile?.role === 'admin') {
         window.location.href = `/${locale}/admin/dashboard`
       } else {
@@ -87,7 +87,6 @@ const LoginPage = () => {
       <div className="relative z-10 flex items-center justify-center h-screen overflow-hidden px-6">
         <div className="w-full max-w-7xl grid grid-cols-1 md:grid-cols-2 gap-16 items-center mx-auto">
 
-          {/* LEFT SIDE */}
           <div className="hidden md:flex flex-col justify-center space-y-12 relative sticky top-0 h-screen">
             <div className="absolute -top-20 -left-20 w-72 h-72 bg-cyan-400/30 blur-3xl rounded-full"></div>
             <div className="absolute bottom-0 right-0 w-72 h-72 bg-[#00D4D0]/30 blur-3xl rounded-full"></div>

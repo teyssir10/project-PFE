@@ -42,11 +42,7 @@
     "health": "Health", "culture": "Culture", "nature": "Nature",
     "politics": "Politics", "literature": "Literature"
   },
-  "leaderboard": {
-    "title": "Top Learners Leaderboard",
-    "subtitle": "Join the top performers and see how you rank against other learners",
-    "rank": "Rank", "user": "User", "score": "Score", "quizzes": "Quizzes"
-  },
+  
   "cta": {
     "badge": "Get Started Today",
     "title": "Ready to Transform Your Learning Experience?",
@@ -151,41 +147,50 @@
     "passwordError": "Please enter your password",
     "passwordMin": "Password must be at least 6 characters",
     "passwordMatch": "Passwords must match",
-    "confirmPasswordError": "Please confirm your password"
+    "confirmPasswordError": "Please confirm your password",
+    "country": "Country",
+"region": "Region"
   },
+  
   "dashboard": {
     "welcome": "Welcome back,",
     "subtitle": "Ready to challenge yourself today?",
-    "recentActivity": "Recent Activity",
+    "browseQuizzes": "Browse quizzes",
+    "generateAI": "Generate with AI",
+    "recentActivity": "Recent activity",
+    "recommended": "Recommended for you",
     "noActivity": "No activity yet",
     "noActivitySub": "Play your first quiz to see it here",
-    "recommended": "Recommended for You",
     "noRecommended": "No recommendations yet",
-    "getMore": "Get More Recommendations",
     "questions": "questions",
+    "getMore": "Get more recommendations",
     "justNow": "Just now",
-    "hoursAgo": "{hours} hours ago",
+    "hoursAgo": "{hours}h ago",
     "yesterday": "Yesterday",
     "daysAgo": "{days} days ago"
   },
+  "quickActions": {
+    "title": "Quick actions",
+    "startQuiz": "Start quiz",
+    "startQuizSub": "Jump in now",
+    "playFriends": "Friends",
+    "playFriendsSub": "Challenge them",
+    "createQuiz": "Create",
+    "createQuizSub": "Manual mode",
+    "generateAI": "AI",
+    "generateAISub": "Generate fast"
+  },
   "stats": {
-    "quizzesPlayed": "Quizzes Played",
-    "avgScore": "Avg. Score",
-    "totalPoints": "Total Points",
-    "globalRank": "Global Rank",
+    "quizzesPlayed": "Quizzes played",
+    "avgScore": "Avg. score",
+    "totalPoints": "Total points",
+    "globalRank": "Global rank",
     "thisWeek": "+{count} this week",
     "avgPercent": "{avg}% avg",
-    "pointsWeek": "+{points} this week",
+    "pointsWeek": "+{points} pts this week",
     "notRanked": "Not ranked"
-  },
-  "quickActions": {
-    "title": "Quick Actions",
-    "startQuiz": "Start Quiz",
-    "startQuizSub": "Jump into a quiz now",
-    "playFriends": "Play with Friends",
-    "playFriendsSub": "Challenge your friends",
-    "generateAI": "Generate AI Quiz",
-    "generateAISub": "Create with AI instantly"
+  
+
   },
    "sidebar": {
     "platform": "AI Quiz Platform",
@@ -203,6 +208,7 @@
   },
   "topbar": {
     "notifications": "Notifications",
+     "settings": "Settings",
     "notif1": "New challenge from Ahmed!",
     "notif2": "You ranked up to #42 globally",
     "notif3": "Weekly report is ready",
@@ -408,7 +414,7 @@
     "timeExpired": "Time expired — this question is locked.",
     "typePlaceholder": "Type your answer here...",
     "correctAnswer": "Correct answer!",
-    "wrongAnswer": "Wrong answer. The correct answer was:",
+    "wrongAnswer": "Wrong answer. ",
     "currentScore": "Current score:",
     "correct": "correct",
     "useHint": "Use hint",
@@ -642,6 +648,137 @@
         "hard": "Hard",
         "mixed": "Mixed"
       }
+    },
+      "leaderboard": {
+    "title": "Leaderboard",
+    "subtitle": "Top players ranked by their performance",
+    "loading": "Loading rankings...",
+    "error": "Unable to load leaderboard. Please try again.",
+    "filter_score": "Score",
+    "filter_accuracy": "Accuracy",
+    "filter_quizzes": "Quizzes",
+    "top10_title": "Top 10 Players",
+    "col_player": "Player",
+    "col_country": "Country",
+    "col_quizzes": "Quizzes",
+    "col_score": "Score",
+    "col_accuracy": "Accuracy",
+    "search_placeholder": "Search by name...",
+    "all_countries": "All countries",
+    "showing_results": "{count} players found",
+    "no_results": "No players match your search",
+    "anonymous": "Anonymous",
+    "you": "You"
+  },
+   "settings": {
+    "title": "Settings",
+    "subtitle": "Manage your account and preferences",
+    "save": "Save",
+    "saved": "Saved!",
+    "saveError": "An error occurred",
+    "nav": {
+      "profile": "Profile",
+      "security": "Security",
+      "language": "Language",
+      "appearance": "Appearance",
+      "notifications": "Notifications"
+    },
+    "profile": {
+      "firstName": "First name",
+      "lastName": "Last name",
+      "email": "Email",
+      "bio": "Bio"
+    },
+    "security": {
+      "currentPwd": "Current password",
+      "newPwd": "New password",
+      "confirmPwd": "Confirm password",
+      "changeBtn": "Change password",
+      "pwdMismatch": "Passwords do not match",
+      "pwdTooShort": "Minimum 6 characters",
+      "pwdChanged": "Password changed!",
+      "dangerZone": "Danger zone",
+      "logout": "Log out"
+    },
+    "appearance": {
+      "light": "Light mode",
+      "dark": "Dark mode",
+      "themeSub": "Change the interface theme"
+    },
+    "notifPrefs": {
+      "welcome": "Welcome messages",
+      "welcomeSub": "Receive a message when you register",
+      "trophy": "Trophies & rankings",
+      "trophySub": "Be notified of your rewards",
+      "multiplayer": "Multiplayer invitations",
+      "multiplayerSub": "Receive friend invitations",
+      "ai": "AI generated quizzes",
+      "aiSub": "Be notified when an AI quiz is ready"
     }
+  },
+   "notifications": {
+    "title": "Notifications",
+    "unreadCount": "{count} unread",
+    "markAllRead": "Mark all as read",
+    "all": "All",
+    "unread": "Unread",
+    "read": "Read",
+    "empty": "No notifications",
+    "emptySub": "You have no notifications yet",
+    "justNow": "Just now",
+    "minsAgo": "{mins} min ago",
+    "hoursAgo": "{hours}h ago",
+    "yesterday": "Yesterday",
+    "daysAgo": "{days} days ago"
+  },
+  
+  "profile": {
+    "editProfile": "Edit Profile",
+    "saveChanges": "Save Changes",
+    "saveSuccess": "Profile updated successfully!",
+    "saveError": "An error occurred. Please try again.",
+
+    "userInfo": "User Information",
+    "username": "Username",
+    "email": "Email",
+    "country": "Country",
+    "region": "Region",
+    "memberSince": "Member since",
+    "quizzesPlayed": "Quizzes Played",
+    "totalScore": "Total Score",
+    "accuracy": "Accuracy",
+    "notSpecified": "Not specified",
+    "countryNotSet": "Country not set",
+
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "newPassword": "New Password",
+    "confirmPassword": "Confirm Password",
+
+    "achievements": "Achievements",
+    "unlocked": "Unlocked",
+
+    "performance": "Performance",
+    "successRate": "Success Rate",
+    "completionRate": "Completion Rate",
+
+    "recentQuizzes": "Recent Quizzes",
+    "noQuizzes": "No quizzes played yet. Start your first quiz!",
+    "justNow": "Just now",
+    "yesterday": "Yesterday",
+
+    "globalRanking": "Global Ranking",
+    "globalRank": "Global Rank",
+    "totalPoints": "Total Points"
+  },
+  "leaderboard": {
+  "rank": "Rank",
+  "user": "User", 
+  "score": "Score",
+  "quizzes": "Quizzes"
+}
+
   }
+ 
+
 

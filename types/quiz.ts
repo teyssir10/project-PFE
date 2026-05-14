@@ -23,6 +23,7 @@ export const DIFFICULTY_COLORS: Record<string, string> = {
   Easy: "text-emerald-500 bg-emerald-50 dark:bg-emerald-900/30 border-emerald-200 dark:border-emerald-700",
   Medium: "text-amber-500 bg-amber-50 dark:bg-amber-900/30 border-amber-200 dark:border-amber-700",
   Hard: "text-red-500 bg-red-50 dark:bg-red-900/30 border-red-200 dark:border-red-700",
+  Mixed: "text-cyan-500 bg-cyan-50 dark:bg-cyan-900/30 border-cyan-200 dark:border-cyan-700",
 };
 
 export const TYPE_LABELS: Record<QuestionType, string> = {
@@ -39,7 +40,7 @@ export const TYPE_ICONS: Record<QuestionType, string> = {
 
 export const OPTION_LETTERS = ["A", "B", "C", "D", "E", "F"];
 
-export const defaultQuestion = (): Question => ({
+export const defaultQuestion = (defaultTime=30): Question => ({
   id: crypto.randomUUID(),
   text: "",
   type: "multiple",
