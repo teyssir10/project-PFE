@@ -210,20 +210,25 @@
     "settings": "Settings",
     "logout": "Logout"
   },
-  "topbar": {
-    "notifications": "Notifications",
-     "settings": "Settings",
-    "notif1": "New challenge from Ahmed!",
-    "notif2": "You ranked up to #42 globally",
-    "notif3": "Weekly report is ready",
-    "minutesAgo": "2 min ago",
-    "hourAgo": "1 hour ago",
-    "yesterday": "Yesterday",
-    "profile": "Profile",
-    "logout": "Logout",
-    "aiGenerate": "AI Generate",
-    "manual": "Manual",
-    "generateQuiz": "Generate AI Quiz"
+    "topbar": {
+      "profile": "Profile",
+      "settings": "Settings",
+      "logout": "Log out",
+      "aiGenerate": "AI Generate",
+      "manual": "Manual",
+      "generateQuiz": "Create a quiz",
+      "notif": {
+        "title": "Notifications",
+        "markAllRead": "Mark all as read",
+        "empty": "No notifications",
+        "viewAll": "View all notifications →",
+        "close": "Close",
+        "now": "Just now",
+        "minutesAgo": "{count} min ago",
+        "hoursAgo": "{count}h ago",
+        "yesterday": "Yesterday",
+        "daysAgo": "{count} days ago"
+      }
   },
   "stepper": {
     "aiStep1": "Configure quiz",
@@ -508,23 +513,24 @@
     "anonymous": "Anonymous",
     "you": "You"
   },
-   "settings": {
+ "settings": {
     "title": "Settings",
     "subtitle": "Manage your account and preferences",
     "save": "Save",
-    "saved": "Saved!",
+    "saved": "Saved",
     "saveError": "An error occurred",
     "nav": {
       "profile": "Profile",
       "security": "Security",
       "language": "Language",
       "appearance": "Appearance",
-      "notifications": "Notifications"
+      "drafts": "Drafts",
+      "myquizzes": "My Quizzes"
     },
     "profile": {
       "firstName": "First name",
       "lastName": "Last name",
-      "email": "Email",
+      "email": "Email address",
       "bio": "Bio"
     },
     "security": {
@@ -533,7 +539,7 @@
       "confirmPwd": "Confirm password",
       "changeBtn": "Change password",
       "pwdMismatch": "Passwords do not match",
-      "pwdTooShort": "Minimum 6 characters",
+      "pwdTooShort": "At least 6 characters",
       "pwdChanged": "Password changed!",
       "dangerZone": "Danger zone",
       "logout": "Log out"
@@ -543,15 +549,37 @@
       "dark": "Dark mode",
       "themeSub": "Change the interface theme"
     },
+    "drafts": {
+      "count": "{count} draft(s) saved",
+      "empty": "No saved drafts yet",
+      "createBtn": "Create a quiz",
+      "deleted": "Draft deleted.",
+      "deleteFailed": "Operation failed.",
+      "untitled": "Untitled Quiz",
+      "step": "Step {current} of {total}",
+      "resume": "Resume"
+    },
+    "myquizzes": {
+      "subtitle": "Track the status of your quizzes submitted for moderation",
+      "filterAll": "All",
+      "empty": "No quizzes found",
+      "statusPublished": "Published",
+      "statusPending": "Pending",
+      "statusRejected": "Rejected",
+      "statusDraft": "Draft",
+      "aiRemarks": "AI Remarks",
+      "pendingNote": "Under review by the administrator. You will be notified of the decision.",
+      "adminDecision": "Admin decision"
+    },
     "notifPrefs": {
       "welcome": "Welcome messages",
-      "welcomeSub": "Receive a message when you register",
-      "trophy": "Trophies & rankings",
+      "welcomeSub": "Receive a message upon registration",
+      "trophy": "Trophies and rankings",
       "trophySub": "Be notified of your rewards",
       "multiplayer": "Multiplayer invitations",
       "multiplayerSub": "Receive friend invitations",
-      "ai": "AI generated quizzes",
-      "aiSub": "Be notified when an AI quiz is ready"
+      "ai": "AI-generated quizzes",
+      "aiSub": "Notification when an AI quiz is ready"
     }
   },
    "notifications": {
@@ -614,7 +642,30 @@
   "user": "User", 
   "score": "Score",
   "quizzes": "Quizzes"
-}
+},
+ "aiReview": {
+      "loading": {
+        "title": "AI is reviewing your quiz…",
+        "subtitle": "Checking logic, coherence, and quality of your questions."
+      },
+      "scoreLabel": "AI quality score",
+      "remarksLabel": "Remarks from AI",
+      "approve": {
+        "title": "Quiz approved by AI"
+      },
+      "needs_review": {
+        "title": "Quiz needs improvements"
+      },
+      "reject": {
+        "title": "Quiz rejected by AI"
+      },
+      "actions": {
+        "publish": "Publish quiz",
+        "fix": "Fix my quiz",
+        "forcePublish": "Send to admin for review anyway"
+      },
+      "forcePublishNote": "Send to admin will put your quiz in a pending queue. An admin will review it manually."
+    }
 
 
 

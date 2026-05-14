@@ -52,7 +52,6 @@ export default function Topbar({ username }: TopbarProps) {
 
   const isCreateQuizPage = pathname.includes("/create-quiz") || pathname.includes("/quiz/create")
 
-  // ── Check admin ───────────────────────────────────────────────────────────
   useEffect(() => {
     if (!user) return
     const checkAdmin = async () => {
@@ -66,7 +65,6 @@ export default function Topbar({ username }: TopbarProps) {
     checkAdmin()
   }, [user])
 
-  // ── Fetch + realtime notifications ────────────────────────────────────────
   useEffect(() => {
     if (!user) return
     fetchNotifications()
@@ -127,14 +125,13 @@ export default function Topbar({ username }: TopbarProps) {
     const minutes = Math.floor(diff / 60000)
     const hours = Math.floor(minutes / 60)
     const days = Math.floor(hours / 24)
-    if (minutes < 1) return "À l'instant"
-    if (minutes < 60) return `Il y a ${minutes} min`
-    if (hours < 24) return `Il y a ${hours}h`
-    if (days === 1) return "Hier"
-    return `Il y a ${days} jours`
+    if (minutes < 1) return t('notif.now')
+    if (minutes < 60) return t('notif.minutesAgo', { count: minutes })
+    if (hours < 24) return t('notif.hoursAgo', { count: hours })
+    if (days === 1) return t('notif.yesterday')
+    return t('notif.daysAgo', { count: days })
   }
 
-  // ── Dropdown notifications ────────────────────────────────────────────────
   const notifDropdown = (
     <div className="w-80 rounded-2xl overflow-hidden shadow-xl
       bg-white dark:bg-slate-900
@@ -145,7 +142,7 @@ export default function Topbar({ username }: TopbarProps) {
         border-b border-gray-100 dark:border-slate-800">
         <div className="flex items-center gap-2">
           <span className="text-sm font-bold text-gray-900 dark:text-white">
-            Notifications
+            {t('notif.title')}
           </span>
           {unreadCount > 0 && (
             <span className="px-1.5 py-0.5 rounded-full text-[10px] font-bold bg-cyan-500 text-white">
@@ -158,7 +155,7 @@ export default function Topbar({ username }: TopbarProps) {
             onClick={markAllRead}
             className="text-xs text-cyan-500 hover:text-cyan-400 font-medium transition-colors"
           >
-            Tout marquer lu
+            {t('notif.markAllRead')}
           </button>
         )}
       </div>
@@ -169,7 +166,7 @@ export default function Topbar({ username }: TopbarProps) {
           <div className="py-10 text-center">
             <p className="text-2xl mb-2">🔔</p>
             <p className="text-sm text-gray-400 dark:text-slate-500">
-              Aucune notification
+              {t('notif.empty')}
             </p>
           </div>
         ) : (
@@ -225,13 +222,13 @@ export default function Topbar({ username }: TopbarProps) {
           }}
           className="text-xs text-cyan-500 hover:text-cyan-400 font-semibold transition-colors"
         >
-          Voir toutes les notifications →
+          {t('notif.viewAll')}
         </button>
         <button
           onClick={() => setNotifOpen(false)}
           className="text-xs text-gray-400 hover:text-gray-500 transition-colors"
         >
-          Fermer
+          {t('notif.close')}
         </button>
       </div>
     </div>
@@ -272,11 +269,15 @@ export default function Topbar({ username }: TopbarProps) {
   }
 
   return (
+    /*
+      justify-between fonctionne bien en RTL (le navigateur inverse les côtés).
+      px-6 est symétrique donc pas de changement nécessaire.
+    */
     <div className="sticky top-0 z-30 flex items-center justify-between h-16 px-6
       bg-white/80 dark:bg-slate-900/80 backdrop-blur-md
       border-b border-gray-100 dark:border-slate-700 gap-1">
 
-      {/* Breadcrumb */}
+      {/* Breadcrumb — start/end s'inversent en RTL automatiquement */}
       <div className="flex items-center gap-4 w-full max-w-md">
         <div className="flex items-center gap-2 text-sm">
           <span className="font-bold text-cyan-500">PandoMind</span>
@@ -287,17 +288,16 @@ export default function Topbar({ username }: TopbarProps) {
         </div>
       </div>
 
-      <div className='flex gap-4 items-center'>
+      <div className="flex gap-4 items-center">
         <LanguageSwitcher />
 
-        {/* ── Cloche → dropdown notifications ── */}
         <Dropdown
           open={notifOpen}
           onOpenChange={(open) => {
             setNotifOpen(open)
             if (open) fetchNotifications()
           }}
-          popupRender={() => notifDropdown}   
+          popupRender={() => notifDropdown}
           trigger={['click']}
           placement="bottomRight"
         >
@@ -312,7 +312,6 @@ export default function Topbar({ username }: TopbarProps) {
 
         <LightToDark />
 
-        {/* ── Admin ── */}
         {isAdmin && (
           <Button
             onClick={() => router.push(`/${locale}/admin/dashboard`)}
@@ -326,7 +325,6 @@ export default function Topbar({ username }: TopbarProps) {
           </Button>
         )}
 
-      
         {isCreateQuizPage ? (
           <div className="flex items-center p-1 gap-1 bg-gray-100 dark:bg-slate-700 rounded-[16px]">
             <Button
@@ -362,15 +360,12 @@ export default function Topbar({ username }: TopbarProps) {
           </Button>
         )}
 
-        {/* ── Avatar profil ── */}
         <Dropdown menu={profileMenu} trigger={['click']}>
           <Avatar
             className="!bg-gradient-to-br !from-cyan-500 !to-teal-900 !shadow-md hover:!shadow-xl ring-2 ring-white dark:ring-slate-800 transition-all duration-300 hover:scale-105 cursor-pointer"
             icon={<UserOutlined />}
           />
         </Dropdown>
-        
-
       </div>
     </div>
   )

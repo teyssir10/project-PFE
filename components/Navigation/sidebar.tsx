@@ -2,7 +2,7 @@
 
 import React from 'react'
 import Link from 'next/link'
-import { usePathname,useParams } from 'next/navigation'
+import { usePathname, useParams } from 'next/navigation'
 import {
   LogoutOutlined, HomeOutlined, LineChartOutlined, SettingOutlined,
   UsergroupAddOutlined, TrophyOutlined, PlusOutlined, AppstoreOutlined
@@ -14,7 +14,8 @@ import { useTranslations } from 'next-intl'
 
 const LogoSection = ({ platform }: { platform: string }) => (
   <div className="items-center gap-3">
-    <div className='flex gap-7 items-center gap-3 cursor-pointer transition-transform duration-200 hover:scale-105'>
+    <div className="flex gap-7 items-center cursor-pointer transition-transform duration-200 hover:scale-105">
+      {/* RTL: logo à gauche en LTR, à droite en RTL → order inversé via flex-row-reverse en rtl */}
       <div>
         <h1 className="text-lg font-extrabold text-gray-900 dark:text-white">
           Pando<span className="text-cyan-500">Mind</span>
@@ -54,7 +55,7 @@ function NavLinks({ onClickItem }: { onClickItem?: () => void }) {
     {
       label: t('account'),
       items: [
-        { icon: SettingOutlined, label: t('settings'), href: `/${locale}/settings`      },
+        { icon: SettingOutlined, label: t('settings'), href: `/${locale}/settings` },
       ]
     },
   ]
@@ -87,7 +88,8 @@ function NavLinks({ onClickItem }: { onClickItem?: () => void }) {
                   <Icon className="text-lg flex-shrink-0 group-hover:scale-110 transition-transform !text-[#003333] dark:!text-white" />
                   <span className="text-[#003333] dark:text-white">{item.label}</span>
                   {isActive && (
-                    <div className="ml-auto w-1.5 h-1.5 rounded-full bg-[#003333] dark:bg-white" />
+                    // ms-auto fonctionne en LTR et RTL (remplace ml-auto)
+                    <div className="ms-auto w-1.5 h-1.5 rounded-full bg-[#003333] dark:bg-white" />
                   )}
                 </Link>
               )
@@ -107,7 +109,7 @@ function LogoutButton({ onClick }: { onClick?: () => void }) {
   return (
     <div className="px-4 py-6 border-t border-gray-100 dark:border-slate-700 space-y-3">
       <div className="flex items-center gap-3 px-2">
-        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-cyan-500 to-teal-400 flex items-center justify-center text-white font-bold text-sm">
+        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-cyan-500 to-teal-400 flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
           {username?.charAt(0).toUpperCase()}
         </div>
         <div className="min-w-0">
@@ -134,11 +136,17 @@ export function sidebar({ children }: { children: React.ReactNode }) {
   const t = useTranslations('sidebar')
 
   return (
-   
     <div className="flex h-screen overflow-hidden bg-gray-50 dark:bg-slate-900">
+      {/*
+        Sidebar :
+        - border-e remplace border-r → s'inverse automatiquement en RTL
+        - Pas besoin de changer la position flex : en RTL, le navigateur
+          inverse l'ordre des enfants flex automatiquement grâce à dir="rtl"
+          défini sur <html>
+      */}
       <aside className="hidden md:flex w-64 flex-col flex-shrink-0
         bg-white dark:bg-slate-800
-        border-r border-gray-100 dark:border-slate-700
+        border-e border-gray-100 dark:border-slate-700
         shadow-sm">
         <div className="h-16 px-6 py-3 border-b border-gray-100 dark:border-slate-700 flex-shrink-0">
           <LogoSection platform={t('platform')} />
@@ -147,7 +155,6 @@ export function sidebar({ children }: { children: React.ReactNode }) {
         <LogoutButton />
       </aside>
 
-      
       <main
         className="flex-1 overflow-auto relative"
         style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' } as React.CSSProperties}

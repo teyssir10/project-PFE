@@ -210,20 +210,25 @@
     "settings": "Paramètres",
     "logout": "Déconnexion"
   },
-  "topbar": {
-    "notifications": "Notifications",
-    "settings": "Paramètres",
-    "notif1": "Nouveau défi de Ahmed !",
-    "notif2": "Vous avez atteint le rang #42 mondial",
-    "notif3": "Le rapport hebdomadaire est prêt",
-    "minutesAgo": "il y a 2 min",
-    "hourAgo": "il y a 1 heure",
-    "yesterday": "Hier",
-    "profile": "Profil",
-    "logout": "Déconnexion",
-    "aiGenerate": "Générer par IA",
-    "manual": "Manuel",
-    "generateQuiz": "Générer Quiz IA"
+   "topbar": {
+      "profile": "Profil",
+      "settings": "Paramètres",
+      "logout": "Se déconnecter",
+      "aiGenerate": "Générer par IA",
+      "manual": "Manuel",
+      "generateQuiz": "Créer un quiz",
+      "notif": {
+        "title": "Notifications",
+        "markAllRead": "Tout marquer lu",
+        "empty": "Aucune notification",
+        "viewAll": "Voir toutes les notifications →",
+        "close": "Fermer",
+        "now": "À l'instant",
+        "minutesAgo": "Il y a {count} min",
+        "hoursAgo": "Il y a {count}h",
+        "yesterday": "Hier",
+        "daysAgo": "Il y a {count} jours"
+      }
   },
   "stepper": {
     "aiStep1": "Configurer le quiz",
@@ -513,20 +518,21 @@
     "title": "Paramètres",
     "subtitle": "Gérez votre compte et vos préférences",
     "save": "Enregistrer",
-    "saved": "Enregistré !",
+    "saved": "Enregistré",
     "saveError": "Une erreur est survenue",
     "nav": {
       "profile": "Profil",
       "security": "Sécurité",
       "language": "Langue",
       "appearance": "Apparence",
-      "notifications": "Notifications"
+      "drafts": "Brouillons",
+      "myquizzes": "Mes Quiz"
     },
     "profile": {
       "firstName": "Prénom",
-      "lastName": "Nom",
-      "email": "Email",
-      "bio": "Bio"
+      "lastName": "Nom de famille",
+      "email": "Adresse e-mail",
+      "bio": "Biographie"
     },
     "security": {
       "currentPwd": "Mot de passe actuel",
@@ -534,7 +540,7 @@
       "confirmPwd": "Confirmer le mot de passe",
       "changeBtn": "Changer le mot de passe",
       "pwdMismatch": "Les mots de passe ne correspondent pas",
-      "pwdTooShort": "Minimum 6 caractères",
+      "pwdTooShort": "6 caractères minimum",
       "pwdChanged": "Mot de passe modifié !",
       "dangerZone": "Zone dangereuse",
       "logout": "Se déconnecter"
@@ -542,18 +548,41 @@
     "appearance": {
       "light": "Mode clair",
       "dark": "Mode sombre",
-      "themeSub": "Changer le thème de l'interface"
+      "themeSub": "Changer l'apparence de l'interface"
+    },
+    "drafts": {
+      "count": "{count} brouillon(s) sauvegardé(s)",
+      "empty": "Aucun brouillon sauvegardé pour l'instant",
+      "createBtn": "Créer un quiz",
+      "deleted": "Brouillon supprimé.",
+      "deleteFailed": "Échec de la suppression.",
+      "untitled": "Quiz sans titre",
+      "step": "Étape {current} sur {total}",
+      "resume": "Reprendre"
+    },
+    "myquizzes": {
+      "subtitle": "Suivez le statut de vos quiz soumis à la modération",
+      "filterAll": "Tous",
+      "empty": "Aucun quiz trouvé",
+      "statusPublished": "Publié",
+      "statusPending": "En attente",
+      "statusRejected": "Rejeté",
+      "statusDraft": "Brouillon",
+      "aiRemarks": "Remarques de l'IA",
+      "pendingNote": "En cours de révision par l'administrateur. Vous serez notifié de la décision.",
+      "adminDecision": "Décision de l'admin"
     },
     "notifPrefs": {
       "welcome": "Messages de bienvenue",
-      "welcomeSub": "Recevoir un message lors de l'inscription",
+      "welcomeSub": "Recevoir un message à l'inscription",
       "trophy": "Trophées et classements",
       "trophySub": "Être notifié de vos récompenses",
       "multiplayer": "Invitations multijoueur",
-      "multiplayerSub": "Recevoir les invitations de vos amis",
-      "ai": "Quiz générés par IA",
-      "aiSub": "Être notifié quand un quiz IA est prêt"
-    }},
+      "multiplayerSub": "Recevoir les invitations d'amis",
+      "ai": "Quiz générés par l'IA",
+      "aiSub": "Notification quand un quiz IA est prêt"
+    }
+  },
       "notifications": {
     "title": "Notifications",
     "unreadCount": "{count} non lues",
@@ -614,7 +643,30 @@
   "user": "Utilisateur",
   "score": "Score", 
   "quizzes": "Quiz"
-}
+},
+ "aiReview": {
+      "loading": {
+        "title": "L'IA analyse votre quiz…",
+        "subtitle": "Vérification de la logique, de la cohérence et de la qualité des questions."
+      },
+      "scoreLabel": "Score de qualité IA",
+      "remarksLabel": "Remarques de l'IA",
+      "approve": {
+        "title": "Quiz approuvé par l'IA"
+      },
+      "needs_review": {
+        "title": "Le quiz nécessite des améliorations"
+      },
+      "reject": {
+        "title": "Quiz rejeté par l'IA"
+      },
+      "actions": {
+        "publish": "Publier le quiz",
+        "fix": "Corriger mon quiz",
+        "forcePublish": "Envoyer à l'admin pour révision quand même"
+      },
+      "forcePublishNote": "Envoyer à l'admin placera votre quiz en file d'attente. Un administrateur le révisera manuellement."
+    }
 
 
 
