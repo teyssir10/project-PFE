@@ -97,7 +97,7 @@ export default function QuestionEditor({ question, questionIndex, totalQuestions
           {t("hint")}{" "}
           <span className="normal-case font-normal text-gray-300 dark:text-slate-600">{t("hintOptional")}</span>
         </label>
-        <textarea rows={3} value={question.explanation} onChange={(e) => onExplanationChange(e.target.value)}
+        <textarea rows={3} value={question.indice} onChange={(e) => onExplanationChange(e.target.value)}
           placeholder={t("hintPlaceholder")}
           className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-800 text-gray-800 dark:text-white text-sm placeholder-gray-300 dark:placeholder-slate-600 focus:outline-none focus:border-cyan-400 dark:focus:border-cyan-500 resize-none transition-all" />
       </div>

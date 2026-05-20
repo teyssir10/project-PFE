@@ -205,20 +205,26 @@
     "settings": "الإعدادات",
     "logout": "تسجيل الخروج"
   },
-  "topbar": {
-    "notifications": "الإشعارات",
-    "settings": "الإعدادات",
-    "notif1": "تحدي جديد من أحمد!",
-    "notif2": "لقد وصلت إلى المرتبة #42 عالمياً",
-    "notif3": "التقرير الأسبوعي جاهز",
-    "minutesAgo": "منذ دقيقتين",
-    "hourAgo": "منذ ساعة",
-    "yesterday": "أمس",
-    "profile": "الملف الشخصي",
-    "logout": "تسجيل الخروج",
-    "aiGenerate": "توليد بالذكاء الاصطناعي",
-    "manual": "يدوي",
-    "generateQuiz": "توليد اختبار بالذكاء الاصطناعي"
+    "topbar": {
+      "profile": "الملف الشخصي",
+      "settings": "الإعدادات",
+      "logout": "تسجيل الخروج",
+      "aiGenerate": "توليد بالذكاء الاصطناعي",
+      "manual": "يدوي",
+      "generateQuiz": "إنشاء اختبار",
+      "admin": "المشرف",
+      "notif": {
+        "title": "الإشعارات",
+        "markAllRead": "تحديد الكل كمقروء",
+        "empty": "لا توجد إشعارات",
+        "viewAll": "عرض كل الإشعارات ←",
+        "close": "إغلاق",
+        "now": "الآن",
+        "minutesAgo": "منذ {count} دقيقة",
+        "hoursAgo": "منذ {count} ساعة",
+        "yesterday": "أمس",
+        "daysAgo": "منذ {count} أيام"
+      }
   },
   "stepper": {
     "aiStep1": "ضبط الاختبار",
@@ -669,24 +675,26 @@
     "anonymous": "مجهول",
     "you": "أنت"
   },
-   "settings": {
+  
+  "settings": {
     "title": "الإعدادات",
     "subtitle": "إدارة حسابك وتفضيلاتك",
     "save": "حفظ",
-    "saved": "تم الحفظ!",
-    "saveError": "حدث خطأ ما",
+    "saved": "تم الحفظ",
+    "saveError": "حدث خطأ أثناء الحفظ",
     "nav": {
       "profile": "الملف الشخصي",
       "security": "الأمان",
       "language": "اللغة",
       "appearance": "المظهر",
-      "notifications": "الإشعارات"
+      "drafts": "المسودات",
+      "myquizzes": "اختباراتي"
     },
     "profile": {
       "firstName": "الاسم الأول",
       "lastName": "اسم العائلة",
       "email": "البريد الإلكتروني",
-      "bio": "نبذة"
+      "bio": "نبذة شخصية"
     },
     "security": {
       "currentPwd": "كلمة المرور الحالية",
@@ -704,6 +712,28 @@
       "dark": "الوضع الداكن",
       "themeSub": "تغيير مظهر الواجهة"
     },
+    "drafts": {
+      "count": "{count} مسودة محفوظة",
+      "empty": "لا توجد مسودات محفوظة بعد",
+      "createBtn": "إنشاء اختبار",
+      "deleted": "تم حذف المسودة",
+      "deleteFailed": "فشلت العملية",
+      "untitled": "اختبار بدون عنوان",
+      "step": "الخطوة {current} من {total}",
+      "resume": "استئناف"
+    },
+    "myquizzes": {
+      "subtitle": "تابع حالة اختباراتك المُرسلة للمراجعة",
+      "filterAll": "الكل",
+      "empty": "لا توجد اختبارات",
+      "statusPublished": "منشور",
+      "statusPending": "قيد الانتظار",
+      "statusRejected": "مرفوض",
+      "statusDraft": "مسودة",
+      "aiRemarks": "ملاحظات الذكاء الاصطناعي",
+      "pendingNote": "قيد المراجعة من قِبل المشرف. ستتلقى إشعاراً بالقرار.",
+      "adminDecision": "قرار المشرف"
+    },
     "notifPrefs": {
       "welcome": "رسائل الترحيب",
       "welcomeSub": "تلقي رسالة عند التسجيل",
@@ -714,6 +744,8 @@
       "ai": "الاختبارات المولدة بالذكاء الاصطناعي",
       "aiSub": "إشعار عند جاهزية اختبار ذكاء اصطناعي"
     }
+  
+
   },
    "notifications": {
     "title": "الإشعارات",
@@ -769,12 +801,221 @@
     "globalRanking": "التصنيف العالمي",
     "globalRank": "الترتيب العالمي",
     "totalPoints": "إجمالي النقاط"
+<<<<<<< HEAD
   }
   
+=======
+  },
+  
+ "aiReview": {
+      "loading": {
+        "title": "الذكاء الاصطناعي يراجع اختبارك…",
+        "subtitle": "يتحقق من المنطق والتماسك وجودة الأسئلة."
+      },
+      "scoreLabel": "تقييم الجودة بالذكاء الاصطناعي",
+      "remarksLabel": "ملاحظات الذكاء الاصطناعي",
+      "approve": {
+        "title": "تمت الموافقة على الاختبار من قِبل الذكاء الاصطناعي"
+      },
+      "needs_review": {
+        "title": "الاختبار يحتاج إلى تحسينات"
+      },
+      "reject": {
+        "title": "تم رفض الاختبار من قِبل الذكاء الاصطناعي"
+      },
+      "actions": {
+        "publish": "نشر الاختبار",
+        "fix": "تصحيح اختباري",
+        "forcePublish": "إرسال إلى المشرف للمراجعة على أي حال"
+      },
+      "forcePublishNote": "سيُضاف اختبارك إلى قائمة الانتظار وسيراجعه المشرف يدوياً."
+    },
+     "leaderboard": {
+    "title": "لوحة الصدارة",
+    "subtitle": "اكتشف أفضل اللاعبين وتقدّم في الترتيب",
+    "loading": "جاري تحميل لوحة الصدارة...",
+    "error": "حدث خطأ أثناء التحميل.",
 
+    "top10_title": "أفضل 10 لاعبين",
 
+    "filter_score": "النقاط",
+    "filter_accuracy": "الدقة",
+    "filter_quizzes": "الاختبارات الملعوبة",
 
+    "col_player": "اللاعب",
+    "col_country": "الدولة",
+    "col_quizzes": "الاختبارات",
+    "col_score": "النقاط",
+    "col_accuracy": "الدقة",
 
+    "all_countries": "كل الدول",
+    "search_placeholder": "ابحث عن لاعب...",
+    "showing_results": "{count} نتيجة",
 
+    "anonymous": "مجهول",
+    "you": "أنت",
 
+    "no_results": "لم يتم العثور على نتائج"
+  },
+   "adminDashboard": {
+    "title": "لوحة تحكم المشرف",
+    "subtitle": "نظرة عامة على المنصة",
+    "stats": {
+      "users": "المستخدمون",
+      "totalQuizzes": "إجمالي الاختبارات",
+      "publishedQuizzes": "الاختبارات المنشورة",
+      "gamesPlayed": "الأدوار المُلعوبة"
+    },
+    "recentUsers": {
+      "title": "أحدث المستخدمين",
+      "viewAll": "عرض الكل ←",
+      "anonymous": "مجهول"
+    },
+    "recentQuizzes": {
+      "title": "أحدث الاختبارات",
+      "viewAll": "عرض الكل ←",
+      "players": "{count} لاعبون",
+      "published": "منشور",
+      "draft": "مسودة"
+    }
+  },
+  "adminPending": {
+    "title": "الاختبارات في انتظار المراجعة",
+    "subtitle": "{count} اختبار في انتظار المراجعة",
+    "refresh": "🔄 تحديث",
+    "approve": "✅ موافقة",
+    "reject": "❌ رفض",
+    "approving": "...",
+    "approved": "تمت الموافقة على الاختبار ونشره!",
+    "rejected": "تم رفض الاختبار.",
+    "loadError": "خطأ أثناء التحميل.",
+    "empty": {
+      "icon": "✅",
+      "title": "لا توجد اختبارات معلقة",
+      "subtitle": "تمت معالجة جميع الاختبارات"
+    },
+    "card": {
+      "anonymous": "مجهول",
+      "questions": "{count} أسئلة",
+      "pending": "⏳ قيد الانتظار",
+      "aiScore": "🤖 تقييم الذكاء الاصطناعي: {score}/100",
+      "clickToView": "👁 انقر لعرض الأسئلة",
+      "aiRejected": "رُفض بواسطة الذكاء الاصطناعي: "
+    },
+    "aiRemarks": {
+      "title": "🤖 ملاحظات الذكاء الاصطناعي:"
+    },
+    "preview": {
+      "anonymous": "مجهول",
+      "questions": "أسئلة",
+      "aiRejectTitle": "🤖 أسباب رفض الذكاء الاصطناعي:",
+      "noQuestions": "لا توجد أسئلة",
+      "emptyQuestion": "سؤال فارغ ⚠️",
+      "emptyOption": "خيار فارغ ⚠️",
+      "noOptions": "⚠️ لا توجد خيارات لهذا السؤال",
+      "indice": "💡 تلميح: "
+    },
+    "rejectModal": {
+      "title": "❌ سبب الرفض",
+      "placeholder": "اشرح سبب رفض هذا الاختبار...",
+      "confirm": "تأكيد الرفض",
+      "cancel": "إلغاء",
+      "emptyReason": "أدخل سبب الرفض.",
+      "loadQuestionsError": "خطأ أثناء تحميل الأسئلة."
+    }
+  },
+  "adminQuizzes": {
+    "title": "الاختبارات",
+    "subtitle": "{count} اختبار في المجموع",
+    "search": "البحث عن اختبار...",
+    "filterDifficulty": "كل المستويات",
+    "filterStatus": "كل الحالات",
+    "statusPublished": "منشور",
+    "statusDraft": "مسودة",
+    "diffAll": "كل المستويات",
+    "pubAll": "كل الحالات",
+    "pubPublished": "المنشورة",
+    "pubDraft": "المسودات",
+    "noResults": "لا توجد اختبارات",
+    "table": {
+      "quiz": "الاختبار",
+      "category": "الفئة",
+      "difficulty": "المستوى",
+      "questions": "الأسئلة",
+      "players": "اللاعبون",
+      "status": "الحالة",
+      "actions": "الإجراءات"
+    },
+    "actions": {
+      "publish": "نشر",
+      "unpublish": "إلغاء النشر",
+      "delete": "حذف",
+      "deleteConfirm": "حذف هذا الاختبار؟"
+    }
+  },
+  "adminUsers": {
+    "title": "المستخدمون",
+    "subtitle": "{count} مستخدم في المجموع",
+    "addBtn": "+ إضافة مستخدم",
+    "search": "البحث بالاسم أو البلد...",
+    "filterRole": "كل الأدوار",
+    "noResults": "لا يوجد مستخدمون",
+    "anonymous": "مجهول",
+    "table": {
+      "user": "المستخدم",
+      "country": "البلد",
+      "score": "النتيجة",
+      "quizzes": "الاختبارات",
+      "accuracy": "الدقة",
+      "role": "الدور",
+      "actions": "الإجراءات"
+    },
+    "actions": {
+      "toAdmin": "← مشرف",
+      "toUser": "← مستخدم",
+      "delete": "حذف",
+      "deleteConfirm": "حذف هذا المستخدم؟"
+    },
+    "modal": {
+      "title": "إضافة مستخدم",
+      "subtitle": "إنشاء حساب مستخدم جديد",
+      "firstname": "الاسم الأول",
+      "firstnamePlaceholder": "أحمد",
+      "lastname": "اسم العائلة",
+      "lastnamePlaceholder": "بن علي",
+      "email": "البريد الإلكتروني",
+      "emailPlaceholder": "ahmed@example.com",
+      "password": "كلمة المرور",
+      "country": "البلد",
+      "countryPlaceholder": "تونس",
+      "role": "الدور",
+      "required": "*",
+      "cancel": "إلغاء",
+      "create": "إنشاء المستخدم",
+      "creating": "جارٍ الإنشاء...",
+      "validationError": "الاسم الأول والبريد الإلكتروني وكلمة المرور مطلوبة.",
+      "createError": "خطأ أثناء الإنشاء."
+    }
+  },
+  "adminLayout": {
+    "nav": {
+      "dashboard": "لوحة التحكم",
+      "users": "المستخدمون",
+      "quizzes": "الاختبارات",
+      "pending": "قيد الانتظار"
+    },
+    "adminPanel": "لوحة المشرف",
+    "administrator": "مشرف",
+    "userMode": "وضع المستخدم",
+    "logout": "تسجيل الخروج",
+    "mobileTitle": "PandoMind Admin"
+  }
 }
+>>>>>>> fb236c235717e53df1d4e3f4b97f1e6b2c82618d
+
+
+
+
+
+
+

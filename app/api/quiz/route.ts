@@ -31,10 +31,17 @@ Use this exact structure:
       "question": "question text",
       "options": ["option A", "option B", "option C", "option D"],
       "correct_answer": "option A",
-      "explanation": "short explanation"
+      "indice": "hint text"
     }
   ]
-}`;
+}
+
+STRICT RULES FOR INDICE:
+- Maximum 10 words
+- NEVER repeat words from the question
+- NEVER mention the answer directly
+- Give a subtle clue that helps think
+- Example: instead of 'Lossless Audio' write 'Used by audiophiles for perfect quality'`;
 
   const userPrompt = `Create a quiz about: "${title}".
 ${prompt ? `Details: ${prompt}` : ""}

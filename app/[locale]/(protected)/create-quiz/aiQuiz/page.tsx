@@ -63,7 +63,7 @@ export default function AIQuiz() {
       const questionsToInsert = generatedQuestions.map((q, index) => ({
         quiz_id: quiz.id,
         text: q.question,
-        explanation: q.explanation,
+        indice: q.indice,
         order_index: index,
         type: "multiple",
         time_limit: String(timerValue),

@@ -35,7 +35,7 @@ export default function QuizPlayer({ quiz }: { quiz: QuizFull }) {
     );
   }
 
-  const hint     = question.explanation;
+  const hint     = question.indice;
   const isLocked = statuses[currentIndex] !== "unanswered";
   const isShort  = question.type === "short";
 

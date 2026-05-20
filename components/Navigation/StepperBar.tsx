@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { RocketOutlined, SaveOutlined, CheckOutlined, LoadingOutlined } from "@ant-design/icons";
 import { Step } from "@/types/stepperBar";
 import { useTranslations } from "next-intl";
@@ -37,7 +37,17 @@ export default function StepperBar({
   const [reviewOpen,    setReviewOpen]    = useState(false);
   const [reviewLoading, setReviewLoading] = useState(false);
   const [reviewResult,  setReviewResult]  = useState<any>(null);
+
+  // ── Keep draftData always up-to-date (avoid stale closure) ───────────────
+  const draftDataRef = useRef<DraftData | undefined>(draftData);
+  useEffect(() => { draftDataRef.current = draftData; }, [draftData]);
+
   const savedDraftId = useRef<string | undefined>(draftData?.draftId);
+
+  // Sync savedDraftId if draftData.draftId changes from outside
+  useEffect(() => {
+    if (draftData?.draftId) savedDraftId.current = draftData.draftId;
+  }, [draftData?.draftId]);
 
   const AI_STEPS: Step[] = [
     { id: 1, label: t("aiStep1") },
@@ -49,29 +59,53 @@ export default function StepperBar({
   const saveDraft = async () => {
     if (!user) { message.error("You must be logged in."); return; }
     setSavingDraft(true);
+
+    // ── Always read from ref, never from stale closure ────────────────────
+    const current = draftDataRef.current;
+    console.log("Saving draft with questions:", current?.questions);
+
     try {
       const payload = {
-        user_id: user.id, title: draftData?.title || "Untitled Quiz",
-        description: draftData?.description || "", difficulty: draftData?.difficulty || "easy",
-        questions: draftData?.questions || [], time_per_question: draftData?.timePerQuestion ?? 20,
-        cover_image: draftData?.coverImage || null, current_step: currentStep,
-        saved_at: new Date().toISOString(),
+        user_id:          user.id,
+        title:            current?.title           || "Untitled Quiz",
+        description:      current?.description     || "",
+      difficulty: (current?.difficulty || "medium").toLowerCase(),
+        questions:        current?.questions       || [],
+        time_per_question: current?.timePerQuestion ?? 20,
+        cover_image:      current?.coverImage      || null,
+        current_step:     currentStep,
+        saved_at:         new Date().toISOString(),
       };
+
       let draftId = savedDraftId.current;
       if (draftId) {
-        const { error } = await supabase.from("quiz_drafts").update(payload).eq("id", draftId).eq("user_id", user.id);
+        const { error } = await supabase
+          .from("quiz_drafts")
+          .update(payload)
+          .eq("id", draftId)
+          .eq("user_id", user.id);
         if (error) throw error;
       } else {
-        const { data, error } = await supabase.from("quiz_drafts").insert(payload).select("id").single();
+        const { data, error } = await supabase
+          .from("quiz_drafts")
+          .insert(payload)
+          .select("id")
+          .single();
         if (error) throw error;
         draftId = (data as { id: string }).id;
         savedDraftId.current = draftId;
         onDraftSaved?.(draftId);
       }
-      setDraftSaved(true); message.success("Draft saved!");
+
+      setDraftSaved(true);
+      message.success("Draft saved!");
       setTimeout(() => setDraftSaved(false), 3000);
-    } catch { message.error("Failed to save draft."); }
-    finally { setSavingDraft(false); }
+    } catch (err) {
+      console.error("Save draft error:", err);
+      message.error("Failed to save draft.");
+    } finally {
+      setSavingDraft(false);
+    }
   };
 
   const handleReviewAndPublish = async () => {
@@ -80,11 +114,16 @@ export default function StepperBar({
       onPublish?.({ status: "published", aiScore: null, aiRemarks: null });
       return;
     }
+    const current = draftDataRef.current;
     setReviewOpen(true); setReviewLoading(true); setReviewResult(null);
     try {
       const res = await fetch("/api/review-quiz", {
         method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ title: draftData?.title, difficulty: draftData?.difficulty, questions: draftData?.questions }),
+        body: JSON.stringify({
+          title:      current?.title,
+          difficulty: current?.difficulty,
+          questions:  current?.questions,
+        }),
       });
       const json = await res.json();
       if (!json.success) throw new Error(json.error);
@@ -92,16 +131,16 @@ export default function StepperBar({
     } catch (err: any) {
       message.error("AI review failed: " + err.message);
       setReviewOpen(false);
-    } finally { setReviewLoading(false); }
+    } finally {
+      setReviewLoading(false);
+    }
   };
 
-  // ✅ Approuvé → published
   const handleApproveAndPublish = () => {
     setReviewOpen(false);
     onPublish?.({ status: "published", aiScore: reviewResult?.score ?? null, aiRemarks: reviewResult?.remarks ?? null });
   };
 
-  // ✅ Forcé → pending_admin (pas publié, pas visible dans browse)
   const handleForcePublish = () => {
     setReviewOpen(false);
     onPublish?.({ status: "pending_admin", aiScore: reviewResult?.score ?? null, aiRemarks: reviewResult?.remarks ?? null });

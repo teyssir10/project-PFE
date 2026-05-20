@@ -2,7 +2,7 @@
 
 import React from 'react'
 import Link from 'next/link'
-import { usePathname,useParams } from 'next/navigation'
+import { usePathname, useParams } from 'next/navigation'
 import {
   LogoutOutlined, HomeOutlined, LineChartOutlined, SettingOutlined,
   UsergroupAddOutlined, TrophyOutlined, PlusOutlined, AppstoreOutlined
@@ -63,7 +63,7 @@ function NavLinks({ onClickItem }: { onClickItem?: () => void }) {
     {
       label: t("account"),
       items: [
-        { icon: SettingOutlined, label: t('settings'), href: `/${locale}/settings`      },
+        { icon: SettingOutlined, label: t('settings'), href: `/${locale}/settings` },
       ]
     },
   ];
@@ -99,7 +99,8 @@ function NavLinks({ onClickItem }: { onClickItem?: () => void }) {
                     {item.label}
                   </span>
                   {isActive && (
-                    <div className="ml-auto w-1.5 h-1.5 rounded-full bg-[#003333] dark:bg-white" />
+                    // ms-auto fonctionne en LTR et RTL (remplace ml-auto)
+                    <div className="ms-auto w-1.5 h-1.5 rounded-full bg-[#003333] dark:bg-white" />
                   )}
                 </Link>
               );
@@ -119,7 +120,7 @@ function LogoutButton({ onClick }: { onClick?: () => void }) {
   return (
     <div className="px-4 py-6 border-t border-gray-100 dark:border-slate-700 space-y-3">
       <div className="flex items-center gap-3 px-2">
-        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-cyan-500 to-teal-400 flex items-center justify-center text-white font-bold text-sm">
+        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-cyan-500 to-teal-400 flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
           {username?.charAt(0).toUpperCase()}
         </div>
         <div className="min-w-0">
@@ -153,11 +154,17 @@ export function sidebar({ children }: { children: React.ReactNode }) {
   const t = useTranslations("sidebar");
 
   return (
-   
     <div className="flex h-screen overflow-hidden bg-gray-50 dark:bg-slate-900">
+      {/*
+        Sidebar :
+        - border-e remplace border-r → s'inverse automatiquement en RTL
+        - Pas besoin de changer la position flex : en RTL, le navigateur
+          inverse l'ordre des enfants flex automatiquement grâce à dir="rtl"
+          défini sur <html>
+      */}
       <aside className="hidden md:flex w-64 flex-col flex-shrink-0
         bg-white dark:bg-slate-800
-        border-r border-gray-100 dark:border-slate-700
+        border-e border-gray-100 dark:border-slate-700
         shadow-sm">
         <div className="h-16 px-6 py-3 border-b border-gray-100 dark:border-slate-700 flex-shrink-0">
           <LogoSection platform={t('platform')} />
@@ -166,7 +173,6 @@ export function sidebar({ children }: { children: React.ReactNode }) {
         <LogoutButton />
       </aside>
 
-      
       <main
         className="flex-1 overflow-auto relative"
         style={

@@ -11,6 +11,7 @@ import { useAuth } from "@/lib/auth";
 import { Modal, Spin, message } from "antd";
 import { useTranslations, useLocale } from "next-intl";
 import { useQuizModeStore } from "@/store/useQuizModeStore";
+import { supabase } from "@/lib/supabase";
 
 export default function QuizPage() {
   const t = useTranslations("browsePage");
@@ -23,6 +24,7 @@ export default function QuizPage() {
   const [tab, setTab] = useState("all");
   const [quizzes, setQuizzes] = useState<any[]>([]);
   const [favorites, setFavorites] = useState<string[]>([]);
+  const [recentlyPlayedIds, setRecentlyPlayedIds] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const searchParams = useSearchParams()
   const isHostMode = searchParams.get('mode') === 'host'
@@ -44,9 +46,23 @@ export default function QuizPage() {
       try {
         const quizzesData = await fetchQuizzes();
         setQuizzes(quizzesData);
+
         if (user) {
+        
           const favs = await fetchFavorites(user.id);
           setFavorites(favs);
+
+         
+          const { data: historyData } = await supabase
+            .from("quiz_history")
+            .select("quiz_id")
+            .eq("user_id", user.id)
+            .order("played_at", { ascending: false });
+
+          if (historyData) {
+            const ids = [...new Set(historyData.map((p: any) => p.quiz_id))] as string[];
+            setRecentlyPlayedIds(ids);
+          }
         }
       } catch (err) {
         console.error(err);
@@ -71,13 +87,11 @@ export default function QuizPage() {
     }
   };
 
-  // ── Edit → force mode manual + redirige vers create-quiz ──────────────────
   const handleOpenEdit = (quiz: any) => {
     setMode("manual");
     router.push(`/${locale}/create-quiz?edit=${quiz.id}`);
   };
 
-  // ── Delete ─────────────────────────────────────────────────────────────────
   const handleOpenDelete = (quiz: any) => {
     setDeletingQuiz(quiz);
     setDeleteModalOpen(true);
@@ -104,10 +118,10 @@ export default function QuizPage() {
     if (!q) return false;
     const matchSearch = (q.title ?? "").toLowerCase().includes(search.toLowerCase());
     if (tab === "all")       return matchSearch;
-    if (tab === "community") return matchSearch && q.is_community;
+    if (tab === "community") return matchSearch && q.creator_id !== user?.id;
     if (tab === "my")        return matchSearch && q.creator_id === user?.id;
     if (tab === "favorites") return matchSearch && favorites.includes(q.id);
-    if (tab === "recently")  return matchSearch && q.recently_played_by?.includes(user?.id ?? "");
+    if (tab === "recently")  return matchSearch && recentlyPlayedIds.includes(q.id);
     return true;
   });
 
@@ -150,11 +164,8 @@ export default function QuizPage() {
             }`}
           >
             {item.label}
-            {item.key === "favorites" && favorites.length > 0 && (
-              <span className="ml-1.5 bg-red-500 text-white text-xs px-1.5 py-0.5 rounded-full">
-                {favorites.length}
-              </span>
-            )}
+           
+       
           </button>
         ))}
       </div>
@@ -190,12 +201,18 @@ export default function QuizPage() {
       {/* Empty state */}
       {filtered.length === 0 ? (
         <div className="text-center py-20">
-          <p className="text-5xl mb-4">{tab === "favorites" ? "❤️" : "🔍"}</p>
+          <p className="text-5xl mb-4">
+            {tab === "favorites" ? "❤️" : tab === "recently" ? "🕐" : "🔍"}
+          </p>
           <p className="text-gray-500 font-medium">
-            {tab === "favorites" ? t("emptyFavTitle") : t("emptySearchTitle")}
+            {tab === "favorites" ? t("emptyFavTitle") :
+             tab === "recently"  ? "Aucun quiz joué récemment" :
+             t("emptySearchTitle")}
           </p>
           <p className="text-gray-400 text-sm mt-1">
-            {tab === "favorites" ? t("emptyFavSub") : t("emptySearchSub")}
+            {tab === "favorites" ? t("emptyFavSub") :
+             tab === "recently"  ? "Jouez des quiz pour les retrouver ici" :
+             t("emptySearchSub")}
           </p>
         </div>
       ) : (

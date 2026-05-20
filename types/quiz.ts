@@ -16,7 +16,7 @@ export interface Question {
   customTime: string;
   points: string;
   difficulty: string;
-  explanation: string;
+  indice: string;
 }
 
 export const DIFFICULTY_COLORS: Record<string, string> = {
@@ -56,7 +56,7 @@ export const defaultQuestion = (defaultTime=30): Question => ({
   customTime: "",
   points: "Standard (1x)",
   difficulty: "Easy",
-  explanation: "",
+  indice: "",
 });
 
 // ─── PLAY PAGE TYPES ───────────────────────────────────
@@ -72,8 +72,8 @@ export interface PlayQuestion {
   id: string;
   text: string;
   type: string;                  
-  hint?: string | null;
-  explanation?: string | null;
+  indice?: string | null;
+  
   correct_answer?: string | null;
   quiz_id: string;
   options: PlayOption[];

@@ -33,13 +33,6 @@ const DIFFICULTY_STYLES: Record<string, string> = {
   mixed:  "bg-purple-50 text-purple-700 dark:bg-purple-900/20 dark:text-purple-400",
 };
 
-const STATUS_CONFIG: Record<string, { label: string; color: string; icon: string }> = {
-  published:     { label: "Publié",     icon: "✅", color: "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400" },
-  pending_admin: { label: "En attente", icon: "⏳", color: "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400"         },
-  rejected:      { label: "Rejeté",    icon: "❌", color: "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400"                 },
-  draft:         { label: "Brouillon", icon: "📝", color: "bg-gray-100 text-gray-600 dark:bg-slate-700 dark:text-slate-400"              },
-};
-
 function timeAgo(dateStr: string): string {
   const diff = Date.now() - new Date(dateStr).getTime();
   const mins = Math.floor(diff / 60000); const hours = Math.floor(diff / 3600000); const days = Math.floor(diff / 86400000);
@@ -69,6 +62,14 @@ export default function SettingsPage() {
   const [myQuizzesLoading, setMyQuizzesLoading] = useState(false);
   const [quizFilter, setQuizFilter] = useState<"all" | "published" | "pending_admin" | "rejected">("all");
 
+  // Status config uses i18n labels — built inside component to access `t`
+  const STATUS_CONFIG: Record<string, { label: string; color: string; icon: string }> = {
+    published:     { label: t("myquizzes.statusPublished"), icon: "✅", color: "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400" },
+    pending_admin: { label: t("myquizzes.statusPending"),   icon: "⏳", color: "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400"         },
+    rejected:      { label: t("myquizzes.statusRejected"),  icon: "❌", color: "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400"                 },
+    draft:         { label: t("myquizzes.statusDraft"),     icon: "📝", color: "bg-gray-100 text-gray-600 dark:bg-slate-700 dark:text-slate-400"              },
+  };
+
   useEffect(() => { setDarkMode(document.documentElement.classList.contains("dark")); }, []);
   useEffect(() => { if (activeSection === "drafts" && user) fetchDrafts(); }, [activeSection, user]);
   useEffect(() => { if (activeSection === "myquizzes" && user) fetchMyQuizzes(); }, [activeSection, user]);
@@ -97,11 +98,10 @@ export default function SettingsPage() {
 
   const deleteDraft = async (id: string) => {
     const { error } = await supabase.from("quiz_drafts").delete().eq("id", id);
-    if (!error) { setDrafts(p => p.filter(d => d.id !== id)); message.success("Draft deleted."); }
-    else message.error("Failed.");
+    if (!error) { setDrafts(p => p.filter(d => d.id !== id)); message.success(t("drafts.deleted")); }
+    else message.error(t("drafts.deleteFailed"));
   };
 
-  // ── Resume draft → force mode manual ──────────────────────────────────────
   const resumeDraft = (d: QuizDraft) => {
     setMode("manual");
     router.push(`/${locale}/create-quiz?draft=${d.id}`);
@@ -122,12 +122,12 @@ export default function SettingsPage() {
   };
 
   const savePassword = async () => {
-    if (newPwd !== confirmPwd) { message.error(t("pwdMismatch")); return; }
-    if (newPwd.length < 6) { message.error(t("pwdTooShort")); return; }
+    if (newPwd !== confirmPwd) { message.error(t("security.pwdMismatch")); return; }
+    if (newPwd.length < 6) { message.error(t("security.pwdTooShort")); return; }
     setLoading(true);
     const { error } = await supabase.auth.updateUser({ password: newPwd });
     setLoading(false);
-    if (!error) { message.success(t("pwdChanged")); setCurrentPwd(""); setNewPwd(""); setConfirmPwd(""); }
+    if (!error) { message.success(t("security.pwdChanged")); setCurrentPwd(""); setNewPwd(""); setConfirmPwd(""); }
     else message.error(t("saveError"));
   };
 
@@ -140,7 +140,7 @@ export default function SettingsPage() {
     { key: "language",   icon: <GlobalOutlined />,   label: t("nav.language")   },
     { key: "appearance", icon: <BulbOutlined />,     label: t("nav.appearance") },
     { key: "drafts",     icon: <FileTextOutlined />, label: t("nav.drafts")     },
-    { key: "myquizzes",  icon: <AppstoreOutlined />, label: "Mes Quiz", badge: pendingCount },
+    { key: "myquizzes",  icon: <AppstoreOutlined />, label: t("nav.myquizzes"), badge: pendingCount },
   ];
 
   return (
@@ -276,15 +276,21 @@ export default function SettingsPage() {
               <div className="space-y-4">
                 <div className="flex items-center justify-between border-b border-gray-100 dark:border-slate-700 pb-3">
                   <h2 className="text-base font-extrabold text-gray-800 dark:text-white">{t("nav.drafts")}</h2>
-                  {!draftsLoading && <span className="text-xs text-gray-400 font-medium">{drafts.length} draft{drafts.length !== 1 ? "s" : ""} saved</span>}
+                  {!draftsLoading && (
+                    <span className="text-xs text-gray-400 font-medium">
+                      {t("drafts.count", { count: drafts.length })}
+                    </span>
+                  )}
                 </div>
                 {draftsLoading ? (
                   <div className="flex justify-center py-10"><Spin /></div>
                 ) : drafts.length === 0 ? (
                   <div className="flex flex-col items-center py-14 gap-3 text-center">
                     <FileTextOutlined className="text-3xl text-gray-300" />
-                    <p className="text-sm text-gray-400">No saved drafts yet</p>
-                    <button onClick={() => router.push(`/${locale}/create-quiz`)} className="px-4 py-2 rounded-xl bg-cyan-500 text-white text-xs font-bold hover:bg-cyan-600 transition-all">Create a quiz</button>
+                    <p className="text-sm text-gray-400">{t("drafts.empty")}</p>
+                    <button onClick={() => router.push(`/${locale}/create-quiz`)} className="px-4 py-2 rounded-xl bg-cyan-500 text-white text-xs font-bold hover:bg-cyan-600 transition-all">
+                      {t("drafts.createBtn")}
+                    </button>
                   </div>
                 ) : (
                   <div className="space-y-3">
@@ -295,10 +301,14 @@ export default function SettingsPage() {
                             <EditOutlined className="text-cyan-500" />
                           </div>
                           <div className="min-w-0">
-                            <p className="text-sm font-bold text-gray-800 dark:text-white truncate">{draft.title || "Untitled Quiz"}</p>
+                            <p className="text-sm font-bold text-gray-800 dark:text-white truncate">
+                              {draft.title || t("drafts.untitled")}
+                            </p>
                             <div className="flex items-center gap-2 mt-1 flex-wrap">
                               <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full capitalize ${DIFFICULTY_STYLES[draft.difficulty] ?? DIFFICULTY_STYLES.easy}`}>{draft.difficulty}</span>
-                              <span className="text-[11px] text-cyan-600 dark:text-cyan-400 bg-cyan-50 dark:bg-cyan-900/20 px-2 py-0.5 rounded-full font-medium">Step {draft.current_step} of 3</span>
+                              <span className="text-[11px] text-cyan-600 dark:text-cyan-400 bg-cyan-50 dark:bg-cyan-900/20 px-2 py-0.5 rounded-full font-medium">
+                                {t("drafts.step", { current: draft.current_step, total: 3 })}
+                              </span>
                               <span className="text-[11px] text-gray-400">{timeAgo(draft.saved_at)}</span>
                             </div>
                           </div>
@@ -308,7 +318,7 @@ export default function SettingsPage() {
                             <DeleteOutlined className="text-sm" />
                           </button>
                           <button onClick={() => resumeDraft(draft)} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-cyan-500 text-white text-xs font-bold hover:bg-cyan-600 transition-all">
-                            <PlayCircleOutlined /> Resume
+                            <PlayCircleOutlined /> {t("drafts.resume")}
                           </button>
                         </div>
                       </div>
@@ -322,8 +332,8 @@ export default function SettingsPage() {
             {activeSection === "myquizzes" && (
               <div className="space-y-5">
                 <div className="border-b border-gray-100 dark:border-slate-700 pb-3">
-                  <h2 className="text-base font-extrabold text-gray-800 dark:text-white">Mes Quiz</h2>
-                  <p className="text-xs text-gray-400 mt-0.5">Suivez le statut de vos quiz soumis à la modération</p>
+                  <h2 className="text-base font-extrabold text-gray-800 dark:text-white">{t("nav.myquizzes")}</h2>
+                  <p className="text-xs text-gray-400 mt-0.5">{t("myquizzes.subtitle")}</p>
                 </div>
 
                 <div className="flex gap-2 flex-wrap">
@@ -333,7 +343,7 @@ export default function SettingsPage() {
                     return (
                       <button key={f} onClick={() => setQuizFilter(f)}
                         className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all flex items-center gap-1.5 ${quizFilter === f ? "bg-cyan-500 text-white shadow-sm" : "bg-gray-100 dark:bg-slate-700 text-gray-500 dark:text-slate-400 hover:bg-gray-200 dark:hover:bg-slate-600"}`}>
-                        {cfg ? `${cfg.icon} ${cfg.label}` : "Tous"}
+                        {cfg ? `${cfg.icon} ${cfg.label}` : t("myquizzes.filterAll")}
                         <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-bold ${quizFilter === f ? "bg-white/20" : "bg-gray-200 dark:bg-slate-600"}`}>{count}</span>
                       </button>
                     );
@@ -345,7 +355,7 @@ export default function SettingsPage() {
                 ) : filteredQuizzes.length === 0 ? (
                   <div className="flex flex-col items-center py-14 gap-3 text-center">
                     <span className="text-4xl">📝</span>
-                    <p className="text-sm text-gray-400">Aucun quiz trouvé</p>
+                    <p className="text-sm text-gray-400">{t("myquizzes.empty")}</p>
                   </div>
                 ) : (
                   <div className="space-y-3">
@@ -365,7 +375,7 @@ export default function SettingsPage() {
                           </div>
                           {quiz.ai_remarks && quiz.ai_remarks.length > 0 && quiz.status !== "published" && (
                             <div className="p-3 bg-amber-50 dark:bg-amber-900/20 rounded-xl border border-amber-100 dark:border-amber-800/40 mb-2">
-                              <p className="text-[11px] font-bold text-amber-700 dark:text-amber-400 mb-1.5">🤖 Remarques de l'IA :</p>
+                              <p className="text-[11px] font-bold text-amber-700 dark:text-amber-400 mb-1.5">🤖 {t("myquizzes.aiRemarks")} :</p>
                               <ul className="space-y-1">
                                 {quiz.ai_remarks.map((r, i) => (
                                   <li key={i} className="text-[11px] text-amber-600 dark:text-amber-300 flex items-start gap-1.5"><span className="flex-shrink-0 mt-0.5">•</span>{r}</li>
@@ -375,12 +385,12 @@ export default function SettingsPage() {
                           )}
                           {quiz.status === "pending_admin" && (
                             <div className="p-3 bg-cyan-50 dark:bg-cyan-900/20 rounded-xl border border-cyan-100 dark:border-cyan-800/40">
-                              <p className="text-[11px] text-cyan-600 dark:text-cyan-400">⏳ En cours de révision par l'administrateur. Vous serez notifié de la décision.</p>
+                              <p className="text-[11px] text-cyan-600 dark:text-cyan-400">⏳ {t("myquizzes.pendingNote")}</p>
                             </div>
                           )}
                           {quiz.status === "rejected" && quiz.admin_note && (
                             <div className="p-3 bg-red-50 dark:bg-red-900/20 rounded-xl border border-red-100 dark:border-red-800/40">
-                              <p className="text-[11px] font-bold text-red-600 dark:text-red-400 mb-1">❌ Décision de l'admin :</p>
+                              <p className="text-[11px] font-bold text-red-600 dark:text-red-400 mb-1">❌ {t("myquizzes.adminDecision")} :</p>
                               <p className="text-[11px] text-red-500 dark:text-red-300">{quiz.admin_note}</p>
                             </div>
                           )}
