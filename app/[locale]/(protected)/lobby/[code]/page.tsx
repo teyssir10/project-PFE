@@ -83,7 +83,7 @@ export default function LobbyPage() {
       .on("postgres_changes", {
         event: "INSERT", schema: "public", table: "game_state",
         filter: `room_id=eq.${room.id}`,
-      }, () => router.push(`/play-quiz/${room.quiz_id}/play?roomId=${room.id}`))
+      }, () => router.push(`/play-quiz/${room.quiz_id}?roomId=${room.id}`))
       .subscribe();
     return () => { supabase.removeChannel(channel); };
   }, [room]);
@@ -106,7 +106,7 @@ export default function LobbyPage() {
     setStarting(true);
     try {
       await insertGameState(room.id);
-      router.push(`/play-quiz/${room.quiz_id}/play?roomId=${room.id}`);
+      router.push(`/play-quiz/${room.quiz_id}?roomId=${room.id}`)
     } catch (e) {
       console.error("Start game error:", e);
       setStarting(false);

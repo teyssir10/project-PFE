@@ -7,17 +7,19 @@ import {
 import { Card } from "antd";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
+import { useQuizModeStore } from "@/store/useQuizModeStore";
 
 const QuickActions = () => {
   const t = useTranslations("quickActions");
   const router = useRouter();
+  const { setMode } = useQuizModeStore();
 
   const actions = [
     {
       icon: <CaretRightOutlined className="text-sm" />,
       label: t("startQuiz"),
       sub: t("startQuizSub"),
-      href: "/browse",
+      href: "/browse-quiz",
       from: "from-cyan-400",
       to: "to-cyan-500",
     },
@@ -25,7 +27,7 @@ const QuickActions = () => {
       icon: <TeamOutlined className="text-sm" />,
       label: t("playFriends"),
       sub: t("playFriendsSub"),
-      href: "/multiplayer",
+      href: "/multiplayerroom",
       from: "from-cyan-500",
       to: "to-teal-500",
     },
@@ -34,6 +36,7 @@ const QuickActions = () => {
       label: t("createQuiz"),
       sub: t("createQuizSub"),
       href: "/create-quiz",
+      onClick: () => setMode("manual"),
       from: "from-teal-400",
       to: "to-cyan-500",
     },
@@ -41,7 +44,8 @@ const QuickActions = () => {
       icon: <RobotOutlined className="text-sm" />,
       label: t("generateAI"),
       sub: t("generateAISub"),
-      href: "/generate",
+      href: "/create-quiz",
+      onClick: () => setMode("ai"),
       from: "from-teal-500",
       to: "to-cyan-600",
     },
@@ -50,7 +54,7 @@ const QuickActions = () => {
   return (
     <Card
       className="!rounded-2xl !border !border-cyan-100 !shadow-sm !bg-white dark:!bg-slate-800 dark:!border-slate-700"
-      bodyStyle={{ padding: "16px" }}
+       styles={{ body: { padding: "16px" } }}
     >
       <h2 className="text-sm font-bold text-gray-800 dark:text-white mb-3">
         {t("title")}
@@ -59,7 +63,8 @@ const QuickActions = () => {
         {actions.map((a, i) => (
           <button
             key={i}
-            onClick={() => router.push(a.href)}
+            onClick={() => {a.onClick?.(); router.push(a.href);
+}}
             className={`group p-3 rounded-xl bg-gradient-to-br ${a.from} ${a.to} text-white hover:shadow-lg hover:scale-[1.03] active:scale-[0.98] transition-all duration-200 flex flex-col items-start gap-1`}
           >
             <div className="w-7 h-7 bg-white/20 rounded-lg flex items-center justify-center">

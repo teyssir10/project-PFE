@@ -568,7 +568,7 @@
     }
   },
   
-  "quizPlay": {
+  "multiquizPlay": {
     "question": "Question",
     "go": "GO!",
     "multiplayer": "Multiplayer",
@@ -632,7 +632,7 @@
         "next": "Next question coming up…"
       }
     },
-        "quizCard": {
+      "quizCard": {
       "featured": "Featured",
       "new": "New",
       "saved": "Saved",
@@ -770,13 +770,7 @@
     "globalRanking": "Global Ranking",
     "globalRank": "Global Rank",
     "totalPoints": "Total Points"
-  },
-  "leaderboard": {
-  "rank": "Rank",
-  "user": "User", 
-  "score": "Score",
-  "quizzes": "Quizzes"
-}
+  }
 
   }
  

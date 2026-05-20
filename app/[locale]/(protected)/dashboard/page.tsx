@@ -92,13 +92,13 @@ export default function Page() {
           </div>
           <div className="relative z-10 flex gap-2 flex-shrink-0">
             <button
-              onClick={() => router.push("/browse")}
+              onClick={() => router.push("/browse-quiz")}
               className="px-4 py-2 rounded-xl text-xs font-bold bg-white/15 text-white border border-white/25 hover:bg-white/25 transition-all"
             >
               {t("browseQuizzes")}
             </button>
             <button
-              onClick={() => router.push("/generate")}
+              onClick={() => router.push("/create-quiz/manuelQuiz")}
               className="px-4 py-2 rounded-xl text-xs font-bold bg-white text-cyan-600 hover:bg-cyan-50 transition-all shadow-sm"
             >
               ✨ {t("generateAI")}
@@ -180,6 +180,7 @@ export default function Page() {
             <Card
               className="!rounded-2xl !border !border-cyan-100 !shadow-sm !bg-white dark:!bg-slate-800 dark:!border-slate-700"
               bodyStyle={{ padding: "20px" }}
+              
             >
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-base font-bold text-gray-800 dark:text-white">
@@ -222,7 +223,7 @@ export default function Page() {
                         <Button
                           size="small"
                           icon={<CaretRightOutlined />}
-                          onClick={() => router.push(`/play/${quiz.id}`)}
+                          onClick={() => router.push(`/play-quiz/${quiz.id}`)}
                           className="!bg-gradient-to-r !from-cyan-500 !to-teal-400 !text-white !border-0 !rounded-lg opacity-0 group-hover:opacity-100 transition-all"
                         />
                       </div>

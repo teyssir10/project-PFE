@@ -15,7 +15,7 @@ const isCorrect = (val: any): boolean => val === true || val === "true";
 const calcScore = (correct: boolean): number => correct ? 10 : 0;
 
 export default function MultiplayerQuizPlayer({ quiz, roomId }: Props) {
-  const t = useTranslations("quizPlay");
+  const t = useTranslations("multiquizPlay");
   const router = useRouter();
 
   const [phase, setPhase] = useState<Phase>("countdown");
@@ -335,7 +335,7 @@ export default function MultiplayerQuizPlayer({ quiz, roomId }: Props) {
               </span>
             )}
 
-            <div className="flex gap-3 items-center ml-auto">
+            <div className="flex items-center">
               {!confirmed && selected && (
                 <button onClick={handleConfirm}
                   className="px-8 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-teal-400 text-white font-bold text-sm shadow-lg shadow-cyan-500/25">

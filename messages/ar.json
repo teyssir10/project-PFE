@@ -568,7 +568,7 @@
   
 },
 
-  "quizPlay": {
+  "multiquizPlay": {
     "question": "سؤال",
     "go": "انطلق!",
     "multiplayer": "متعدد اللاعبين",
@@ -631,7 +631,7 @@
         "next": "السؤال التالي قادم…"
       }
     },
-        "quizCard": {
+      "quizCard": {
       "featured": "مميز",
       "new": "جديد",
       "saved": "محفوظ",
@@ -648,7 +648,7 @@
         "mixed": "مختلط"
       }
     },
-       "leaderboard": {
+   "leaderboard": {
     "title": "لوحة المتصدرين",
     "subtitle": "أفضل اللاعبين مرتبين حسب الأداء",
     "loading": "جارٍ تحميل الترتيب...",
@@ -769,13 +769,8 @@
     "globalRanking": "التصنيف العالمي",
     "globalRank": "الترتيب العالمي",
     "totalPoints": "إجمالي النقاط"
-  },
-  "leaderboard": {
-  "rank": "Rank",
-  "user": "User", 
-  "score": "Score",
-  "quizzes": "Quizzes"
-}
+  }
+  
 
 
 
