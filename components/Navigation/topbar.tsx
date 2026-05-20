@@ -234,9 +234,32 @@ export default function Topbar({ username }: TopbarProps) {
     </div>
   )
 
-  const formatName = (name: string | undefined) => {
-    if (!name) return "Dashboard"
-    return name.replace("-", " ").replace(/\b\w/g, (c) => c.toUpperCase())
+  const pageNames: Record<string, string> = {
+    "dashboard":   "Dashboard",
+    "browse-quiz": "Browse Quiz",
+    "create-quiz": "Create Quiz",
+    "analytics":   "Analytics",
+    "leaderboard": "Leaderboard",
+    "settings":    "Settings",
+    "room":        "Multiplayer",
+    "multiplayerroom": "Multiplayer",
+    "lobby":         "Waiting Room",
+    "profile":     "Profile",
+    "play-quiz":   "Play Quiz",
+    "play":        "Play Quiz",
+  }
+
+  const formatName = (pathname: string) => {
+    const segments = pathname.split("/").filter(Boolean)
+    if (segments.length === 0) return "Dashboard"
+
+    for (let i = segments.length - 1; i >= 0; i--) {
+      const segment = segments[i]
+      if (pageNames[segment]) return pageNames[segment]
+    }
+
+    const last = segments[segments.length - 1]
+    return last.replace(/-/g, " ").replace(/\b\w/g, c => c.toUpperCase())
   }
 
   const handleLogout = async () => {
@@ -283,7 +306,7 @@ export default function Topbar({ username }: TopbarProps) {
           <span className="font-bold text-cyan-500">PandoMind</span>
           <span className="text-gray-400">/</span>
           <span className="text-gray-800 dark:text-white font-medium">
-            {formatName(currentPage)}
+            {formatName(pathname)}
           </span>
         </div>
       </div>
@@ -319,10 +342,11 @@ export default function Topbar({ username }: TopbarProps) {
               !bg-gradient-to-r !from-red-500 !to-orange-400
               !text-white !shadow-md hover:!shadow-red-500/30
               hover:!scale-105 transition-all duration-200 flex items-center gap-2"
-            icon={<CrownOutlined />}
-          >
-            Admin
-          </Button>
+           // Après
+icon={<CrownOutlined />}
+>
+  {t('admin')}
+</Button>
         )}
 
         {isCreateQuizPage ? (

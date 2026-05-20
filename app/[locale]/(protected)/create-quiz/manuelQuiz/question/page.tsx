@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState ,useEffect} from "react";
 import { useAntdApp } from "@/hooks/useAntdApp";
 import { useAuth } from "@/lib/auth";
 import { useRouter } from "next/navigation";
@@ -12,8 +12,12 @@ import QuizSidebar from "@/components/createquiz/manual/question/Quizqidebar";
 import QuestionEditor from "@/components/createquiz/manual/question/Quistioneditor";
 import { useTranslations } from "next-intl";
 import { useResumeDraft } from "@/hooks/Useresumedraft";
+import { useSearchParams } from "next/navigation";
+import { getQuizWithQuestions } from "@/lib/api/quiz";
 
 export default function ManualQuiz() {
+   const searchParams = useSearchParams();
+  const editId = searchParams.get("edit");
   const t = useTranslations("manualQuizEditor");
   const tStepper = useTranslations("stepper");
   const { message } = useAntdApp();
@@ -23,6 +27,7 @@ export default function ManualQuiz() {
   const router = useRouter();
 
   const { difficulty, coverImage, timePerQuestion, categoryId } = useQuizStore();
+  
 
   const MANUAL_STEPS = [
     { id: 1, label: tStepper("manualStep1") },
@@ -46,6 +51,38 @@ export default function ManualQuiz() {
   useState(() => {
     if (urlDraftId) setDraftId(urlDraftId);
   });
+  useEffect(() => {
+    if (!editId) return;
+
+    const loadQuizQuestions = async () => {
+      const data = await getQuizWithQuestions(editId);
+      if (!data) return;
+
+      setQuizTitle(data.title);
+
+      if (data.questions && data.questions.length > 0) {
+        const formatted = data.questions.map((q: any) => ({
+          id:            q.id,
+          text:          q.question_text ?? q.text ?? "",
+          indice:        q.indice ?? "",
+          type:          q.question_type ?? q.type ?? "multiple",
+          points:        q.points ?? "Standard (1x)",
+          correctAnswer: q.correct_answer ?? "",
+          timeLimit:     q.time_limit ?? null,
+          correctOptionId: q.options?.find((o: any) => o.is_correct)?.id ?? null,
+          options: q.options?.map((o: any) => ({
+            id:   o.id,
+            text: o.option_text ?? o.text ?? "",
+          })) ?? [],
+        }));
+
+        setQuestions(formatted);
+        setActiveId(formatted[0].id);
+      }
+    };
+
+    loadQuizQuestions();
+  }, [editId]);
 
   const handleSave = async (publishResult?: PublishResult) => {
     if (!user) return message.error(t("mustLogin"));
@@ -69,6 +106,7 @@ export default function ManualQuiz() {
         status:    publishResult?.status    ?? "published",
         aiScore:   publishResult?.aiScore   ?? null,
         aiRemarks: publishResult?.aiRemarks ?? null,
+        
       });
 
       if (publishResult?.status === "pending_admin") {
@@ -135,7 +173,7 @@ export default function ManualQuiz() {
               question={activeQuestion} questionIndex={activeIndex} totalQuestions={questions.length}
               canDelete={questions.length > 1} onTypeChange={handleTypeChange}
               onTextChange={(text) => updateQuestion({ text })}
-              onExplanationChange={(explanation) => updateQuestion({ explanation })}
+              onExplanationChange={(indice) => updateQuestion({ indice})}
               onCorrectAnswerChange={(correctAnswer) => updateQuestion({ correctAnswer })}
               onSelectCorrect={(correctOptionId) => updateQuestion({ correctOptionId })}
               onUpdateOption={updateOption} onDeleteOption={deleteOption} onAddOption={addOption}

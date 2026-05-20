@@ -1,30 +1,44 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { getQuizWithQuestions } from "@/lib/api/quiz";
 import QuizPlayer from "@/components/PlayQuiz/QuizPlayer";
+import MultiplayerQuizPlayer from "@/components/PlayQuiz/MultiplayerQuizPlayer";
 import { useTranslations } from "next-intl";
+import { Spin } from "antd";
 
 export default function PlayQuizPage() {
   const t = useTranslations("quizPlay");
   const { id } = useParams<{ id: string }>();
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const roomId = searchParams.get("roomId");
+
   const [quiz, setQuiz] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const [blocked, setBlocked] = useState(false); // ← NOUVEAU
 
   useEffect(() => {
-    getQuizWithQuestions(id)
-      .then(setQuiz)
-      .catch(() => setError(true))
-      .finally(() => setLoading(false));
-  }, [id]);
+    const init = async () => {
+      try {
+        const data = await getQuizWithQuestions(id);
+        setQuiz(data);
+      } catch {
+        setError(true);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    init();
+  }, [id, roomId]);
+
+
 
   if (loading) return (
-    <div className="flex items-center justify-center h-screen bg-gray-50 dark:bg-slate-950">
-      <div className="w-8 h-8 border-4 border-cyan-500 border-t-transparent rounded-full animate-spin" />
-    </div>
+    <div className="flex justify-center items-center h-screen"><Spin size="large" /></div> 
   );
 
   if (error || !quiz) return (
@@ -35,6 +49,6 @@ export default function PlayQuizPage() {
       </button>
     </div>
   );
-
+  if (roomId) return <MultiplayerQuizPlayer quiz={quiz} roomId={roomId} />;
   return <QuizPlayer quiz={quiz} />;
 }

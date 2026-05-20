@@ -53,7 +53,7 @@ export function useResumeDraft({
               options:         q.options         ?? [],
               correctOptionId: q.correctOptionId ?? null,
               correctAnswer:   q.correctAnswer   ?? "",
-              explanation:     q.explanation     ?? "",
+              indice:     q.indice    ?? "",
               timeLimit:       q.timeLimit       ?? "30",
               customTime:      q.customTime      ?? "",
               points:          q.points          ?? "Standard (1x)",

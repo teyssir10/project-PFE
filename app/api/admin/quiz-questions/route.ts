@@ -17,7 +17,7 @@ export async function GET(req: Request) {
         text,
         type,
         difficulty,
-        explanation,
+        indice,
         options (
           id,
           text,

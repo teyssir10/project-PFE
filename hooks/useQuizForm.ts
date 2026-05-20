@@ -7,7 +7,7 @@ export interface GeneratedQuestion {
   question: string;
   options: string[];
   correct_answer: string;
-  explanation: string;
+  indice: string;
 }
 
 export function useQuizForm() {

@@ -14,13 +14,13 @@ export default function QuizPlayer({ quiz }: { quiz: QuizFull }) {
   const t = useTranslations("quizPlay");
   const router = useRouter();
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [selected, setSelected]         = useState<string | null>(null);
-  const [confirmed, setConfirmed]       = useState(false);
-  const [score, setScore]               = useState(0);
-  const [timeLeft, setTimeLeft]         = useState(quiz.time_per_question ?? 30);
-  const [showHint, setShowHint]         = useState(false);
-  const [shortInput, setShortInput]     = useState("");
-  const [statuses, setStatuses]         = useState<("unanswered" | "correct" | "wrong" | "skipped")[]>(
+  const [selected, setSelected] = useState<string | null>(null);
+  const [confirmed, setConfirmed] = useState(false);
+  const [score, setScore] = useState(0);
+  const [timeLeft, setTimeLeft] = useState(quiz.time_per_question ?? 30);
+  const [showHint, setShowHint] = useState(false);
+  const [shortInput, setShortInput] = useState("");
+  const [statuses, setStatuses] = useState<("unanswered" | "correct" | "wrong" | "skipped")[]>(
     Array(quiz.questions.length).fill("unanswered")
   );
 
@@ -35,7 +35,7 @@ export default function QuizPlayer({ quiz }: { quiz: QuizFull }) {
     );
   }
 
-  const hint     = question.explanation;
+  const hint     = question.indice;
   const isLocked = statuses[currentIndex] !== "unanswered";
   const isShort  = question.type === "short";
 
@@ -53,7 +53,7 @@ export default function QuizPlayer({ quiz }: { quiz: QuizFull }) {
   }, [isLast, router, quiz.id, quiz.questions.length, quiz.time_per_question, score]);
 
   const handleSkip = useCallback(() => {
-    if (isLocked) return;
+    if (isLocked) return; 
     const newStatuses = [...statuses];
     newStatuses[currentIndex] = "skipped";
     setStatuses(newStatuses);
@@ -74,7 +74,7 @@ export default function QuizPlayer({ quiz }: { quiz: QuizFull }) {
     return () => clearTimeout(timer);
   }, [timeLeft, isLocked]);
 
-  // ✅ Toggle : re-cliquer désélectionne, cliquer une autre option change la sélection
+
   const handleSelect = (opt: PlayOption) => {
     if (isLocked || confirmed) return;
     setSelected(prev => prev === opt.id ? null : opt.id);
@@ -115,7 +115,7 @@ export default function QuizPlayer({ quiz }: { quiz: QuizFull }) {
   return (
     <div className="flex h-screen bg-gradient-to-br from-slate-50 via-cyan-50/30 to-teal-50/30 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 overflow-hidden">
       <QuizSidebar
-        questions={quiz.questions}
+        questions={quiz?.questions}
         currentIndex={currentIndex}
         statuses={statuses}
         onJump={(i) => {
@@ -149,7 +149,6 @@ export default function QuizPlayer({ quiz }: { quiz: QuizFull }) {
 
         <div className="flex-1 px-10 py-8 max-w-3xl w-full mx-auto relative z-10">
 
-          {/* Question counter + score */}
           <div className="flex items-center justify-between mb-6">
             <span className="px-3 py-1 rounded-full bg-cyan-100 dark:bg-cyan-900/40 text-cyan-600 dark:text-cyan-400 text-xs font-bold tracking-widest uppercase">
               {t("question")} {currentIndex + 1} / {quiz.questions.length}
@@ -183,7 +182,6 @@ export default function QuizPlayer({ quiz }: { quiz: QuizFull }) {
             )}
           </div>
 
-          {/* SHORT ANSWER */}
           {isShort ? (
             <div className="space-y-3 mb-6">
               <input
@@ -223,10 +221,8 @@ export default function QuizPlayer({ quiz }: { quiz: QuizFull }) {
                   state = "selected";
                 } else if (confirmed && !isTimeout) {
                   if (opt.id === selected) {
-                    // L'option choisie par l'utilisateur
                     state = isCorrect(opt.is_correct) ? "correct" : "wrong";
                   } else if (isCorrect(opt.is_correct)) {
-                    // ✅ Révèle toujours la bonne réponse après confirmation
                     state = "reveal";
                   }
                 }

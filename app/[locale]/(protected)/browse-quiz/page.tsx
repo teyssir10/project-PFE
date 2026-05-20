@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import QuizCard from "@/components/UI/QuizCard/quiz-card";
 import { SearchOutlined } from "@ant-design/icons";
 import { useRouter } from "next/navigation";
+import { useSearchParams} from 'next/navigation'
 import { fetchQuizzes, deleteQuiz } from "@/lib/api/quiz";
 import { fetchFavorites, addFavorite, removeFavorite } from "@/lib/api/favorites";
 import { useAuth } from "@/lib/auth";
@@ -25,6 +26,8 @@ export default function QuizPage() {
   const [favorites, setFavorites] = useState<string[]>([]);
   const [recentlyPlayedIds, setRecentlyPlayedIds] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
+  const searchParams = useSearchParams()
+  const isHostMode = searchParams.get('mode') === 'host'
 
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [deletingQuiz, setDeletingQuiz] = useState<any>(null);
@@ -124,7 +127,7 @@ export default function QuizPage() {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-[60vh]">
+      <div className="flex justify-center items-center h-[80vh]">
         <Spin size="large" />
       </div>
     );
@@ -220,6 +223,7 @@ export default function QuizPage() {
               quiz={{ ...quiz, creator: quiz.creator_name, questionCount: quiz.question_count }}
               isFavorite={favorites.includes(quiz.id)}
               onToggleFavorite={toggleFavorite}
+              isHostMode={isHostMode}
               isOwner={quiz.creator_id === user?.id}
               onEdit={handleOpenEdit}
               onDelete={handleOpenDelete}

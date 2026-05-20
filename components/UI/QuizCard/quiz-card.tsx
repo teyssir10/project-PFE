@@ -1,7 +1,9 @@
 "use client";
 import React from "react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { Button } from "antd";
+import { supabase } from "@/lib/supabase";
 import {
   PlayCircleOutlined,
   StarOutlined,
@@ -13,26 +15,48 @@ import {
   DeleteOutlined,
 } from "@ant-design/icons";
 
-export default function QuizCard({
-  quiz,
-  isFavorite,
-  onToggleFavorite,
-  isOwner,
-  onEdit,
-  onDelete,
-}: {
+export default function QuizCard({ quiz, isFavorite, onToggleFavorite, isHostMode,isOwner,onEdit, onDelete }: {
   quiz: any;
   isFavorite: boolean;
   onToggleFavorite: (id: string) => void;
+  isHostMode?: boolean;
   isOwner?: boolean;
   onEdit?: (quiz: any) => void;
   onDelete?: (quiz: any) => void;
 }) {
   const router = useRouter();
-
+  const t = useTranslations("quizCard");
   if (!quiz) return null;
 
-  const difficultyConfig: Record<string, { color: string; bg: string; icon: string }> = {
+  const handlePlay = async () => {
+    if (!isHostMode) {
+      router.push(`/play-quiz/${quiz.id}/play`);
+      return;
+    }
+
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) { router.push("/login"); return; }
+
+    const newCode = Math.random().toString(36).substring(2, 8).toUpperCase();
+
+    const { data: room, error } = await supabase
+      .from("rooms")
+      .insert({ code: newCode, host_id: user.id, quiz_id: quiz.id, status: "waiting" })
+      .select()
+      .single();
+
+    if (error) { console.error("Erreur création room:", error.message); return; }
+
+    await supabase.from("players").insert({
+      user_id: user.id, room_id: room.id, is_ready: true, score: 0,
+    });
+
+    router.push(`/lobby/${newCode}`);
+    
+
+ 
+  };
+    const difficultyConfig: Record<string, { color: string; bg: string; icon: string }> = {
     Easy:   { color: "text-green-600",  bg: "bg-green-50 border-green-200",   icon: "🟢" },
     Medium: { color: "text-amber-600",  bg: "bg-amber-50 border-amber-200",   icon: "🟡" },
     Hard:   { color: "text-red-600",    bg: "bg-red-50 border-red-200",       icon: "🔴" },
@@ -65,12 +89,12 @@ export default function QuizCard({
         <div className="absolute top-3 left-3 flex gap-2">
           {quiz.featured && (
             <span className="flex items-center gap-1 text-xs bg-cyan-500 text-white px-2.5 py-1 rounded-full font-semibold">
-              <StarOutlined className="text-[10px]" /> Featured
+              <StarOutlined className="text-[10px]" /> {t("featured")}
             </span>
           )}
           {quiz.isNew && (
             <span className="flex items-center gap-1 text-xs bg-orange-400 text-white px-2.5 py-1 rounded-full font-semibold">
-              <FireOutlined className="text-[10px]" /> New
+              <FireOutlined className="text-[10px]" /> {t("new")}
             </span>
           )}
         </div>
@@ -128,17 +152,17 @@ export default function QuizCard({
           </h3>
           {isFavorite && (
             <span className="ml-2 text-xs bg-red-50 text-red-400 border border-red-200 px-2 py-0.5 rounded-full font-semibold flex-shrink-0 dark:bg-slate-600/50 dark:text-white dark:border-white">
-              ❤️ Saved
+              ❤️ {t("saved")}
             </span>
           )}
         </div>
 
-        <p className="text-sm text-gray-400 mt-1">by {quiz.creator ?? "Unknown"}</p>
+        <p className="text-sm text-gray-400 mt-1">{t("by")} {quiz.creator}</p>
 
         <div className="flex items-center gap-4 mt-3 text-xs text-gray-400">
-          <span>📝 {questionCount} questions</span>
-          <span><ClockCircleOutlined /> {minutes} min</span>
-          <span>👥 {quiz.players ?? 0} played</span>
+          <span>📝 {t("questions", { count: quiz.questionCount ?? 10 })}</span>
+          <span><ClockCircleOutlined /> {t("duration", { min: quiz.duration ?? 15 })}</span>
+          <span>👥 {t("played", { count: quiz.players ?? 0 })}</span>
         </div>
 
         <div className="border-t border-gray-100 my-3" />
@@ -147,10 +171,10 @@ export default function QuizCard({
           <Button
             icon={<PlayCircleOutlined />}
             block
-            onClick={() => router.push(`/play-quiz/${quiz.id}/play`)}
+            onClick={handlePlay}
             className="!h-10 !rounded-xl !bg-gradient-to-r !from-cyan-500 !to-teal-400 !text-white !border-0 !font-semibold hover:!opacity-90 !shadow-md !shadow-cyan-200"
           >
-            Play now
+            {isHostMode ? t("createRoom") : t("playNow")}
           </Button>
           <button
             onClick={() => onToggleFavorite(quiz.id)}

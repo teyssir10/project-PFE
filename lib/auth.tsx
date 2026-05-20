@@ -18,7 +18,12 @@ type AuthContextType = {
   signUp: (
     email: string,
     password: string,
-    metadata?: { firstname: string; lastname: string }
+    metadata?: {
+      firstname: string;
+      lastname: string;
+      country?: string | null;
+      region?: string | null;
+    }
   ) => Promise<{
     error: AuthError | null;
     data: { user: User | null; session: Session | null } | null;
@@ -45,26 +50,35 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     };
     getSessionData();
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (_event, session) => {
-        setSession(session);
-        setUser(session?.user ?? null);
-        setIsLoading(false);
-      }
-    );
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+      setUser(session?.user ?? null);
+      setIsLoading(false);
+    });
 
     return () => subscription.unsubscribe();
   }, []);
 
   const signIn = async (email: string, password: string) => {
-    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
     return { data, error };
   };
 
+  // FIX 1: Added country and region to metadata type and signUp call
   const signUp = async (
     email: string,
     password: string,
-    metadata?: { firstname: string; lastname: string }
+    metadata?: {
+      firstname: string;
+      lastname: string;
+      country?: string | null;
+      region?: string | null;
+    }
   ) => {
     const { data, error } = await supabase.auth.signUp({
       email,
@@ -73,6 +87,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         data: {
           firstname: metadata?.firstname,
           lastname: metadata?.lastname,
+          country: metadata?.country ?? null,
+          region: metadata?.region ?? null,
         },
       },
     });
@@ -83,11 +99,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     await supabase.auth.signOut();
   };
 
+  // FIX 2: redirectTo now includes the locale prefix extracted from the current URL
   const signInWithGoogle = async () => {
+    const locale = window.location.pathname.split("/")[1] || "fr";
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: `${window.location.origin}/dashboard`,
+        redirectTo: `${window.location.origin}/${locale}/dashboard`,
       },
     });
     return { error };
@@ -116,23 +134,24 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
   const { user, isLoading } = useAuth();
   const pathname = usePathname();
   const router = useRouter();
-  const locale = useLocale(); // ✅ locale courante : fr, en, ar
+  const locale = useLocale();
 
-  const isPublicRoute = pathname.includes('/login') ||
-                        pathname.includes('/signup') ||
-                        pathname.includes('/register');
-  const isAdminRoute = pathname.includes('/admin');
+  const isPublicRoute =
+    pathname.includes("/login") ||
+    pathname.includes("/signup") ||
+    pathname.includes("/register");
+  const isAdminRoute = pathname.includes("/admin");
 
   useEffect(() => {
     if (isLoading) return;
 
-    // Non connecté sur route protégée → login
+    // Not logged in on protected route → redirect to login
     if (!user && !isPublicRoute) {
       router.replace(`/${locale}/login`);
       return;
     }
 
-    // Connecté sur page publique → rediriger selon rôle
+    // Logged in on public page → redirect based on role
     if (user && isPublicRoute) {
       const checkRole = async () => {
         const { data: profile } = await supabase
@@ -142,16 +161,16 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
           .single();
 
         if (profile?.role === "admin") {
-          router.replace(`/${locale}/admin/dashboard`); // ✅ /fr/admin/dashboard
+          router.replace(`/${locale}/admin/dashboard`);
         } else {
-          router.replace(`/${locale}/dashboard`); // ✅ /fr/dashboard
+          router.replace(`/${locale}/dashboard`);
         }
       };
       checkRole();
       return;
     }
 
-    // User normal tente d'accéder à /admin → bloquer
+    // Regular user trying to access /admin → block
     if (user && isAdminRoute) {
       const checkAdmin = async () => {
         const { data: profile } = await supabase
@@ -161,12 +180,11 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
           .single();
 
         if (profile?.role !== "admin") {
-          router.replace(`/${locale}/dashboard`); // ✅ /fr/dashboard
+          router.replace(`/${locale}/dashboard`);
         }
       };
       checkAdmin();
     }
-
   }, [user, pathname, isLoading, router, locale]);
 
   if (isLoading) {

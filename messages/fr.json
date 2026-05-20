@@ -42,11 +42,7 @@
     "health": "Santé", "culture": "Culture", "nature": "Nature",
     "politics": "Politique", "literature": "Littérature"
   },
-  "leaderboard": {
-    "title": "Classement des Meilleurs",
-    "subtitle": "Rejoignez les meilleurs et voyez comment vous vous classez par rapport aux autres apprenants",
-    "rank": "Rang", "user": "Utilisateur", "score": "Score", "quizzes": "Quiz"
-  },
+
   "cta": {
     "badge": "Commencer Aujourd'hui",
     "title": "Prêt à Transformer Votre Expérience d'Apprentissage ?",
@@ -217,6 +213,7 @@
       "aiGenerate": "Générer par IA",
       "manual": "Manuel",
       "generateQuiz": "Créer un quiz",
+      "admin": "Admin",
       "notif": {
         "title": "Notifications",
         "markAllRead": "Tout marquer lu",
@@ -492,6 +489,12 @@
     "tipLoser2": "Utilise les indices la prochaine fois 💡",
     "tipLoser3": "Commence par un quiz plus facile 🎯"
   },
+  "multiplayer": {
+    "title": {
+      "prefix": "Mode",
+      "highlight": "Multijoueur"
+    },
+    "subtitle": "Défiez vos amis en temps réel et dominez le classement",
  
   "leaderboard": {
     "title": "Classement",
@@ -666,11 +669,333 @@
         "forcePublish": "Envoyer à l'admin pour révision quand même"
       },
       "forcePublishNote": "Envoyer à l'admin placera votre quiz en file d'attente. Un administrateur le révisera manuellement."
+    },
+
+
+    "join": {
+      "title": "Rejoindre une salle",
+      "subtitle": "Entrer dans une partie existante",
+      "codeLabel": "Code de la salle",
+      "codePlaceholder": "ABC123",
+      "button": "Rejoindre",
+      "connecting": "Connexion...",
+      "errorEmpty": "Veuillez entrer un code de salle",
+      "errorNotFound": "Salle introuvable. Vérifiez le code.",
+      "errorStarted": "Cette salle a déjà commencé."
+    },
+
+    "create": {
+      "title": "Créer une salle",
+      "subtitle": "Hébergez votre propre partie",
+      "description": "Choisissez un quiz et invitez vos amis avec un code unique. Lancez la partie quand tout le monde est prêt.",
+      "steps": {
+        "chooseQuiz": "Choisir un quiz",
+        "shareCode": "Partager le code",
+        "startGame": "Lancer la partie"
+      },
+      "button": "Choisir un quiz →"
+    },
+
+    "stats": {
+      "realTime": "Temps réel",
+      "maxPlayers": "Jusqu'à 50 joueurs",
+      "leaderboard": "Classement en direct"
     }
+  },
+  "lobby": {
+    "header": {
+      "label": "Salle d'attente",
+      "hostTitle": "Vous êtes l'hôte 👑",
+      "guestTitle": "En attente du lancement...",
+      "playerCount": "{count, plural, one {# joueur} other {# joueurs}}"
+    },
 
+    "share": {
+      "codeLabel": "Code de la salle",
+      "codeHint": "Partagez ce code avec vos amis",
+      "qrLabel": "QR Code",
+      "qrHint": "Scanner pour rejoindre",
+      "linkLabel": "Lien d'invitation",
+      "copy": "Copier",
+      "copied": "✓ Copié"
+    },
 
+    "players": {
+      "title": "Joueurs ({count})",
+      "waiting": "{count} en attente",
+      "empty": "En attente de joueurs...",
+      "you": "Vous",
+      "host": "Hôte",
+      "waitingStatus": "En attente"
+    },
 
+    "actions": {
+      "closeRoom": "Fermer la salle",
+      "leave": "Quitter",
+      "waitingForHost": "En attente du lancement par l'hôte...",
+      "waitingForPlayers": "En attente d'au moins un joueur...",
+      "playersInRoom": "{count, plural, one {# joueur dans la salle} other {# joueurs dans la salle}}",
+      "startGame": "🚀 Lancer la partie",
+      "starting": "Lancement..."
+    },
 
+    "confirm": {
+      "hostTitle": "Fermer la salle ?",
+      "guestTitle": "Quitter la salle ?",
+      "hostMessage": "Tous les joueurs seront expulsés et la salle sera fermée définitivement.",
+      "guestMessage": "Vous serez retiré de la salle d'attente. Vous pourrez rejoindre une autre partie.",
+      "cancel": "Annuler",
+      "processing": "En cours…",
+      "hostConfirm": "Fermer la salle",
+      "guestConfirm": "Quitter"
+    }
+  
+},
 
+  "quizPlay": {
+    "question": "Question",
+    "go": "GO!",
+    "multiplayer": "Multijoueur",
+    "pts": "pts",
+    "timeExpired": "Temps écoulé ! Vous n'avez pas répondu à temps.",
+    "wrongAnswer": "Mauvaise réponse",
+    "confirm": "Confirmer",
+    "waitingForHost": "En attente de l'hôte...",
+    "waitingForPlayers": "En attente des joueurs... ({count} au total)",
+    "finish": "🎉 Terminer",
+    "nextQuestion": "Question suivante →"
+  },
+      "finalLeaderboard": {
+      "title": "Résultats Finaux",
+      "pandaAlt": "Panda gagnant",
+      "pts": "pts",
+      "playerCount": "{count, plural, one {# joueur} other {# joueurs}}",
+      "rankingLabel": "Classement",
+      "you": "Vous",
+      "tied": "Égalité",
+      "exploreQuizzes": "Explorer les quiz",
+      "dashboard": "Tableau de bord →",
+      "result": {
+        "tieLine1": "Égalité —",
+        "tieLine2": "Vous gagnez tous les deux !",
+        "wonLine1": "Félicitations !",
+        "wonLine2": "Vous avez gagné !",
+        "2ndLine1": "Presque !",
+        "2ndLine2": "2ème place !",
+        "3rdLine1": "Bien joué !",
+        "3rdLine2": "3ème place !",
+        "defaultLine1": "Bonne partie !",
+        "defaultLine2": "#{rank}ème place"
+      }
+    },
 
-}
+      "feedback": {
+        "timeUpEyebrow": "Temps écoulé",
+        "timeUpHeadline": "Aucune réponse",
+        "lastAnswerEyebrow": "Dernière réponse",
+        "correctHeadline": "Bonne réponse !",
+        "wrongHeadline": "Mauvaise réponse",
+        "pointsEarned": "+{pts} points gagnés",
+        "zeroPoints": "0 point pour cette question"
+      },
+      "countdown": {
+        "finished": "Merci d'avoir joué !",
+        "next": "Prochaine question dans quelques instants…"
+      },
+    
+    "quizCard": {
+      "featured": "À la une",
+      "new": "Nouveau",
+      "saved": "Sauvegardé",
+      "by": "par",
+      "questions": "{count} questions",
+      "duration": "{min} min",
+      "played": "{count} joués",
+      "playNow": "Jouer maintenant",
+      "createRoom": "Créer une salle",
+      "difficulty": {
+        "easy": "Facile",
+        "medium": "Moyen",
+        "hard": "Difficile",
+        "mixed": "Mixte"
+      }
+    },
+     "leaderboard": {
+    "title": "Classement",
+    "subtitle": "Découvrez les meilleurs joueurs et grimpez dans le classement",
+    "loading": "Chargement du classement...",
+    "error": "Une erreur est survenue lors du chargement.",
+    "top10_title": "Top 10 Joueurs",
+
+    "filter_score": "Score",
+    "filter_accuracy": "Précision",
+    "filter_quizzes": "Quiz joués",
+
+    "col_player": "Joueur",
+    "col_country": "Pays",
+    "col_quizzes": "Quiz",
+    "col_score": "Score",
+    "col_accuracy": "Précision",
+
+    "all_countries": "Tous les pays",
+    "search_placeholder": "Rechercher un joueur...",
+    "showing_results": "{count} résultat(s)",
+
+    "anonymous": "Anonyme",
+    "you": "Vous",
+
+    "no_results": "Aucun résultat trouvé"
+  },
+  "adminDashboard": {
+    "title": "Dashboard Admin",
+    "subtitle": "Vue d'ensemble de la plateforme",
+    "stats": {
+      "users": "Utilisateurs",
+      "totalQuizzes": "Quiz total",
+      "publishedQuizzes": "Quiz publiés",
+      "gamesPlayed": "Parties jouées"
+    },
+    "recentUsers": {
+      "title": "Derniers utilisateurs",
+      "viewAll": "Voir tout →",
+      "anonymous": "Anonyme"
+    },
+    "recentQuizzes": {
+      "title": "Derniers quiz",
+      "viewAll": "Voir tout →",
+      "players": "{count} joueurs",
+      "published": "Publié",
+      "draft": "Brouillon"
+    }
+  },
+  "adminPending": {
+    "title": "Quiz en attente de validation",
+    "subtitle": "{count} quiz en attente de review",
+    "refresh": "🔄 Actualiser",
+    "approve": "✅ Approuver",
+    "reject": "❌ Rejeter",
+    "approving": "...",
+    "approved": "Quiz approuvé et publié !",
+    "rejected": "Quiz rejeté.",
+    "loadError": "Erreur lors du chargement.",
+    "empty": {
+      "icon": "✅",
+      "title": "Aucun quiz en attente",
+      "subtitle": "Tous les quiz ont été traités"
+    },
+    "card": {
+      "anonymous": "Anonyme",
+      "questions": "{count} questions",
+      "pending": "⏳ En attente",
+      "aiScore": "🤖 Score IA : {score}/100",
+      "clickToView": "👁 Cliquer pour voir les questions",
+      "aiRejected": "Rejeté par l'IA : "
+    },
+    "aiRemarks": {
+      "title": "🤖 Remarques de l'IA :"
+    },
+    "preview": {
+      "anonymous": "Anonyme",
+      "questions": "questions",
+      "aiRejectTitle": "🤖 Raisons du rejet IA :",
+      "noQuestions": "Aucune question trouvée",
+      "emptyQuestion": "Question vide ⚠️",
+      "emptyOption": "Option vide ⚠️",
+      "noOptions": "⚠️ Aucune option pour cette question",
+      "indice": "💡 indice : "
+    },
+    "rejectModal": {
+      "title": "❌ Raison du rejet",
+      "placeholder": "Expliquez pourquoi ce quiz est rejeté...",
+      "confirm": "Confirmer le rejet",
+      "cancel": "Annuler",
+      "emptyReason": "Entrez une raison de rejet.",
+      "loadQuestionsError": "Erreur lors du chargement des questions."
+    }
+  },
+  "adminQuizzes": {
+    "title": "Quiz",
+    "subtitle": "{count} quiz au total",
+    "search": "Rechercher un quiz...",
+    "diffAll": "Toutes difficultés",
+    "pubAll": "Tous les statuts",
+    "pubPublished": "Publiés",
+    "pubDraft": "Brouillons",
+    "noResults": "Aucun quiz trouvé",
+    "table": {
+      "quiz": "Quiz",
+      "category": "Catégorie",
+      "difficulty": "Difficulté",
+      "questions": "Questions",
+      "players": "Joueurs",
+      "status": "Statut",
+      "actions": "Actions"
+    },
+    "actions": {
+      "publish": "Publier",
+      "unpublish": "Dépublier",
+      "delete": "Suppr.",
+      "deleteConfirm": "Supprimer ce quiz ?"
+    }
+  },
+  "adminUsers": {
+    "title": "Utilisateurs",
+    "subtitle": "{count} utilisateurs au total",
+    "addBtn": "+ Ajouter un utilisateur",
+    "search": "Rechercher par nom ou pays...",
+    "filterRole": "Tous les rôles",
+    "noResults": "Aucun utilisateur trouvé",
+    "anonymous": "Anonyme",
+    "table": {
+      "user": "Utilisateur",
+      "country": "Pays",
+      "score": "Score",
+      "quizzes": "Quiz",
+      "accuracy": "Précision",
+      "role": "Rôle",
+      "actions": "Actions"
+    },
+    "actions": {
+      "toAdmin": "→ Admin",
+      "toUser": "→ User",
+      "delete": "Suppr.",
+      "deleteConfirm": "Supprimer cet utilisateur ?"
+    },
+    "modal": {
+      "title": "Ajouter un utilisateur",
+      "subtitle": "Créer un nouveau compte utilisateur",
+      "firstname": "Prénom",
+      "firstnamePlaceholder": "Jean",
+      "lastname": "Nom",
+      "lastnamePlaceholder": "Dupont",
+      "email": "Email",
+      "emailPlaceholder": "jean@exemple.com",
+      "password": "Mot de passe",
+      "country": "Pays",
+      "countryPlaceholder": "France",
+      "role": "Rôle",
+      "required": "*",
+      "cancel": "Annuler",
+      "create": "Créer l'utilisateur",
+      "creating": "Création...",
+      "validationError": "Prénom, email et mot de passe sont requis.",
+      "createError": "Erreur lors de la création."
+    }
+  },
+  "adminLayout": {
+    "nav": {
+      "dashboard": "Dashboard",
+      "users": "Utilisateurs",
+      "quizzes": "Quiz",
+      "pending": "En attente"
+    },
+    "adminPanel": "Admin Panel",
+    "administrator": "Administrateur",
+    "userMode": "Mode Utilisateur",
+    "logout": "Déconnexion",
+    "mobileTitle": "PandoMind Admin"
+  }
+
+  
+
+  }

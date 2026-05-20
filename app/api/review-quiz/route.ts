@@ -53,7 +53,7 @@ Check for these issues:
 - Empty questions or options
 - Overall educational value
 
-Return ONLY the JSON object. No explanation, no markdown, no extra text.`;
+Return ONLY the JSON object. No indice, no markdown, no extra text.`;
 
   const userPrompt = `Review this quiz:
 Title: "${title || "Untitled"}"

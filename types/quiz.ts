@@ -11,12 +11,12 @@ export interface Question {
   type: QuestionType;
   options: Option[];
   correctOptionId: string | null;
-  correctAnswer: string;        // 👈 NOUVEAU
+  correctAnswer: string;       
   timeLimit: string;
   customTime: string;
   points: string;
   difficulty: string;
-  explanation: string;
+  indice: string;
 }
 
 export const DIFFICULTY_COLORS: Record<string, string> = {
@@ -52,11 +52,11 @@ export const defaultQuestion = (defaultTime=30): Question => ({
   ],
   correctOptionId: null,
   correctAnswer: "",             
-  timeLimit: defaultTime,
+  timeLimit: "30",
   customTime: "",
   points: "Standard (1x)",
   difficulty: "Easy",
-  explanation: "",
+  indice: "",
 });
 
 // ─── PLAY PAGE TYPES ───────────────────────────────────
@@ -71,10 +71,10 @@ export interface PlayOption {
 export interface PlayQuestion {
   id: string;
   text: string;
-  type: string;                  // 👈 NOUVEAU
-  hint?: string | null;
-  explanation?: string | null;
-  correct_answer?: string | null; // 👈 NOUVEAU
+  type: string;                  
+  indice?: string | null;
+  
+  correct_answer?: string | null;
   quiz_id: string;
   options: PlayOption[];
 }
@@ -87,3 +87,48 @@ export interface QuizFull {
   time_per_question: number;
   questions: PlayQuestion[];
 }
+//Multiplayer Page Types
+export interface Player {
+  userId: string;
+  name: string;
+  score: number;
+  rank: number;
+  isMe: boolean;
+}
+
+export interface Props {
+  quiz: QuizFull;
+  roomId: string;
+}
+export interface leaderProps {
+  leaderboard: Player[];
+  myRank: number;
+  totalScore: number;
+  quizTitle: string;
+}
+export type Phase = "countdown" | "playing" | "leaderboard" | "finished";
+export interface LeaderboardPhaseProps {
+  wasCorrect: boolean | null;
+  lastScoreEarned: number;
+  myRank: number;
+  leaderboard: Player[];
+  isLast: boolean;
+}
+export type Rank = {
+  avatar:    string;
+  score:     string;
+  bar:       string;
+  track:     string;
+  rowAccent: string;
+  rowBg:     string;
+  rankNum:   string;
+};
+export type LobbyPlayer = {
+  id: string;
+  user_id: string;
+  room_id: string;
+  score: number;
+  joined_at: string;
+  displayName: string;
+  displayInitial: string;
+};
