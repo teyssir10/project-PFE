@@ -14,33 +14,27 @@ export const fetchQuizzes = async () => {
   return data ?? [];
 };
 // GET QUIZ WITH QUESTIONS
-
 export const getQuizWithQuestions = async (quizId: string) => {
   const { data, error } = await supabase
     .from("quizzes")
     .select(`
       *,
-      questions (
-        *,
-        options (*)
-      )
-    `)
+      questions (*)
+    `)           // ← supprimez ", options (*)"
     .eq("id", quizId)
     .single();
 
   if (error) throw error;
 
-  // Normalise les options depuis la colonne JSON
   if (data?.questions) {
     data.questions = data.questions.map((q: any) => ({
       ...q,
-      options: q.options ?? [],
+      options: q.options ?? [],  // ← déjà dans la colonne JSON
     }));
   }
 
   return data;
 };
-
 // UPDATE QUIZ
 export const updateQuiz = async (
   id: string,
