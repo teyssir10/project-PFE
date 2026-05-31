@@ -20,6 +20,20 @@ interface SaveQuizParams {
   editId?: string | null;
 }
 
+function buildOptions(q: Question) {
+  if (q.type === "short" || !q.options?.length) return null;
+  return q.options.map((o) => ({
+    id: o.id || crypto.randomUUID(),
+    text: o.text,
+    is_correct: o.id === q.correctOptionId,
+  }));
+}
+
+function findCorrectOptionId(q: Question): string | null {
+  if (q.type === "short" || !q.options?.length) return null;
+  return q.options.find((o) => o.id === q.correctOptionId)?.id ?? null;
+}
+
 export async function saveQuiz({
   quizTitle,
   questions,
@@ -39,6 +53,7 @@ export async function saveQuiz({
 }: SaveQuizParams): Promise<void> {
 
   // ✅ MODE EDIT
+  // ── MODE EDIT ─────────────────────────────────────────────────────────
   if (editId) {
     // 1. Mettre à jour les infos du quiz
     const { error: updateError } = await supabase
@@ -161,7 +176,7 @@ export async function saveQuiz({
     .select()
     .single();
 
-  if (quizError) throw quizError;
+  if (quizError) { console.error("Quiz insert error:", quizError); throw quizError; }
 
   for (let i = 0; i < questions.length; i++) {
     const q = questions[i];

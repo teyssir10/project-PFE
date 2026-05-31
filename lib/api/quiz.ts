@@ -14,6 +14,7 @@ export const fetchQuizzes = async () => {
   return data ?? [];
 };
 // GET QUIZ WITH QUESTIONS
+
 export const getQuizWithQuestions = async (quizId: string) => {
   const { data, error } = await supabase
     .from("quizzes")
@@ -28,6 +29,15 @@ export const getQuizWithQuestions = async (quizId: string) => {
     .single();
 
   if (error) throw error;
+
+  // Normalise les options depuis la colonne JSON
+  if (data?.questions) {
+    data.questions = data.questions.map((q: any) => ({
+      ...q,
+      options: q.options ?? [],
+    }));
+  }
+
   return data;
 };
 
