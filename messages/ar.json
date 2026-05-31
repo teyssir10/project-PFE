@@ -801,10 +801,6 @@
     "globalRanking": "التصنيف العالمي",
     "globalRank": "الترتيب العالمي",
     "totalPoints": "إجمالي النقاط"
-<<<<<<< HEAD
-  }
-  
-=======
   },
   
  "aiReview": {
@@ -1011,7 +1007,6 @@
     "mobileTitle": "PandoMind Admin"
   }
 }
->>>>>>> fb236c235717e53df1d4e3f4b97f1e6b2c82618d
 
 
 

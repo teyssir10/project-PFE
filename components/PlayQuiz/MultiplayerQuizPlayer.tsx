@@ -9,7 +9,8 @@ import QuizHeader from "@/components/PlayQuiz/QuizHeader";
 import OptionCard from "@/components/PlayQuiz/OptionCard";
 import FinalLeaderboard from "@/components/PlayQuiz/FinalLeaderboard";
 import { LeaderboardPhase } from "@/components/PlayQuiz/LeaderboardPhase";
-import { checkAllAnswered, fetchLeaderboardWithMe, setGameStatus, advanceQuestion, finishGame } from "@/lib/api/multiplayer";
+// ✅ setGameStatus → setGamePhase
+import { checkAllAnswered, fetchLeaderboardWithMe, setGamePhase, advanceQuestion, finishGame } from "@/lib/api/multiplayer";
 
 const isCorrect = (val: any): boolean => val === true || val === "true";
 const calcScore = (correct: boolean): number => correct ? 10 : 0;
@@ -36,7 +37,7 @@ export default function MultiplayerQuizPlayer({ quiz, roomId }: Props) {
   const [totalPlayers, setTotalPlayers] = useState(0);
 
   const scoreRef = useRef(score);
-  const currentUserRef  = useRef(currentUser);
+  const currentUserRef = useRef(currentUser);
   const currentIndexRef = useRef(currentIndex);
   const isLastRef = useRef(false);
 
@@ -64,26 +65,30 @@ export default function MultiplayerQuizPlayer({ quiz, roomId }: Props) {
     if (done) setAllAnswered(true);
   }, [roomId, question]);
 
+  // ✅ init — remplace game_state par rooms
   useEffect(() => {
     const init = async () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
       setCurrentUser(user);
 
-      const { data: room } = await supabase.from("rooms").select("host_id").eq("id", roomId).single();
+      const { data: room } = await supabase
+        .from("rooms")
+        .select("host_id, room_status, game_phase, current_question_index, question_start_time")
+        .eq("id", roomId)
+        .single();
+
       setIsHost(room?.host_id === user.id);
 
-      const { data: gs } = await supabase.from("game_state").select("*").eq("room_id", roomId).single();
-
-      if (gs?.status === "finished" || gs?.status === "leaderboard") {
+      if (room?.game_phase === "finished" || room?.game_phase === "leaderboard") {
         await refreshLeaderboard(user.id);
-        setPhase(gs.status);
+        setPhase(room.game_phase);
         return;
       }
 
-      if (gs) {
-        setCurrentIndex(gs.current_question_index ?? 0);
-        setQuestionStartTime(gs.question_start_time);
+      if (room) {
+        setCurrentIndex(room.current_question_index ?? 0);
+        setQuestionStartTime(room.question_start_time);
       }
       setPhase("countdown");
     };
@@ -128,21 +133,25 @@ export default function MultiplayerQuizPlayer({ quiz, roomId }: Props) {
     return () => { supabase.removeChannel(channel); };
   }, [roomId, currentUser, isHost, refreshAnswerCount]);
 
+  // ✅ Realtime — remplace game_state par rooms
   useEffect(() => {
     if (!currentUser) return;
     const channel = supabase
       .channel(`multi-gs-${roomId}`)
       .on("postgres_changes", {
-        event: "UPDATE", schema: "public", table: "game_state", filter: `room_id=eq.${roomId}`,
-      }, async ({ new: gs }) => {
-        if (gs.status === "leaderboard" || gs.status === "finished") {
+        event: "UPDATE",
+        schema: "public",
+        table: "rooms",
+        filter: `id=eq.${roomId}`,
+      }, async ({ new: room }) => {
+        if (room.game_phase === "leaderboard" || room.game_phase === "finished") {
           await refreshLeaderboard(currentUserRef.current?.id);
-          setPhase(gs.status);
+          setPhase(room.game_phase);
           return;
         }
-        if (gs.status === "playing" && gs.current_question_index !== currentIndexRef.current) {
-          setCurrentIndex(gs.current_question_index);
-          setQuestionStartTime(gs.question_start_time);
+        if (room.game_phase === "playing" && room.current_question_index !== currentIndexRef.current) {
+          setCurrentIndex(room.current_question_index);
+          setQuestionStartTime(room.question_start_time);
           setSelected(null); setConfirmed(false); setWasCorrect(null);
           setLastScoreEarned(0); setAllAnswered(false);
           setTimeLeft(questionTotalTime);
@@ -191,9 +200,10 @@ export default function MultiplayerQuizPlayer({ quiz, roomId }: Props) {
     ]);
   }, [confirmed, selected, currentUser, question, roomId, questionStartTime, questionTotalTime]);
 
+  // ✅ handleNextQuestion — setGameStatus → setGamePhase
   const handleNextQuestion = useCallback(async () => {
     const userId = currentUserRef.current?.id;
-    await setGameStatus(roomId, "leaderboard");
+    await setGamePhase(roomId, "leaderboard");
     await refreshLeaderboard(userId);
     setPhase("leaderboard");
 
@@ -270,7 +280,6 @@ export default function MultiplayerQuizPlayer({ quiz, roomId }: Props) {
   return (
     <div className="flex h-screen bg-gradient-to-br from-slate-50 via-cyan-50/30 to-teal-50/30 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 overflow-hidden">
       <div className="flex-1 flex flex-col overflow-y-auto relative z-10">
-
         <QuizHeader
           title={quiz.title}
           category={quiz.category}
@@ -279,9 +288,7 @@ export default function MultiplayerQuizPlayer({ quiz, roomId }: Props) {
           totalTime={questionTotalTime}
           onExit={() => router.push("/dashboard")}
         />
-
         <div className="flex-1 px-10 py-8 max-w-3xl w-full mx-auto">
-
           <div className="flex items-center justify-between mb-6">
             <span className="px-3 py-1 rounded-full bg-cyan-100 dark:bg-cyan-900/40 text-cyan-600 dark:text-cyan-400 text-xs font-bold tracking-widest uppercase">
               {t("question")} {currentIndex + 1} / {quiz.questions.length}
@@ -295,7 +302,6 @@ export default function MultiplayerQuizPlayer({ quiz, roomId }: Props) {
               </span>
             </div>
           </div>
-
           <div className="bg-white dark:bg-slate-900 rounded-2xl border border-gray-100 dark:border-slate-800 shadow-sm p-8 mb-6">
             <h2 className="text-xl font-bold text-gray-900 dark:text-white leading-snug">
               {question.text}
@@ -306,7 +312,6 @@ export default function MultiplayerQuizPlayer({ quiz, roomId }: Props) {
               </div>
             )}
           </div>
-
           <div className="space-y-3 mb-6">
             {question.options.map((opt, i) => {
               let state: "default" | "correct" | "wrong" | "selected" | "reveal" = "default";
@@ -327,14 +332,12 @@ export default function MultiplayerQuizPlayer({ quiz, roomId }: Props) {
               );
             })}
           </div>
-
           <div className="flex items-center justify-between">
             {confirmed && wasCorrect !== null && (
               <span className={`text-sm font-bold ${wasCorrect ? "text-emerald-500" : "text-red-400"}`}>
                 {wasCorrect ? `+${lastScoreEarned} ${t("pts")} ✅` : `${t("wrongAnswer")} ❌`}
               </span>
             )}
-
             <div className="flex items-center">
               {!confirmed && selected && (
                 <button onClick={handleConfirm}
@@ -342,14 +345,12 @@ export default function MultiplayerQuizPlayer({ quiz, roomId }: Props) {
                   {t("confirm")}
                 </button>
               )}
-
               {confirmed && !isHost && (
                 <div className="flex items-center gap-2 text-sm text-gray-400 dark:text-slate-500">
                   <div className="w-4 h-4 border-2 border-cyan-500 border-t-transparent rounded-full animate-spin" />
                   {t("waitingForHost")}
                 </div>
               )}
-
               {confirmed && isHost && (
                 allAnswered ? (
                   <button onClick={handleNextQuestion}
@@ -365,7 +366,6 @@ export default function MultiplayerQuizPlayer({ quiz, roomId }: Props) {
               )}
             </div>
           </div>
-
         </div>
       </div>
     </div>

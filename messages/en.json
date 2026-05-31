@@ -799,8 +799,6 @@
     "globalRanking": "Global Ranking",
     "globalRank": "Global Rank",
     "totalPoints": "Total Points"
-<<<<<<< HEAD
-=======
   },
  
  "aiReview": {
@@ -1001,7 +999,6 @@
     "userMode": "User Mode",
     "logout": "Log out",
     "mobileTitle": "PandoMind Admin"
->>>>>>> fb236c235717e53df1d4e3f4b97f1e6b2c82618d
   }
 
   }

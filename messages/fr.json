@@ -42,14 +42,12 @@
     "health": "Santé", "culture": "Culture", "nature": "Nature",
     "politics": "Politique", "literature": "Littérature"
   },
-
   "cta": {
     "badge": "Commencer Aujourd'hui",
     "title": "Prêt à Transformer Votre Expérience d'Apprentissage ?",
     "subtitle": "Rejoignez des milliers d'enseignants et d'étudiants qui utilisent QuizAI pour créer des quiz engageants et intelligents.",
     "button": "Créer Votre Premier Quiz"
   },
-
   "contact": {
     "title": "Nous sommes là",
     "titleHighlight": "pour vous aider.",
@@ -94,7 +92,6 @@
     "privacyPolicy": "Politique de confidentialité",
     "rights": "Tous droits réservés."
   },
-
   "login": {
     "tagline": "Créez des quiz intelligents en quelques secondes grâce à l'IA et suivez votre parcours d'apprentissage avec des analyses puissantes.",
     "fast": "Ultra Rapide",
@@ -150,9 +147,8 @@
     "passwordMatch": "Les mots de passe ne correspondent pas",
     "confirmPasswordError": "Veuillez confirmer votre mot de passe",
     "country": "Pays",
-"region": "Région"
+    "region": "Région"
   },
-
   "dashboard": {
     "welcome": "Bon retour,",
     "subtitle": "Prêt à te challenger aujourd'hui ?",
@@ -191,8 +187,7 @@
     "pointsWeek": "+{points} pts cette semaine",
     "notRanked": "Non classé"
   },
-
-   "sidebar": {
+  "sidebar": {
     "platform": "Plateforme Quiz IA",
     "main": "PRINCIPAL",
     "play": "JOUER",
@@ -206,26 +201,26 @@
     "settings": "Paramètres",
     "logout": "Déconnexion"
   },
-   "topbar": {
-      "profile": "Profil",
-      "settings": "Paramètres",
-      "logout": "Se déconnecter",
-      "aiGenerate": "Générer par IA",
-      "manual": "Manuel",
-      "generateQuiz": "Créer un quiz",
-      "admin": "Admin",
-      "notif": {
-        "title": "Notifications",
-        "markAllRead": "Tout marquer lu",
-        "empty": "Aucune notification",
-        "viewAll": "Voir toutes les notifications →",
-        "close": "Fermer",
-        "now": "À l'instant",
-        "minutesAgo": "Il y a {count} min",
-        "hoursAgo": "Il y a {count}h",
-        "yesterday": "Hier",
-        "daysAgo": "Il y a {count} jours"
-      }
+  "topbar": {
+    "profile": "Profil",
+    "settings": "Paramètres",
+    "logout": "Se déconnecter",
+    "aiGenerate": "Générer par IA",
+    "manual": "Manuel",
+    "generateQuiz": "Créer un quiz",
+    "admin": "Admin",
+    "notif": {
+      "title": "Notifications",
+      "markAllRead": "Tout marquer lu",
+      "empty": "Aucune notification",
+      "viewAll": "Voir toutes les notifications →",
+      "close": "Fermer",
+      "now": "À l'instant",
+      "minutesAgo": "Il y a {count} min",
+      "hoursAgo": "Il y a {count}h",
+      "yesterday": "Hier",
+      "daysAgo": "Il y a {count} jours"
+    }
   },
   "stepper": {
     "aiStep1": "Configurer le quiz",
@@ -238,7 +233,7 @@
     "saveDraft": "Enregistrer le brouillon",
     "reviewPublish": "Réviser et Publier"
   },
-   "aiQuiz": {
+  "aiQuiz": {
     "badge": "Créateur de Quiz IA",
     "title1": "Créer Votre",
     "title2": "Quiz",
@@ -270,7 +265,6 @@
     "noQuizBtn": "Générer le Quiz",
     "noQuizSub2": "pour créer vos questions instantanément."
   },
-  
   "manualQuiz": {
     "step": "Étape 1 sur 3",
     "title": "Paramètres du Quiz",
@@ -339,7 +333,6 @@
     "currently": "Actuellement :",
     "perQuestion": "s par question"
   },
-  
   "questionEditor": {
     "questionLabel": "Question",
     "questionPlaceholder": "Tapez votre question ici...",
@@ -393,7 +386,6 @@
     "saveSuccess": "Quiz sauvegardé avec succès ! 🎉",
     "saveError": "Erreur : "
   },
-  
   "browsePage": {
     "searchPlaceholder": "Rechercher des quiz...",
     "tabAll": "Tous les quiz",
@@ -411,9 +403,7 @@
     "emptyFavSub": "Cliquez sur le cœur d'un quiz pour le sauvegarder ici",
     "emptySearchTitle": "Aucun quiz trouvé",
     "emptySearchSub": "Essayez une autre recherche"
-  
-},
-
+  },
   "quizPlay": {
     "noQuestions": "Aucune question trouvée pour ce quiz.",
     "question": "Question",
@@ -443,7 +433,6 @@
     "sec": "sec",
     "exit": "Quitter le quiz"
   },
-  
   "results": {
     "title": "Résultats du Quiz",
     "correct": "correctes",
@@ -495,29 +484,207 @@
       "highlight": "Multijoueur"
     },
     "subtitle": "Défiez vos amis en temps réel et dominez le classement",
- 
+    "join": {
+      "title": "Rejoindre une salle",
+      "subtitle": "Entrer dans une partie existante",
+      "codeLabel": "Code de la salle",
+      "codePlaceholder": "ABC123",
+      "button": "Rejoindre",
+      "connecting": "Connexion...",
+      "errorEmpty": "Veuillez entrer un code de salle",
+      "errorNotFound": "Salle introuvable. Vérifiez le code.",
+      "errorStarted": "Cette salle a déjà commencé."
+    },
+    "create": {
+      "title": "Créer une salle",
+      "subtitle": "Hébergez votre propre partie",
+      "description": "Choisissez un quiz et invitez vos amis avec un code unique. Lancez la partie quand tout le monde est prêt.",
+      "steps": {
+        "chooseQuiz": "Choisir un quiz",
+        "shareCode": "Partager le code",
+        "startGame": "Lancer la partie"
+      },
+      "button": "Choisir un quiz →"
+    },
+    "stats": {
+      "realTime": "Temps réel",
+      "maxPlayers": "Jusqu'à 50 joueurs",
+      "leaderboard": "Classement en direct"
+    }
+  },
+  "lobby": {
+    "header": {
+      "label": "Salle d'attente",
+      "hostTitle": "Vous êtes l'hôte 👑",
+      "guestTitle": "En attente du lancement...",
+      "playerCount": "{count, plural, one {# joueur} other {# joueurs}}"
+    },
+    "share": {
+      "codeLabel": "Code de la salle",
+      "codeHint": "Partagez ce code avec vos amis",
+      "qrLabel": "QR Code",
+      "qrHint": "Scanner pour rejoindre",
+      "linkLabel": "Lien d'invitation",
+      "copy": "Copier",
+      "copied": "✓ Copié"
+    },
+    "players": {
+      "title": "Joueurs ({count})",
+      "waiting": "{count} en attente",
+      "empty": "En attente de joueurs...",
+      "you": "Vous",
+      "host": "Hôte",
+      "waitingStatus": "En attente"
+    },
+    "actions": {
+      "closeRoom": "Fermer la salle",
+      "leave": "Quitter",
+      "waitingForHost": "En attente du lancement par l'hôte...",
+      "waitingForPlayers": "En attente d'au moins un joueur...",
+      "playersInRoom": "{count, plural, one {# joueur dans la salle} other {# joueurs dans la salle}}",
+      "startGame": "🚀 Lancer la partie",
+      "starting": "Lancement..."
+    },
+    "confirm": {
+      "hostTitle": "Fermer la salle ?",
+      "guestTitle": "Quitter la salle ?",
+      "hostMessage": "Tous les joueurs seront expulsés et la salle sera fermée définitivement.",
+      "guestMessage": "Vous serez retiré de la salle d'attente. Vous pourrez rejoindre une autre partie.",
+      "cancel": "Annuler",
+      "processing": "En cours…",
+      "hostConfirm": "Fermer la salle",
+      "guestConfirm": "Quitter"
+    }
+  },
+  "multiquizPlay": {
+    "question": "Question",
+    "go": "GO!",
+    "multiplayer": "Multijoueur",
+    "pts": "pts",
+    "timeExpired": "Temps écoulé ! Vous n'avez pas répondu à temps.",
+    "wrongAnswer": "Mauvaise réponse",
+    "confirm": "Confirmer",
+    "waitingForHost": "En attente de l'hôte...",
+    "waitingForPlayers": "En attente des joueurs... ({count} au total)",
+    "finish": "🎉 Terminer",
+    "nextQuestion": "Question suivante →"
+  },
+  "leaderboardPhase": {
+    "pandasAlt": "Deux pandas qui s'affrontent",
+    "title": {
+      "live": {
+        "prefix": "Classement",
+        "highlight": "En Direct"
+      },
+      "finished": "Résultats Finaux"
+    },
+    "feedback": {
+      "timeUpEyebrow": "Temps écoulé",
+      "timeUpHeadline": "Aucune réponse",
+      "lastAnswerEyebrow": "Dernière réponse",
+      "correctHeadline": "Bonne réponse !",
+      "wrongHeadline": "Mauvaise réponse",
+      "pointsEarned": "+{pts} points gagnés",
+      "zeroPoints": "0 point pour cette question"
+    },
+    "myRankLabel": "Mon rang",
+    "rankingLabel": "Classement",
+    "you": "Vous",
+    "pts": "pts",
+    "countdown": {
+      "next": "Prochaine question dans quelques instants…",
+      "finished": "Merci d'avoir joué !"
+    }
+  },
+  "finalLeaderboard": {
+    "title": "Résultats Finaux",
+    "pandaAlt": "Panda gagnant",
+    "pts": "pts",
+    "playerCount": "{count, plural, one {# joueur} other {# joueurs}}",
+    "rankingLabel": "Classement",
+    "you": "Vous",
+    "tied": "Égalité",
+    "exploreQuizzes": "Explorer les quiz",
+    "dashboard": "Tableau de bord →",
+    "result": {
+      "tieLine1": "Égalité —",
+      "tieLine2": "Vous gagnez tous les deux !",
+      "wonLine1": "Félicitations !",
+      "wonLine2": "Vous avez gagné !",
+      "2ndLine1": "Presque !",
+      "2ndLine2": "2ème place !",
+      "3rdLine1": "Bien joué !",
+      "3rdLine2": "3ème place !",
+      "defaultLine1": "Bonne partie !",
+      "defaultLine2": "#{rank}ème place"
+    }
+  },
+  "quizCard": {
+    "featured": "À la une",
+    "new": "Nouveau",
+    "saved": "Sauvegardé",
+    "by": "par",
+    "questions": "{count} questions",
+    "duration": "{min} min",
+    "played": "{count} joués",
+    "playNow": "Jouer maintenant",
+    "createRoom": "Créer une salle",
+    "difficulty": {
+      "easy": "Facile",
+      "medium": "Moyen",
+      "hard": "Difficile",
+      "mixed": "Mixte"
+    }
+  },
   "leaderboard": {
     "title": "Classement",
-    "subtitle": "Meilleurs joueurs classés par performance",
+    "subtitle": "Découvrez les meilleurs joueurs et grimpez dans le classement",
     "loading": "Chargement du classement...",
-    "error": "Impossible de charger le classement. Veuillez réessayer.",
+    "error": "Une erreur est survenue lors du chargement.",
+    "top10_title": "Top 10 Joueurs",
     "filter_score": "Score",
     "filter_accuracy": "Précision",
     "filter_quizzes": "Quiz joués",
-    "top10_title": "Top 10 Joueurs",
     "col_player": "Joueur",
     "col_country": "Pays",
     "col_quizzes": "Quiz",
     "col_score": "Score",
     "col_accuracy": "Précision",
-    "search_placeholder": "Rechercher par nom...",
     "all_countries": "Tous les pays",
-    "showing_results": "{count} joueurs trouvés",
-    "no_results": "Aucun joueur ne correspond à votre recherche",
+    "search_placeholder": "Rechercher un joueur...",
+    "showing_results": "{count} résultat(s)",
     "anonymous": "Anonyme",
-    "you": "Vous"
+    "you": "Vous",
+    "no_results": "Aucun résultat trouvé",
+    "rank": "Rang",
+    "user": "Utilisateur",
+    "score": "Score",
+    "quizzes": "Quiz"
   },
-   "settings": {
+  "aiReview": {
+    "loading": {
+      "title": "L'IA analyse votre quiz…",
+      "subtitle": "Vérification de la logique, de la cohérence et de la qualité des questions."
+    },
+    "scoreLabel": "Score de qualité IA",
+    "remarksLabel": "Remarques de l'IA",
+    "approve": {
+      "title": "Quiz approuvé par l'IA"
+    },
+    "needs_review": {
+      "title": "Le quiz nécessite des améliorations"
+    },
+    "reject": {
+      "title": "Quiz rejeté par l'IA"
+    },
+    "actions": {
+      "publish": "Publier le quiz",
+      "fix": "Corriger mon quiz",
+      "forcePublish": "Envoyer à l'admin pour révision quand même"
+    },
+    "forcePublishNote": "Envoyer à l'admin placera votre quiz en file d'attente. Un administrateur le révisera manuellement."
+  },
+  "settings": {
     "title": "Paramètres",
     "subtitle": "Gérez votre compte et vos préférences",
     "save": "Enregistrer",
@@ -586,7 +753,7 @@
       "aiSub": "Notification quand un quiz IA est prêt"
     }
   },
-      "notifications": {
+  "notifications": {
     "title": "Notifications",
     "unreadCount": "{count} non lues",
     "markAllRead": "Tout marquer comme lu",
@@ -601,13 +768,11 @@
     "yesterday": "Hier",
     "daysAgo": "Il y a {days} jours"
   },
-  
   "profile": {
     "editProfile": "Modifier le profil",
     "saveChanges": "Enregistrer les modifications",
     "saveSuccess": "Profil mis à jour avec succès !",
     "saveError": "Une erreur est survenue. Veuillez réessayer.",
-
     "userInfo": "Informations utilisateur",
     "username": "Nom d'utilisateur",
     "email": "Email",
@@ -619,232 +784,22 @@
     "accuracy": "Précision",
     "notSpecified": "Non renseigné",
     "countryNotSet": "Pays non défini",
-
     "firstName": "Prénom",
     "lastName": "Nom",
     "newPassword": "Nouveau mot de passe",
     "confirmPassword": "Confirmer le mot de passe",
-
     "achievements": "Succès",
     "unlocked": "Débloqué",
-
     "performance": "Performance",
     "successRate": "Taux de réussite",
     "completionRate": "Taux de complétion",
-
     "recentQuizzes": "Quiz récents",
     "noQuizzes": "Aucun quiz joué pour l'instant. Lancez votre premier quiz !",
     "justNow": "À l'instant",
     "yesterday": "Hier",
-
     "globalRanking": "Classement mondial",
     "globalRank": "Rang mondial",
     "totalPoints": "Points totaux"
-  },
-  "leaderboard": {
-  "rank": "Rang",
-  "user": "Utilisateur",
-  "score": "Score", 
-  "quizzes": "Quiz"
-},
- "aiReview": {
-      "loading": {
-        "title": "L'IA analyse votre quiz…",
-        "subtitle": "Vérification de la logique, de la cohérence et de la qualité des questions."
-      },
-      "scoreLabel": "Score de qualité IA",
-      "remarksLabel": "Remarques de l'IA",
-      "approve": {
-        "title": "Quiz approuvé par l'IA"
-      },
-      "needs_review": {
-        "title": "Le quiz nécessite des améliorations"
-      },
-      "reject": {
-        "title": "Quiz rejeté par l'IA"
-      },
-      "actions": {
-        "publish": "Publier le quiz",
-        "fix": "Corriger mon quiz",
-        "forcePublish": "Envoyer à l'admin pour révision quand même"
-      },
-      "forcePublishNote": "Envoyer à l'admin placera votre quiz en file d'attente. Un administrateur le révisera manuellement."
-    },
-
-
-    "join": {
-      "title": "Rejoindre une salle",
-      "subtitle": "Entrer dans une partie existante",
-      "codeLabel": "Code de la salle",
-      "codePlaceholder": "ABC123",
-      "button": "Rejoindre",
-      "connecting": "Connexion...",
-      "errorEmpty": "Veuillez entrer un code de salle",
-      "errorNotFound": "Salle introuvable. Vérifiez le code.",
-      "errorStarted": "Cette salle a déjà commencé."
-    },
-
-    "create": {
-      "title": "Créer une salle",
-      "subtitle": "Hébergez votre propre partie",
-      "description": "Choisissez un quiz et invitez vos amis avec un code unique. Lancez la partie quand tout le monde est prêt.",
-      "steps": {
-        "chooseQuiz": "Choisir un quiz",
-        "shareCode": "Partager le code",
-        "startGame": "Lancer la partie"
-      },
-      "button": "Choisir un quiz →"
-    },
-
-    "stats": {
-      "realTime": "Temps réel",
-      "maxPlayers": "Jusqu'à 50 joueurs",
-      "leaderboard": "Classement en direct"
-    }
-  },
-  "lobby": {
-    "header": {
-      "label": "Salle d'attente",
-      "hostTitle": "Vous êtes l'hôte 👑",
-      "guestTitle": "En attente du lancement...",
-      "playerCount": "{count, plural, one {# joueur} other {# joueurs}}"
-    },
-
-    "share": {
-      "codeLabel": "Code de la salle",
-      "codeHint": "Partagez ce code avec vos amis",
-      "qrLabel": "QR Code",
-      "qrHint": "Scanner pour rejoindre",
-      "linkLabel": "Lien d'invitation",
-      "copy": "Copier",
-      "copied": "✓ Copié"
-    },
-
-    "players": {
-      "title": "Joueurs ({count})",
-      "waiting": "{count} en attente",
-      "empty": "En attente de joueurs...",
-      "you": "Vous",
-      "host": "Hôte",
-      "waitingStatus": "En attente"
-    },
-
-    "actions": {
-      "closeRoom": "Fermer la salle",
-      "leave": "Quitter",
-      "waitingForHost": "En attente du lancement par l'hôte...",
-      "waitingForPlayers": "En attente d'au moins un joueur...",
-      "playersInRoom": "{count, plural, one {# joueur dans la salle} other {# joueurs dans la salle}}",
-      "startGame": "🚀 Lancer la partie",
-      "starting": "Lancement..."
-    },
-
-    "confirm": {
-      "hostTitle": "Fermer la salle ?",
-      "guestTitle": "Quitter la salle ?",
-      "hostMessage": "Tous les joueurs seront expulsés et la salle sera fermée définitivement.",
-      "guestMessage": "Vous serez retiré de la salle d'attente. Vous pourrez rejoindre une autre partie.",
-      "cancel": "Annuler",
-      "processing": "En cours…",
-      "hostConfirm": "Fermer la salle",
-      "guestConfirm": "Quitter"
-    }
-  
-},
-
-  "multiquizPlay": {
-    "question": "Question",
-    "go": "GO!",
-    "multiplayer": "Multijoueur",
-    "pts": "pts",
-    "timeExpired": "Temps écoulé ! Vous n'avez pas répondu à temps.",
-    "wrongAnswer": "Mauvaise réponse",
-    "confirm": "Confirmer",
-    "waitingForHost": "En attente de l'hôte...",
-    "waitingForPlayers": "En attente des joueurs... ({count} au total)",
-    "finish": "🎉 Terminer",
-    "nextQuestion": "Question suivante →"
-  },
-      "finalLeaderboard": {
-      "title": "Résultats Finaux",
-      "pandaAlt": "Panda gagnant",
-      "pts": "pts",
-      "playerCount": "{count, plural, one {# joueur} other {# joueurs}}",
-      "rankingLabel": "Classement",
-      "you": "Vous",
-      "tied": "Égalité",
-      "exploreQuizzes": "Explorer les quiz",
-      "dashboard": "Tableau de bord →",
-      "result": {
-        "tieLine1": "Égalité —",
-        "tieLine2": "Vous gagnez tous les deux !",
-        "wonLine1": "Félicitations !",
-        "wonLine2": "Vous avez gagné !",
-        "2ndLine1": "Presque !",
-        "2ndLine2": "2ème place !",
-        "3rdLine1": "Bien joué !",
-        "3rdLine2": "3ème place !",
-        "defaultLine1": "Bonne partie !",
-        "defaultLine2": "#{rank}ème place"
-      }
-    },
-
-      "feedback": {
-        "timeUpEyebrow": "Temps écoulé",
-        "timeUpHeadline": "Aucune réponse",
-        "lastAnswerEyebrow": "Dernière réponse",
-        "correctHeadline": "Bonne réponse !",
-        "wrongHeadline": "Mauvaise réponse",
-        "pointsEarned": "+{pts} points gagnés",
-        "zeroPoints": "0 point pour cette question"
-      },
-      "countdown": {
-        "finished": "Merci d'avoir joué !",
-        "next": "Prochaine question dans quelques instants…"
-      },
-    
-    "quizCard": {
-      "featured": "À la une",
-      "new": "Nouveau",
-      "saved": "Sauvegardé",
-      "by": "par",
-      "questions": "{count} questions",
-      "duration": "{min} min",
-      "played": "{count} joués",
-      "playNow": "Jouer maintenant",
-      "createRoom": "Créer une salle",
-      "difficulty": {
-        "easy": "Facile",
-        "medium": "Moyen",
-        "hard": "Difficile",
-        "mixed": "Mixte"
-      }
-    },
-     "leaderboard": {
-    "title": "Classement",
-    "subtitle": "Découvrez les meilleurs joueurs et grimpez dans le classement",
-    "loading": "Chargement du classement...",
-    "error": "Une erreur est survenue lors du chargement.",
-    "top10_title": "Top 10 Joueurs",
-
-    "filter_score": "Score",
-    "filter_accuracy": "Précision",
-    "filter_quizzes": "Quiz joués",
-
-    "col_player": "Joueur",
-    "col_country": "Pays",
-    "col_quizzes": "Quiz",
-    "col_score": "Score",
-    "col_accuracy": "Précision",
-
-    "all_countries": "Tous les pays",
-    "search_placeholder": "Rechercher un joueur...",
-    "showing_results": "{count} résultat(s)",
-
-    "anonymous": "Anonyme",
-    "you": "Vous",
-
-    "no_results": "Aucun résultat trouvé"
   },
   "adminDashboard": {
     "title": "Dashboard Admin",
@@ -995,7 +950,4 @@
     "logout": "Déconnexion",
     "mobileTitle": "PandoMind Admin"
   }
-
-  
-
-  }
+}

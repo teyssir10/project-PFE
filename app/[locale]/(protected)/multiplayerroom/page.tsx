@@ -22,7 +22,7 @@ export default function MultiplayerPage() {
 
     const { data } = await supabase
       .from('rooms')
-      .select('id, status')
+      .select('id, room_status')   // ✅ status → room_status
       .eq('code', code.toUpperCase())
       .single()
 
@@ -32,7 +32,8 @@ export default function MultiplayerPage() {
       return
     }
 
-    if (data.status !== 'waiting') {
+    // ✅ status → room_status
+    if (data.room_status !== 'waiting') {
       setError(t('join.errorStarted'))
       setLoading(false)
       return
@@ -59,7 +60,6 @@ export default function MultiplayerPage() {
     <div className="min-h-screen relative overflow-hidden">
       <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-4 py-12">
 
-        {/* Header */}
         <div className="text-center space-y-3 mb-12 max-w-xl">
           <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 dark:text-white tracking-tight">
             {t('title.prefix')}{' '}
@@ -75,7 +75,7 @@ export default function MultiplayerPage() {
         <div className="w-full max-w-4xl grid md:grid-cols-2 gap-6 mb-8">
 
           <div className="bg-white dark:bg-slate-800 rounded-2xl border-2 border-gray-200 dark:border-slate-700 hover:border-cyan-400 dark:hover:border-cyan-500 hover:shadow-md transition-all duration-300 group p-8 space-y-6">
-             <div className="flex items-start gap-4">
+            <div className="flex items-start gap-4">
               <div className="w-12 h-12 rounded-xl bg-cyan-50 dark:bg-cyan-900/30 flex items-center justify-center group-hover:bg-cyan-100 dark:group-hover:bg-cyan-800/40 transition-colors flex-shrink-0">
                 <LoginOutlined className="text-xl text-cyan-500" />
               </div>
@@ -120,9 +120,7 @@ export default function MultiplayerPage() {
             </button>
           </div>
 
-          <div className="rounded-2xl bg-gradient-to-br from-cyan-500 via-cyan-400 to-teal-500
-            hover:shadow-2xl hover:-translate-y-1 transition-all duration-300
-            group overflow-hidden relative p-8 space-y-6">
+          <div className="rounded-2xl bg-gradient-to-br from-cyan-500 via-cyan-400 to-teal-500 hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 group overflow-hidden relative p-8 space-y-6">
 
             <div className="absolute -top-6 -right-6 w-32 h-32 bg-white/10 rounded-full pointer-events-none" />
             <div className="absolute -bottom-8 -left-4 w-24 h-24 bg-white/5 rounded-full pointer-events-none" />

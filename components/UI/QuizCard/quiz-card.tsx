@@ -15,7 +15,7 @@ import {
   DeleteOutlined,
 } from "@ant-design/icons";
 
-export default function QuizCard({ quiz, isFavorite, onToggleFavorite, isHostMode,isOwner,onEdit, onDelete }: {
+export default function QuizCard({ quiz, isFavorite, onToggleFavorite, isHostMode, isOwner, onEdit, onDelete }: {
   quiz: any;
   isFavorite: boolean;
   onToggleFavorite: (id: string) => void;
@@ -41,7 +41,14 @@ export default function QuizCard({ quiz, isFavorite, onToggleFavorite, isHostMod
 
     const { data: room, error } = await supabase
       .from("rooms")
-      .insert({ code: newCode, host_id: user.id, quiz_id: quiz.id, status: "waiting" })
+      .insert({
+        code: newCode,
+        host_id: user.id,
+        quiz_id: quiz.id,
+        room_status: "waiting",       // ✅
+        game_phase: "idle",           // ✅
+        current_question_index: 0,   // ✅
+      })
       .select()
       .single();
 
@@ -52,11 +59,9 @@ export default function QuizCard({ quiz, isFavorite, onToggleFavorite, isHostMod
     });
 
     router.push(`/lobby/${newCode}`);
-    
-
- 
   };
-    const difficultyConfig: Record<string, { color: string; bg: string; icon: string }> = {
+
+  const difficultyConfig: Record<string, { color: string; bg: string; icon: string }> = {
     Easy:   { color: "text-green-600",  bg: "bg-green-50 border-green-200",   icon: "🟢" },
     Medium: { color: "text-amber-600",  bg: "bg-amber-50 border-amber-200",   icon: "🟡" },
     Hard:   { color: "text-red-600",    bg: "bg-red-50 border-red-200",       icon: "🔴" },
@@ -106,7 +111,7 @@ export default function QuizCard({ quiz, isFavorite, onToggleFavorite, isHostMod
           </div>
         )}
 
-        {/* Source badge — AI ou Manual */}
+        {/* Source badge */}
         {quiz.source && (
           <div className={`absolute bottom-3 left-3 flex items-center gap-1 text-xs px-2.5 py-1 rounded-full font-semibold border ${
             quiz.source === "ai"
@@ -117,7 +122,7 @@ export default function QuizCard({ quiz, isFavorite, onToggleFavorite, isHostMod
           </div>
         )}
 
-        {/* Edit / Delete — owner only, visible on hover */}
+        {/* Edit / Delete */}
         {isOwner && (
           <div className="absolute bottom-3 right-3 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
             <button

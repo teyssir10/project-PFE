@@ -115,7 +115,7 @@ export default function Page() {
           {/* Recent Activity */}
           <Card
             className="!rounded-2xl !border !border-cyan-100 !shadow-sm !bg-white dark:!bg-slate-800 dark:!border-slate-700"
-            bodyStyle={{ padding: "20px" }}
+            styles={{ body: { padding: "20px" } }}
           >
             <div className="flex items-center justify-between mb-5">
               <div className="flex items-center gap-2">
@@ -179,7 +179,7 @@ export default function Page() {
             {/* Recommended */}
             <Card
               className="!rounded-2xl !border !border-cyan-100 !shadow-sm !bg-white dark:!bg-slate-800 dark:!border-slate-700"
-              bodyStyle={{ padding: "20px" }}
+              styles={{ body: { padding: "20px" } }}
               
             >
               <div className="flex items-center justify-between mb-4">

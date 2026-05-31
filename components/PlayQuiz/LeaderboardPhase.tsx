@@ -115,7 +115,7 @@ export function LeaderboardPhase({ wasCorrect, lastScoreEarned, myRank, leaderbo
   const maxScore = leaderboard[0]?.score ?? 1;
 
   return (
-    <div className="flex flex-col items-center px-4 py-2 relative bg-gradient-to-br from-slate-50 via-cyan-50/30 to-teal-50/30 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 ">
+    <div className="flex flex-col items-center px-4 py-2 relative min-h-screen bg-gradient-to-br from-slate-50 via-cyan-50/30 to-teal-50/30 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950">
       <Deco />
 
       <div

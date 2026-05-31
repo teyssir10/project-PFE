@@ -7,7 +7,8 @@ import { supabase } from "@/lib/supabase";
 import QRCode from "qrcode";
 import { Spin } from "antd";
 import { LobbyPlayer } from "@/types/quiz";
-import { fetchPlayersWithNames, leaveRoom, closeRoom, upsertPlayer, insertGameState } from "@/lib/api/multiplayer";
+// ✅ insertGameState → startGame
+import { fetchPlayersWithNames, leaveRoom, closeRoom, upsertPlayer, startGame } from "@/lib/api/multiplayer";
 
 export default function LobbyPage() {
   const { code } = useParams<{ code: string }>();
@@ -40,10 +41,12 @@ export default function LobbyPage() {
 
       if (roomError || !roomData) { router.push("/multiplayerroom"); return; }
 
-      if (roomData.status === "finished" || roomData.status === "playing") {
+      // ✅ room_status au lieu de status
+      if (roomData.room_status === "closed" || roomData.game_phase === "playing") {
         router.replace("/dashboard");
         return;
       }
+
       setRoom(roomData);
       setIsHost(user.id === roomData.host_id);
       await upsertPlayer(user.id, roomData.id);
@@ -76,37 +79,38 @@ export default function LobbyPage() {
     return () => { supabase.removeChannel(channel); clearInterval(interval); };
   }, [room]);
 
+  // ✅ écouter rooms au lieu de game_state
   useEffect(() => {
     if (!room) return;
     const channel = supabase
       .channel(`game-start-${room.id}`)
       .on("postgres_changes", {
-        event: "INSERT", schema: "public", table: "game_state",
-        filter: `room_id=eq.${room.id}`,
-      }, () => router.push(`/play-quiz/${room.quiz_id}?roomId=${room.id}`))
-      .subscribe();
-    return () => { supabase.removeChannel(channel); };
-  }, [room]);
-
-  useEffect(() => {
-    if (!room) return;
-    const channel = supabase
-      .channel(`room-status-${room.id}`)
-      .on("postgres_changes", {
-        event: "UPDATE", schema: "public", table: "rooms",
+        event: "UPDATE",
+        schema: "public",
+        table: "rooms",
         filter: `id=eq.${room.id}`,
       }, ({ new: updatedRoom }) => {
-        if (updatedRoom.status === "finished") router.replace("/dashboard");
+        // ✅ game_phase au lieu de game_state INSERT
+        if (updatedRoom.game_phase === "playing") {
+          router.push(`/play-quiz/${room.quiz_id}?roomId=${room.id}`);
+        }
+        // ✅ room_status au lieu de status
+        if (updatedRoom.room_status === "closed") {
+          router.replace("/dashboard");
+        }
       })
       .subscribe();
     return () => { supabase.removeChannel(channel); };
   }, [room]);
 
+  // ✅ suppression du channel room-status séparé — fusionné dans game-start ci-dessus
+
   const handleStartGame = async () => {
     setStarting(true);
     try {
-      await insertGameState(room.id);
-      router.push(`/play-quiz/${room.quiz_id}?roomId=${room.id}`)
+      // ✅ insertGameState → startGame
+      await startGame(room.id);
+      router.push(`/play-quiz/${room.quiz_id}?roomId=${room.id}`);
     } catch (e) {
       console.error("Start game error:", e);
       setStarting(false);
@@ -168,7 +172,8 @@ export default function LobbyPage() {
             </div>
 
             <button
-              onClick={() => setShowConfirm(true)} className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold bg-white dark:bg-slate-800 border border-red-200 dark:border-red-900/50 text-red-500 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all duration-200 shadow-sm"
+              onClick={() => setShowConfirm(true)}
+              className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold bg-white dark:bg-slate-800 border border-red-200 dark:border-red-900/50 text-red-500 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all duration-200 shadow-sm"
             >
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round"
@@ -178,6 +183,7 @@ export default function LobbyPage() {
             </button>
           </div>
         </div>
+
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
           <div className="space-y-4">
             <div className="bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 shadow-sm p-5">
@@ -189,6 +195,7 @@ export default function LobbyPage() {
                 <p className="text-xs text-cyan-100 mt-1">{t("share.codeHint")}</p>
               </div>
             </div>
+
             <div className="bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 shadow-sm p-5">
               <p className="text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-3">
                 {t("share.qrLabel")}
@@ -225,8 +232,8 @@ export default function LobbyPage() {
               </div>
             </div>
           </div>
-          <div className="lg:col-span-2 space-y-4">
 
+          <div className="lg:col-span-2 space-y-4">
             <div className="bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 shadow-sm p-5">
               <div className="flex items-center justify-between mb-4">
                 <p className="text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider">
@@ -292,14 +299,13 @@ export default function LobbyPage() {
                 </div>
               )}
             </div>
-            
+
             <div className="bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 shadow-sm p-5 space-y-3">
               {!isHost && (
                 <p className="text-center text-xs text-gray-400 dark:text-gray-500">
                   {t("actions.waitingForHost")}
                 </p>
               )}
-
               {isHost && (
                 <>
                   <div className="flex items-center gap-2 text-xs px-3 py-2 rounded-xl bg-amber-50 dark:bg-amber-900/20 text-amber-600 dark:text-amber-400">
@@ -310,7 +316,6 @@ export default function LobbyPage() {
                         : t("actions.playersInRoom", { count: nonHostPlayers.length })}
                     </span>
                   </div>
-
                   <button
                     onClick={handleStartGame}
                     disabled={starting || players.length < 2}
@@ -330,14 +335,14 @@ export default function LobbyPage() {
         </div>
       </div>
 
-      {/*Confirm modal */}
       {showConfirm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center px-4"
              onClick={() => setShowConfirm(false)}>
           <div className="absolute inset-0 bg-black/40 dark:bg-black/60 backdrop-blur-sm" />
-          <div className="relative bg-white dark:bg-slate-900 rounded-2xl shadow-xl border border-gray-100 dark:border-slate-800 w-full max-w-sm p-6 space-y-4"
+          <div
+            className="relative bg-white dark:bg-slate-900 rounded-2xl shadow-xl border border-gray-100 dark:border-slate-800 w-full max-w-sm p-6 space-y-4"
             onClick={e => e.stopPropagation()}
-            >
+          >
             <div className="text-center">
               <div className="text-4xl mb-3">{isHost ? "🔒" : "👋"}</div>
               <h2 className="text-lg font-black text-gray-900 dark:text-white">
@@ -347,7 +352,6 @@ export default function LobbyPage() {
                 {isHost ? t("confirm.hostMessage") : t("confirm.guestMessage")}
               </p>
             </div>
-
             <div className="flex gap-3">
               <button
                 onClick={() => setShowConfirm(false)}

@@ -66,7 +66,7 @@ export default function AIReviewModal({
       centered
       width={480}
       closable={!loading}
-      maskClosable={!loading}
+      mask={{ closable: false }}
     >
       {/* Loading state */}
       {loading && (

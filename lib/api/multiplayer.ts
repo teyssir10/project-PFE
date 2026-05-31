@@ -1,10 +1,11 @@
 import { supabase } from "@/lib/supabase";
-import { Player , LobbyPlayer } from "@/types/quiz";
+import { Player, LobbyPlayer } from "@/types/quiz";
 
 const generateCode = (): string => {
   return Math.random().toString(36).substring(2, 8).toUpperCase();
 };
 
+// ── createRoom ─────────────────────────────────────────────────────────────
 export const createRoom = async (quizId: string): Promise<string> => {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) throw new Error("Not authenticated");
@@ -19,7 +20,14 @@ export const createRoom = async (quizId: string): Promise<string> => {
 
   const { data: room, error } = await supabase
     .from("rooms")
-    .insert({ code, host_id: user.id, quiz_id: quizId, status: "waiting" })
+    .insert({
+      code,
+      host_id: user.id,
+      quiz_id: quizId,
+      room_status: "waiting",       // ✅ status → room_status
+      game_phase: "idle",           // ✅ ajouté
+      current_question_index: 0,   // ✅ ajouté
+    })
     .select()
     .single();
 
@@ -30,6 +38,7 @@ export const createRoom = async (quizId: string): Promise<string> => {
   return code;
 };
 
+// ── joinRoom ───────────────────────────────────────────────────────────────
 export const joinRoom = async (code: string): Promise<{ roomId: string; quizId: string }> => {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) throw new Error("Not authenticated");
@@ -38,7 +47,7 @@ export const joinRoom = async (code: string): Promise<{ roomId: string; quizId: 
     .from("rooms").select("*").eq("code", code.toUpperCase()).single();
 
   if (error || !room) throw new Error("Room introuvable");
-  if (room.status !== "waiting") throw new Error("La partie a déjà commencé");
+  if (room.room_status !== "waiting") throw new Error("La partie a déjà commencé"); // ✅
 
   await supabase.from("players").upsert(
     { user_id: user.id, room_id: room.id, score: 0 },
@@ -48,27 +57,56 @@ export const joinRoom = async (code: string): Promise<{ roomId: string; quizId: 
   return { roomId: room.id, quizId: room.quiz_id };
 };
 
-export const insertGameState = async (roomId: string): Promise<void> => {
-  const { error } = await supabase.from("game_state").insert({
-    room_id: roomId,
-    current_question_index: 0,
-    question_start_time: new Date().toISOString(),
-    status: "playing",
-  });
+// ── insertGameState → startGame ────────────────────────────────────────────
+// ✅ plus de game_state — on met à jour rooms directement
+export const startGame = async (roomId: string): Promise<void> => {
+  const { error } = await supabase
+    .from("rooms")
+    .update({
+      room_status: "started",
+      game_phase: "playing",
+      current_question_index: 0,
+      question_start_time: new Date().toISOString(),
+    })
+    .eq("id", roomId);
   if (error) throw new Error(error.message);
 };
 
-export const nextQuestion = async (roomId: string, nextIndex: number): Promise<void> => {
-  await supabase.from("game_state")
-    .update({ current_question_index: nextIndex, question_start_time: new Date().toISOString() })
-    .eq("room_id", roomId);
+// ── setGamePhase ───────────────────────────────────────────────────────────
+// ✅ setGameStatus → setGamePhase, game_state → rooms
+export const setGamePhase = async (roomId: string, phase: string): Promise<void> => {
+  await supabase
+    .from("rooms")
+    .update({ game_phase: phase })
+    .eq("id", roomId);
 };
 
+// ── advanceQuestion ────────────────────────────────────────────────────────
+// ✅ game_state → rooms
+export const advanceQuestion = async (roomId: string, nextIndex: number): Promise<void> => {
+  await supabase
+    .from("rooms")
+    .update({
+      game_phase: "playing",
+      current_question_index: nextIndex,
+      question_start_time: new Date().toISOString(),
+    })
+    .eq("id", roomId);
+};
+
+// ── finishGame ─────────────────────────────────────────────────────────────
+// ✅ suppression game_state, tout dans rooms
 export const finishGame = async (roomId: string): Promise<void> => {
-  await supabase.from("game_state").update({ status: "finished" }).eq("room_id", roomId);
-  await supabase.from("rooms").update({ status: "finished" }).eq("id", roomId);
+  await supabase
+    .from("rooms")
+    .update({
+      room_status: "closed",
+      game_phase: "finished",
+    })
+    .eq("id", roomId);
 };
 
+// ── submitAnswer ───────────────────────────────────────────────────────────
 export const submitAnswer = async ({
   userId, roomId, questionId, optionId, isCorrect, timeTaken, scoreEarned,
 }: {
@@ -91,7 +129,6 @@ export const submitAnswer = async ({
 };
 
 // ── Leaderboard ────────────────────────────────────────────────────────────
-
 export const fetchLeaderboard = async (roomId: string): Promise<Omit<Player, "isMe">[]> => {
   const { data: players } = await supabase
     .from("players").select("user_id, score")
@@ -121,6 +158,7 @@ export const fetchLeaderboardWithMe = async (roomId: string, currentUserId?: str
   return raw.map(p => ({ ...p, isMe: p.userId === currentUserId }));
 };
 
+// ── checkAllAnswered ───────────────────────────────────────────────────────
 export const checkAllAnswered = async (roomId: string, questionId: string): Promise<{ allAnswered: boolean; totalPlayers: number }> => {
   const { count: answersCount } = await supabase
     .from("answers").select("*", { count: "exact", head: true })
@@ -136,21 +174,7 @@ export const checkAllAnswered = async (roomId: string, questionId: string): Prom
   return { allAnswered: total > 0 && answered >= total, totalPlayers: total };
 };
 
-export const setGameStatus = async (roomId: string, status: string): Promise<void> => {
-  await supabase.from("game_state").update({ status }).eq("room_id", roomId);
-};
-
-export const advanceQuestion = async (roomId: string, nextIndex: number): Promise<void> => {
-  await supabase.from("game_state").update({
-    status: "playing",
-    current_question_index: nextIndex,
-    question_start_time: new Date().toISOString(),
-  }).eq("room_id", roomId);
-};
-
 // ── Lobby helpers ──────────────────────────────────────────────────────────
-
-
 export const fetchPlayersWithNames = async (roomId: string): Promise<LobbyPlayer[]> => {
   const { data, error } = await supabase
     .from("players").select("*").eq("room_id", roomId).order("joined_at", { ascending: true });
@@ -165,7 +189,7 @@ export const fetchPlayersWithNames = async (roomId: string): Promise<LobbyPlayer
     const user = (usersData || []).find(u => u.id === player.user_id);
     return {
       ...player,
-      displayName:    user ? `${user.firstname} ${user.lastname || ""}`.trim() : player.user_id?.slice(0, 8) + "...",
+      displayName: user ? `${user.firstname} ${user.lastname || ""}`.trim() : player.user_id?.slice(0, 8) + "...",
       displayInitial: user ? user.firstname.charAt(0).toUpperCase() : "?",
     };
   });
@@ -176,8 +200,12 @@ export const leaveRoom = async (userId: string, roomId: string): Promise<void> =
   if (error) throw new Error(error.message);
 };
 
+// ✅ closeRoom → room_status: "closed"
 export const closeRoom = async (roomId: string): Promise<void> => {
-  const { error } = await supabase.from("rooms").update({ status: "finished" }).eq("id", roomId);
+  const { error } = await supabase
+    .from("rooms")
+    .update({ room_status: "closed" })   // ✅ status → room_status
+    .eq("id", roomId);
   if (error) throw new Error(error.message);
 };
 
