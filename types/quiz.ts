@@ -40,7 +40,7 @@ export const TYPE_ICONS: Record<QuestionType, string> = {
 
 export const OPTION_LETTERS = ["A", "B", "C", "D", "E", "F"];
 
-export const defaultQuestion = (defaultTime=30): Question => ({
+export const defaultQuestion = (defaultTime: number | string = 30): Question => ({
   id: crypto.randomUUID(),
   text: "",
   type: "multiple",
@@ -52,7 +52,7 @@ export const defaultQuestion = (defaultTime=30): Question => ({
   ],
   correctOptionId: null,
   correctAnswer: "",             
-  timeLimit: "30",
+  timeLimit: String(defaultTime),
   customTime: "",
   points: "Standard (1x)",
   difficulty: "Easy",

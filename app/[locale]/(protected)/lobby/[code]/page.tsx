@@ -92,7 +92,7 @@ export default function LobbyPage() {
       }, ({ new: updatedRoom }) => {
         // ✅ game_phase au lieu de game_state INSERT
         if (updatedRoom.game_phase === "playing") {
-          router.push(`/play-quiz/${room.quiz_id}?roomId=${room.id}`);
+          router.push(`/play-quiz/${room.quiz_id}/play?roomId=${room.id}`);
         }
         // ✅ room_status au lieu de status
         if (updatedRoom.room_status === "closed") {
@@ -110,7 +110,7 @@ export default function LobbyPage() {
     try {
       // ✅ insertGameState → startGame
       await startGame(room.id);
-      router.push(`/play-quiz/${room.quiz_id}?roomId=${room.id}`);
+      router.push(`/play-quiz/${room.quiz_id}/play?roomId=${room.id}`);
     } catch (e) {
       console.error("Start game error:", e);
       setStarting(false);

@@ -223,7 +223,7 @@ export default function Page() {
                         <Button
                           size="small"
                           icon={<CaretRightOutlined />}
-                          onClick={() => router.push(`/play-quiz/${quiz.id}`)}
+                          onClick={() => router.push(`/play-quiz/${quiz.id}/play`)}
                           className="!bg-gradient-to-r !from-cyan-500 !to-teal-400 !text-white !border-0 !rounded-lg opacity-0 group-hover:opacity-100 transition-all"
                         />
                       </div>
@@ -235,7 +235,7 @@ export default function Page() {
               <Button
                 block
                 icon={<ThunderboltOutlined />}
-                onClick={() => router.push("/browse")}
+                onClick={() => router.push("/browse-quiz")}
                 className="!mt-4 !bg-gradient-to-r !from-cyan-500 !to-teal-400 !text-white !border-0 !rounded-xl !font-bold hover:!opacity-90"
               >
                 {t("getMore")}

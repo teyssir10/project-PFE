@@ -428,6 +428,7 @@
     "confirm": "✅ Confirm Answer",
     "next": "Next question →",
     "finish": "🎉 Finish",
+    "changeOrConfirm": "Change or confirm your answer",
     "quizNotFound": "Quiz not found.",
     "goBack": "Go back"
   },

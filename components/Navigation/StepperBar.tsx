@@ -11,7 +11,7 @@ import AIReviewModal from "@/components/createquiz/manual/AIReviewModal";
 
 interface DraftData {
   draftId?: string; title?: string; description?: string; difficulty?: string;
-  questions?: any[]; timePerQuestion?: number; coverImage?: string;
+  questions?: any[]; timePerQuestion?: number | string; coverImage?: string;
 }
 
 export interface PublishResult {
@@ -71,7 +71,9 @@ export default function StepperBar({
         description:      current?.description     || "",
       difficulty: (current?.difficulty || "medium").toLowerCase(),
         questions:        current?.questions       || [],
-        time_per_question: current?.timePerQuestion ?? 20,
+        time_per_question: typeof current?.timePerQuestion === "string"
+          ? (parseInt(current.timePerQuestion) || 20)
+          : (current?.timePerQuestion ?? 20),
         cover_image:      current?.coverImage      || null,
         current_step:     currentStep,
         saved_at:         new Date().toISOString(),

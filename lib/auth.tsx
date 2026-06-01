@@ -155,7 +155,7 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
     if (user && isPublicRoute) {
       const checkRole = async () => {
         const { data: profile } = await supabase
-          .from("profiles")
+          .from("users")
           .select("role")
           .eq("id", user.id)
           .single();
@@ -174,7 +174,7 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
     if (user && isAdminRoute) {
       const checkAdmin = async () => {
         const { data: profile } = await supabase
-          .from("profiles")
+          .from("users")
           .select("role")
           .eq("id", user.id)
           .single();

@@ -121,7 +121,12 @@ export default function ProfilePage() {
         .order("played_at", { ascending: false })
         .limit(4);
 
-      setQuizHistory(historyData ?? []);
+      const formattedHistory = (historyData as any[])?.map(q => ({
+        ...q,
+        quizzes: Array.isArray(q.quizzes) ? q.quizzes[0] : q.quizzes
+      })) ?? [];
+
+      setQuizHistory(formattedHistory);
 
       const { data: rankData } = await supabase
         .from("users")

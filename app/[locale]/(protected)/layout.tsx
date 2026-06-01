@@ -17,7 +17,7 @@ const LazyWrapper = dynamic(
 export default function Layout({ children }: { children: React.ReactNode }) {
   const { user, isLoading } = useAuth();
   const pathname = usePathname();
-  const username = user?.user_metadata?.firstName;
+  const username = user?.user_metadata?.firstname || user?.user_metadata?.firstName || user?.email?.split("@")[0] || "User";
 
   const isPlayPage = pathname?.includes("/play") && !pathname?.includes("/results");
 

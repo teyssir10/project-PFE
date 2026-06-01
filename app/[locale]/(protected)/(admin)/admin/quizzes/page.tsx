@@ -38,7 +38,13 @@ export default function AdminQuizzesPage() {
       .from("quizzes")
       .select("id, title, difficulty, players, is_published, created_at, question_count, categories(name, icon)")
       .order("created_at", { ascending: false });
-    setQuizzes(data ?? []);
+    
+    const formatted = (data as any[])?.map(q => ({
+      ...q,
+      categories: Array.isArray(q.categories) ? q.categories[0] : q.categories
+    })) ?? [];
+
+    setQuizzes(formatted);
     setLoading(false);
   };
 

@@ -115,13 +115,13 @@ function NavLinks({ onClickItem }: { onClickItem?: () => void }) {
 function LogoutButton({ onClick }: { onClick?: () => void }) {
   const t = useTranslations("sidebar");
   const { signOut, user } = useAuth();
-  const username = user?.user_metadata?.firstName || user?.email?.split("@")[0];
+  const username = user?.user_metadata?.firstname || user?.user_metadata?.firstName || user?.email?.split("@")[0] || "User";
 
   return (
     <div className="px-4 py-6 border-t border-gray-100 dark:border-slate-700 space-y-3">
       <div className="flex items-center gap-3 px-2">
         <div className="w-8 h-8 rounded-full bg-gradient-to-br from-cyan-500 to-teal-400 flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
-          {username?.charAt(0).toUpperCase()}
+          {username?.charAt(0)?.toUpperCase() ?? ""}
         </div>
         <div className="min-w-0">
           <p className="text-sm font-semibold text-gray-900 dark:text-white truncate">
@@ -150,7 +150,7 @@ function LogoutButton({ onClick }: { onClick?: () => void }) {
   );
 }
 
-export function sidebar({ children }: { children: React.ReactNode }) {
+export function Sidebar({ children }: { children: React.ReactNode }) {
   const t = useTranslations("sidebar");
 
   return (
@@ -188,4 +188,4 @@ export function sidebar({ children }: { children: React.ReactNode }) {
   );
 }
 
-export default sidebar;
+export default Sidebar;

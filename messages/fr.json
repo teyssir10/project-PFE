@@ -419,6 +419,7 @@
     "confirm": "✅ Confirmer la réponse",
     "next": "Question suivante →",
     "finish": "🎉 Terminer",
+    "changeOrConfirm": "Modifiez ou confirmez votre réponse",
     "quizNotFound": "Quiz introuvable.",
     "goBack": "Retour"
   },
