@@ -8,6 +8,7 @@ import DescribeCard from "@/components/createquiz/AIquiz/DecribeCard";
 import SettingsCard from "@/components/createquiz/AIquiz/SettingsCard";
 import PreviewPanel from "@/components/createquiz/AIquiz/PreviewPanel";
 import { useTranslations } from "next-intl";
+import { useLocale } from "next-intl";
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/lib/supabase";
 import { message } from "antd";
@@ -19,6 +20,7 @@ export default function AIQuiz() {
   const tStepper = useTranslations("stepper");
   const { user } = useAuth();
   const router = useRouter();
+  const locale = useLocale();
   const [publishing, setPublishing] = useState(false);
   const [generatedImageUrl, setGeneratedImageUrl] = useState<string | null>(null);
 
@@ -40,58 +42,62 @@ export default function AIQuiz() {
 
     setPublishing(true);
     try {
+      // 1. Insérer le quiz
       const { data: quiz, error: quizError } = await supabase
         .from("quizzes")
         .insert({
-          title: form.title,
-          difficulty: form.difficulty,
-          question_count: generatedQuestions.length,
+          title:             form.title,
+          difficulty:        form.difficulty,
+          question_count:    generatedQuestions.length,
           time_per_question: timerValue,
-          is_published: true,
-          status: "published",
-          players: 0,
-          creator_id: user.id,
-          creator_name: user.user_metadata?.firstname ?? user.email?.split("@")[0],
-          cover_image: generatedImageUrl ?? null,
-          source: "ai", // ← quiz créé par IA
+          is_published:      true,
+          status:            "published",
+          players:           0,
+          creator_id:        user.id,
+          creator_name:      user.user_metadata?.firstname ?? user.email?.split("@")[0],
+          cover_image:       generatedImageUrl ?? null,
+          source:            "ai",
         })
         .select()
         .single();
 
       if (quizError) throw quizError;
 
-      const questionsToInsert = generatedQuestions.map((q, index) => ({
-        quiz_id: quiz.id,
-        text: q.question,
-        indice: q.indice,
-        order_index: index,
-        type: "multiple",
-        time_limit: String(timerValue),
-        points: "Standard (1x)",
-        difficulty: form.difficulty,
-      }));
+      // 2. ✅ Insérer les questions avec options en jsonb (plus de table options)
+      const questionsToInsert = generatedQuestions.map((q, index) => {
+        // Construire les options en jsonb avec is_correct
+        const optionsJsonb = q.options.map((opt) => ({
+          id:         crypto.randomUUID(),
+          text:       opt,
+          is_correct: opt === q.correct_answer,
+        }));
 
-      const { data: insertedQuestions, error: questionsError } = await supabase
+        // Trouver l'id de la bonne réponse
+        const correctOption = optionsJsonb.find((o) => o.is_correct);
+
+        return {
+          quiz_id:           quiz.id,
+          text:              q.question,
+          indice:            q.indice,
+          order_index:       index,
+          type:              "multiple",
+          time_limit:        String(timerValue),
+          points:            "Standard (1x)",
+          difficulty:        form.difficulty,
+          options:           optionsJsonb,           // ✅ jsonb
+          correct_option_id: correctOption?.id ?? null, // ✅
+          correct_answer:    null,
+        };
+      });
+
+      const { error: questionsError } = await supabase
         .from("questions")
-        .insert(questionsToInsert)
-        .select();
+        .insert(questionsToInsert);
 
       if (questionsError) throw questionsError;
 
-      const optionsToInsert = insertedQuestions.flatMap((dbQ, index) => {
-        const originalQ = generatedQuestions[index];
-        return originalQ.options.map((opt) => ({
-          question_id: dbQ.id,
-          text: opt,
-          is_correct: opt === originalQ.correct_answer,
-        }));
-      });
-
-      const { error: optionsError } = await supabase.from("options").insert(optionsToInsert);
-      if (optionsError) throw optionsError;
-
       message.success("✅ Quiz publié avec succès !");
-      router.push("/browse-quiz");
+      router.push(`/${locale}/browse-quiz`);
 
     } catch (err: any) {
       console.error(err);

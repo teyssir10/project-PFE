@@ -48,11 +48,9 @@ export default function QuizPage() {
         setQuizzes(quizzesData);
 
         if (user) {
-        
           const favs = await fetchFavorites(user.id);
           setFavorites(favs);
 
-         
           const { data: historyData } = await supabase
             .from("quiz_history")
             .select("quiz_id")
@@ -164,8 +162,6 @@ export default function QuizPage() {
             }`}
           >
             {item.label}
-           
-       
           </button>
         ))}
       </div>
@@ -185,13 +181,21 @@ export default function QuizPage() {
           <p className="text-sm opacity-80">{t("bannerSub")}</p>
         </div>
         <div className="flex gap-3">
+          {/* Bouton IA → mode "ai" */}
           <button
-            onClick={() => router.push(`/${locale}/create-quiz`)}
+            onClick={() => {
+              setMode("ai");
+              router.push(`/${locale}/create-quiz`);
+            }}
             className="text-white px-4 py-2 rounded-lg font-semibold border border-white hover:bg-white/10 transition">
             {t("aiGenerate")}
           </button>
+          {/* Bouton Manuel → mode "manual" */}
           <button
-            onClick={() => router.push(`/${locale}/create-quiz`)}
+            onClick={() => {
+              setMode("manual");
+              router.push(`/${locale}/create-quiz`);
+            }}
             className="border border-white px-4 py-2 rounded-lg hover:bg-white/10 transition">
             {t("manual")}
           </button>

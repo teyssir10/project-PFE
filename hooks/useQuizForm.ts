@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { message } from "antd";
+import { App } from "antd";
 import { DEFAULT_FORM_STATE, QuizFormState } from "@/types/aiquiz";
 
 // ─── Type pour une question générée ──────────────────────────────────────────
@@ -16,6 +16,7 @@ export function useQuizForm() {
   const [step, setStep] = useState(1);
   const [generatedQuestions, setGeneratedQuestions] = useState<GeneratedQuestion[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const { message } = App.useApp();
 
   // ── Mettre à jour le formulaire ────────────────────────────────────────────
   const update = (fields: Partial<QuizFormState>) =>
@@ -39,9 +40,27 @@ export function useQuizForm() {
 
   // ── Générer le quiz via OpenAI ─────────────────────────────────────────────
   const generateQuiz = async () => {
-    // Validation
     if (!form.title && !form.prompt) {
       message.warning("Veuillez entrer un titre ou une description.");
+      return;
+    }
+
+    // ✅ Résoudre les valeurs custom
+    const effectiveCategory = form.category === "Custom"
+      ? form.customCategory
+      : form.category;
+
+    const effectiveLanguage = form.language === "Custom"
+      ? form.customLanguage
+      : form.language;
+
+    // ✅ Validation custom
+    if (form.category === "Custom" && !form.customCategory.trim()) {
+      message.warning("Veuillez entrer une catégorie personnalisée.");
+      return;
+    }
+    if (form.language === "Custom" && !form.customLanguage.trim()) {
+      message.warning("Veuillez entrer une langue personnalisée.");
       return;
     }
 
@@ -55,24 +74,22 @@ export function useQuizForm() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          title: form.title,
-          prompt: form.prompt,
-          category: form.category,
-          difficulty: form.difficulty,
+          title:        form.title,
+          prompt:       form.prompt,
+          category:     effectiveCategory, // ✅
+          difficulty:   form.difficulty,
           numQuestions: numQuestionsValue,
-          timer: timerValue,
-          language: form.language,
+          timer:        timerValue,
+          language:     effectiveLanguage, // ✅
         }),
       });
 
       const data = await res.json();
 
       if (!res.ok || !data.success) {
-        // Erreur retournée par l'API
         throw new Error(data.error ?? "Erreur lors de la génération.");
       }
 
-      // ✅ Extraire les questions depuis la réponse
       const questions: GeneratedQuestion[] = data.data?.questions ?? [];
 
       if (questions.length === 0) {

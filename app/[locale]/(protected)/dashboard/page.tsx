@@ -9,10 +9,9 @@ import {
 } from "@ant-design/icons";
 import Stats from "@/components/LayoutDashboard/stats";
 import QuickActions from "@/components/LayoutDashboard/Quick-Actions";
-
-
 import { supabase } from "@/lib/supabase";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
+import { useQuizModeStore } from "@/store/useQuizModeStore";
 
 const difficultyColor: Record<string, string> = {
   Easy:   "!bg-cyan-50 !text-cyan-700 !border-cyan-200",
@@ -25,14 +24,15 @@ export default function Page() {
   const t = useTranslations("dashboard");
   const { user } = useAuth();
   const router = useRouter();
+  const locale = useLocale();
+  const { setMode } = useQuizModeStore();
+
   const username = user?.user_metadata?.firstname || user?.email?.split("@")[0] || "User";
 
   const [recentActivity, setRecentActivity] = useState<any[]>([]);
   const [recommendedQuizzes, setRecommendedQuizzes] = useState<any[]>([]);
   const [loadingActivity, setLoadingActivity] = useState(true);
   const [loadingRecommended, setLoadingRecommended] = useState(true);
-
-  
 
   useEffect(() => {
     if (!user) return;
@@ -91,14 +91,19 @@ export default function Page() {
             <p className="text-white/70 text-sm mt-1">{t("subtitle")}</p>
           </div>
           <div className="relative z-10 flex gap-2 flex-shrink-0">
+            {/* Parcourir les quiz */}
             <button
-              onClick={() => router.push("/browse-quiz")}
+              onClick={() => router.push(`/${locale}/browse-quiz`)}
               className="px-4 py-2 rounded-xl text-xs font-bold bg-white/15 text-white border border-white/25 hover:bg-white/25 transition-all"
             >
               {t("browseQuizzes")}
             </button>
+            {/* Générer avec l'IA → mode "ai" */}
             <button
-              onClick={() => router.push("/create-quiz/manuelQuiz")}
+              onClick={() => {
+                setMode("ai");
+                router.push(`/${locale}/create-quiz`);
+              }}
               className="px-4 py-2 rounded-xl text-xs font-bold bg-white text-cyan-600 hover:bg-cyan-50 transition-all shadow-sm"
             >
               ✨ {t("generateAI")}
@@ -122,7 +127,6 @@ export default function Page() {
                 <h2 className="text-base font-bold text-gray-800 dark:text-white">
                   {t("recentActivity")}
                 </h2>
-                
               </div>
               <ClockCircleOutlined className="text-cyan-400 text-base" />
             </div>
@@ -180,15 +184,12 @@ export default function Page() {
             <Card
               className="!rounded-2xl !border !border-cyan-100 !shadow-sm !bg-white dark:!bg-slate-800 dark:!border-slate-700"
               styles={{ body: { padding: "20px" } }}
-              
             >
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-base font-bold text-gray-800 dark:text-white">
                   {t("recommended")}
                 </h2>
-                <Tag className="!rounded-full !text-xs !font-bold !bg-cyan-500 !text-white !border-0">
-                  AI ✨
-                </Tag>
+
               </div>
 
               {loadingRecommended ? (
@@ -223,7 +224,7 @@ export default function Page() {
                         <Button
                           size="small"
                           icon={<CaretRightOutlined />}
-                          onClick={() => router.push(`/play-quiz/${quiz.id}`)}
+                          onClick={() => router.push(`/${locale}/play-quiz/${quiz.id}`)}
                           className="!bg-gradient-to-r !from-cyan-500 !to-teal-400 !text-white !border-0 !rounded-lg opacity-0 group-hover:opacity-100 transition-all"
                         />
                       </div>
@@ -235,7 +236,7 @@ export default function Page() {
               <Button
                 block
                 icon={<ThunderboltOutlined />}
-                onClick={() => router.push("/browse")}
+                onClick={() => router.push(`/${locale}/browse-quiz`)}
                 className="!mt-4 !bg-gradient-to-r !from-cyan-500 !to-teal-400 !text-white !border-0 !rounded-xl !font-bold hover:!opacity-90"
               >
                 {t("getMore")}

@@ -3,7 +3,9 @@ export type Difficulty = "Easy" | "Medium" | "Hard" | "Mixed";
 export interface QuizFormState {
   prompt: string;
   category: string;
+  customCategory: string;
   language: string;
+  customLanguage: string;
   difficulty: Difficulty;
   numQuestions: string;
   customQuestions: number | null;
@@ -15,7 +17,9 @@ export interface QuizFormState {
 export const DEFAULT_FORM_STATE: QuizFormState = {
   prompt: "",
   category: "Technology",
+  customCategory: "",
   language: "English",
+  customLanguage: "",
   difficulty: "Medium",
   numQuestions: "15",
   customQuestions: null,
@@ -43,6 +47,7 @@ export const CATEGORIES = [
   { value: "Science",    label: "Science" },
   { value: "History",    label: "History" },
   { value: "Math",       label: "Math" },
+  { value: "Custom",     label: "✏️ Custom" },
 ];
 
 export const LANGUAGES = [
@@ -50,4 +55,5 @@ export const LANGUAGES = [
   { value: "French",  label: "🇫🇷 French" },
   { value: "Spanish", label: "🇪🇸 Spanish" },
   { value: "Arabic",  label: "🇸🇦 Arabic" },
+  { value: "Custom",  label: "✏️ Custom" },
 ];

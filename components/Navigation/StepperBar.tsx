@@ -38,13 +38,11 @@ export default function StepperBar({
   const [reviewLoading, setReviewLoading] = useState(false);
   const [reviewResult,  setReviewResult]  = useState<any>(null);
 
-  // ── Keep draftData always up-to-date (avoid stale closure) ───────────────
   const draftDataRef = useRef<DraftData | undefined>(draftData);
   useEffect(() => { draftDataRef.current = draftData; }, [draftData]);
 
   const savedDraftId = useRef<string | undefined>(draftData?.draftId);
 
-  // Sync savedDraftId if draftData.draftId changes from outside
   useEffect(() => {
     if (draftData?.draftId) savedDraftId.current = draftData.draftId;
   }, [draftData?.draftId]);
@@ -60,21 +58,20 @@ export default function StepperBar({
     if (!user) { message.error("You must be logged in."); return; }
     setSavingDraft(true);
 
-    // ── Always read from ref, never from stale closure ────────────────────
     const current = draftDataRef.current;
     console.log("Saving draft with questions:", current?.questions);
 
     try {
       const payload = {
-        user_id:          user.id,
-        title:            current?.title           || "Untitled Quiz",
-        description:      current?.description     || "",
-      difficulty: (current?.difficulty || "medium").toLowerCase(),
-        questions:        current?.questions       || [],
-        time_per_question: current?.timePerQuestion ?? 20,
-        cover_image:      current?.coverImage      || null,
-        current_step:     currentStep,
-        saved_at:         new Date().toISOString(),
+        user_id:           user.id,
+        title:             current?.title            || "Untitled Quiz",
+        description:       current?.description      || "",
+        difficulty:        (current?.difficulty || "medium").toLowerCase(),
+        questions:         current?.questions        || [],
+        time_per_question: current?.timePerQuestion  ?? 20,
+        cover_image:       current?.coverImage       || null,
+        current_step:      currentStep,
+        saved_at:          new Date().toISOString(),
       };
 
       let draftId = savedDraftId.current;
@@ -136,15 +133,23 @@ export default function StepperBar({
     }
   };
 
+  // ✅ Publie le quiz (appelé UNIQUEMENT par le bouton ✅ quand score OK)
   const handleApproveAndPublish = () => {
     setReviewOpen(false);
     onPublish?.({ status: "published", aiScore: reviewResult?.score ?? null, aiRemarks: reviewResult?.remarks ?? null });
   };
 
+  // ✅ Envoie à l'admin (bouton "Send to admin anyway")
   const handleForcePublish = () => {
     setReviewOpen(false);
     onPublish?.({ status: "pending_admin", aiScore: reviewResult?.score ?? null, aiRemarks: reviewResult?.remarks ?? null });
     message.info("Quiz envoyé à l'admin. Statut 'En attente' visible dans vos paramètres.");
+  };
+
+  // ✅ Ferme juste le modal — NE sauvegarde PAS, reste sur la page de configuration
+  const handleJustClose = () => {
+    setReviewOpen(false);
+    // Ne pas appeler onPublish — le quiz rejeté ne doit pas être sauvegardé
   };
 
   return (
@@ -178,11 +183,15 @@ export default function StepperBar({
           </div>
         </div>
       </div>
+
       <AIReviewModal
-        open={reviewOpen} result={reviewResult} loading={reviewLoading}
-        onFix={() => setReviewOpen(false)}
-        onForcePublish={handleForcePublish}
-        onClose={handleApproveAndPublish}
+        open={reviewOpen}
+        result={reviewResult}
+        loading={reviewLoading}
+        onFix={() => setReviewOpen(false)}          // ✏️ Fix = fermer, rester sur la page
+        onForcePublish={handleForcePublish}          // 📤 Envoyer à l'admin
+        onClose={handleJustClose}                    // ✅ X / overlay = fermer SANS sauvegarder
+        onApprove={handleApproveAndPublish}          // ✅ Bouton publier = sauvegarder
       />
     </>
   );

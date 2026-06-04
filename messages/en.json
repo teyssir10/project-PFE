@@ -268,7 +268,9 @@
     "noQuizYet": "No quiz generated yet",
     "noQuizSub": "Fill in the form and click",
     "noQuizBtn": "Generate Quiz",
-    "noQuizSub2": "to create your questions instantly."
+    "noQuizSub2": "to create your questions instantly.",
+    "customCategoryPlaceholder": "Enter a category...",
+    "customLanguagePlaceholder": "Enter a language..."
   },
   
   "manualQuiz": {
@@ -291,7 +293,12 @@
     "perQuestion": "s per question",
     "back": "← Back",
     "continue": "Continue to Questions",
-    "alertTitle": "Please enter a quiz title"
+    "alertTitle": "Please enter a quiz title",
+    "editMode": "Edit Mode",
+    "editTitle": "Edit Quiz",
+    "editSubtitle": "Update your quiz settings and questions",
+    "editNext": "Next: Edit Questions",
+    "loadingQuiz": "Loading quiz…"
   },
   "categorySelector": {
     "science": "🔬 Science",
@@ -391,7 +398,8 @@
     "selectCorrect": "Please select a correct answer for each question",
     "enterShortAnswer": "Please enter the correct answer for short answer questions",
     "saveSuccess": "Quiz saved successfully! 🎉",
-    "saveError": "Error: "
+    "saveError": "Error: ",
+     "loadingDraft": "Loading draft..."
   },
   
   "browsePage": {
@@ -429,7 +437,8 @@
     "next": "Next question →",
     "finish": "🎉 Finish",
     "quizNotFound": "Quiz not found.",
-    "goBack": "Go back"
+    "goBack": "Go back",
+    "changeOrConfirm": "Change or confirm your answer"
   },
   "quizSidebarPlay": {
     "questions": "Questions",
@@ -675,6 +684,7 @@
     "no_results": "No players match your search",
     "anonymous": "Anonymous",
     "you": "You"
+    
   },
  "settings": {
     "title": "Settings",
@@ -692,9 +702,12 @@
     },
     "profile": {
       "firstName": "First name",
-      "lastName": "Last name",
-      "email": "Email address",
-      "bio": "Bio"
+    "lastName": "Last name",
+    "email": "Email address",
+    "country": "Country",
+    "countryPlaceholder": "e.g. Tunisia",
+    "region": "Region",
+    "regionPlaceholder": "e.g. Tunis"
     },
     "security": {
       "currentPwd": "Current password",
@@ -999,6 +1012,15 @@
     "userMode": "User Mode",
     "logout": "Log out",
     "mobileTitle": "PandoMind Admin"
+  },
+  "landingLeaderboard": {
+    "title": "Leaderboard",
+    "subtitle": "Discover the best players and climb the rankings",
+    "rank": "Rank",
+    "user": "User",
+    "score": "Score",
+    "quizzes": "Quizzes",
+    "empty": "No players yet"
   }
 
   }

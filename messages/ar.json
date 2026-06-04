@@ -267,7 +267,9 @@
     "noQuizYet": "لم يتم توليد اختبار بعد",
     "noQuizSub": "املأ النموذج وانقر على",
     "noQuizBtn": "توليد الاختبار",
-    "noQuizSub2": "لإنشاء أسئلتك فوراً."
+    "noQuizSub2": "لإنشاء أسئلتك فوراً.",
+     "customCategoryPlaceholder": "أدخل فئة...",
+    "customLanguagePlaceholder": "أدخل لغة..."
   },
   
   "manualQuiz": {
@@ -290,7 +292,12 @@
     "perQuestion": "ث لكل سؤال",
     "back": "→ رجوع",
     "continue": "المتابعة إلى الأسئلة",
-    "alertTitle": "الرجاء إدخال عنوان الاختبار"
+    "alertTitle": "الرجاء إدخال عنوان الاختبار",
+    "editMode": "وضع التعديل",
+    "editTitle": "تعديل الاختبار",
+    "editSubtitle": "حدّث إعدادات اختبارك وأسئلته",
+    "editNext": "التالي: تعديل الأسئلة",
+    "loadingQuiz": "جارٍ تحميل الاختبار..."
   },
   "categorySelector": {
     "science": "🔬 العلوم",
@@ -390,7 +397,8 @@
     "selectCorrect": "يرجى اختيار إجابة صحيحة لكل سؤال",
     "enterShortAnswer": "يرجى إدخال الإجابة الصحيحة للأسئلة ذات الإجابة القصيرة",
     "saveSuccess": "تم حفظ الاختبار بنجاح! 🎉",
-    "saveError": "خطأ: "
+    "saveError": "خطأ: ",
+    "loadingDraft": "جارٍ تحميل المسودة..."
   },
   
   "browsePage": {
@@ -428,7 +436,8 @@
     "next": "السؤال التالي →",
     "finish": "🎉 إنهاء",
     "quizNotFound": "الاختبار غير موجود.",
-    "goBack": "رجوع"
+    "goBack": "رجوع",
+    "changeOrConfirm": "تغيير أو تأكيد إجابتك"
   },
   "quizSidebarPlay": {
     "questions": "الأسئلة",
@@ -690,11 +699,14 @@
       "drafts": "المسودات",
       "myquizzes": "اختباراتي"
     },
-    "profile": {
+    "profile": { 
       "firstName": "الاسم الأول",
-      "lastName": "اسم العائلة",
-      "email": "البريد الإلكتروني",
-      "bio": "نبذة شخصية"
+    "lastName": "اسم العائلة",
+    "email": "البريد الإلكتروني",
+    "country": "البلد",
+    "countryPlaceholder": "مثال: تونس",
+    "region": "المنطقة",
+    "regionPlaceholder": "مثال: تونس العاصمة"
     },
     "security": {
       "currentPwd": "كلمة المرور الحالية",
@@ -1005,7 +1017,18 @@
     "userMode": "وضع المستخدم",
     "logout": "تسجيل الخروج",
     "mobileTitle": "PandoMind Admin"
+  },
+    "landingLeaderboard": {
+    "title": "لوحة المتصدرين",
+    "subtitle": "اكتشف أفضل اللاعبين وتسلق التصنيفات",
+    "rank": "الترتيب",
+    "user": "المستخدم",
+    "score": "النقاط",
+    "quizzes": "الاختبارات",
+    "empty": "لا يوجد لاعبون بعد"
   }
+
+  
 }
 
 

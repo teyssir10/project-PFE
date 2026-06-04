@@ -127,7 +127,7 @@ export default function QuizSettingsPage() {
         })
         .eq("id", editId);
 
-      if (error) { alert("Failed to update quiz"); return; }
+      if (error) { alert(t("updateError")); return; }
 
       setQuizData({
         title,
@@ -166,11 +166,11 @@ export default function QuizSettingsPage() {
   );
 
   const summaryItems = [
-    { label: t("summaryTitle"),      value: title || "—"                                              },
-    { label: t("summaryDifficulty"), value: difficulty                                                },
+    { label: t("summaryTitle"),      value: title || "—"                                               },
+    { label: t("summaryDifficulty"), value: difficulty                                                 },
     { label: t("summaryCategory"),   value: isCustomCategory ? customCategory || "—" : category || "—" },
-    { label: t("summaryTimer"),      value: `${time}${t("perQuestion")}`                              },
-    { label: t("summaryCover"),      value: coverImage ? t("uploaded") : "—"                          },
+    { label: t("summaryTimer"),      value: `${time}${t("perQuestion")}`                               },
+    { label: t("summaryCover"),      value: coverImage ? t("uploaded") : "—"                           },
   ];
 
   if (loading) {
@@ -179,7 +179,8 @@ export default function QuizSettingsPage() {
         <div className="flex flex-col items-center gap-4">
           <div className="w-10 h-10 border-4 border-cyan-500 border-t-transparent rounded-full animate-spin" />
           <p className="text-sm text-gray-400 dark:text-slate-500 font-medium">
-            {isEditMode ? "Loading quiz…" : "Loading draft…"}
+            {/* ✅ Traduit */}
+            {isEditMode ? t("loadingQuiz") : t("loadingDraft")}
           </p>
         </div>
       </div>
@@ -213,13 +214,16 @@ export default function QuizSettingsPage() {
               </div>
               <div>
                 <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-cyan-100 dark:bg-cyan-900/40 text-cyan-600 dark:text-cyan-400 text-xs font-bold tracking-widest uppercase mb-2 block">
-                  {isEditMode ? "✏️ Edit Mode" : t("step")}
+                  {/* ✅ Traduit */}
+                  {isEditMode ? `✏️ ${t("editMode")}` : t("step")}
                 </span>
                 <h1 className="text-3xl font-extrabold tracking-tight text-gray-900 dark:text-white">
-                  {isEditMode ? "Edit Quiz" : t("title")}
+                  {/* ✅ Traduit */}
+                  {isEditMode ? t("editTitle") : t("title")}
                 </h1>
                 <p className="text-sm text-gray-500 dark:text-slate-400 mt-1">
-                  {isEditMode ? "Update your quiz settings and questions" : t("subtitle")}
+                  {/* ✅ Traduit */}
+                  {isEditMode ? t("editSubtitle") : t("subtitle")}
                 </p>
               </div>
             </div>
@@ -335,7 +339,8 @@ export default function QuizSettingsPage() {
               disabled={!title.trim()}
               className="px-10 py-3.5 rounded-xl bg-cyan-500 hover:bg-cyan-400 disabled:opacity-40 disabled:cursor-not-allowed text-white font-bold text-sm transition-all shadow-lg shadow-cyan-500/20 flex items-center gap-2"
             >
-              {isEditMode ? "Next: Edit Questions" : t("continue")}
+              {/* ✅ Traduit */}
+              {isEditMode ? t("editNext") : t("continue")}
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
               </svg>

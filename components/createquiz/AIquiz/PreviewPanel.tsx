@@ -167,7 +167,7 @@ export default function PreviewPanel({ loading, questions, onReset, quizTitle, o
                   </div>
                   <div className="text-center">
                     <p className="text-sm font-semibold">Générer une image IA</p>
-                    <p className="text-xs mt-0.5 opacity-60">Powered by Pollinations AI</p>
+                    <p className="text-xs mt-0.5 opacity-60">Powered by Unsplash</p>
                   </div>
                 </button>
               )}

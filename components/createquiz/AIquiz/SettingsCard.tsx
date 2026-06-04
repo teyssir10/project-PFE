@@ -33,17 +33,49 @@ export default function SettingsCard({ form, loading, onUpdate, onGenerate }: Se
 
         {/* Category + Language */}
         <div className="grid grid-cols-2 gap-3">
+
+          {/* Category */}
           <div>
             <label className="block text-[10px] font-bold text-gray-400 dark:text-slate-500 tracking-widest uppercase mb-1.5">
               {t("category")}
             </label>
-            <Select value={form.category} onChange={(v) => onUpdate({ category: v })} className="w-full" options={CATEGORIES} />
+            <Select
+              value={form.category}
+              onChange={(v) => onUpdate({ category: v, customCategory: "" })}
+              className="w-full"
+              options={CATEGORIES}
+            />
+            {form.category === "Custom" && (
+              <input
+                type="text"
+                value={form.customCategory}
+                placeholder={t("customCategoryPlaceholder")}
+                className="mt-2 w-full px-3 py-2 text-sm rounded-xl border border-gray-200 dark:border-slate-600 bg-gray-50 dark:bg-slate-700 text-gray-800 dark:text-white outline-none focus:border-cyan-400 transition"
+                onChange={(e) => onUpdate({ customCategory: e.target.value })}
+              />
+            )}
           </div>
+
+          {/* Language */}
           <div>
             <label className="block text-[10px] font-bold text-gray-400 dark:text-slate-500 tracking-widest uppercase mb-1.5">
               {t("language")}
             </label>
-            <Select value={form.language} onChange={(v) => onUpdate({ language: v })} className="w-full" options={LANGUAGES} />
+            <Select
+              value={form.language}
+              onChange={(v) => onUpdate({ language: v, customLanguage: "" })}
+              className="w-full"
+              options={LANGUAGES}
+            />
+            {form.language === "Custom" && (
+              <input
+                type="text"
+                value={form.customLanguage}
+                placeholder={t("customLanguagePlaceholder")}
+                className="mt-2 w-full px-3 py-2 text-sm rounded-xl border border-gray-200 dark:border-slate-600 bg-gray-50 dark:bg-slate-700 text-gray-800 dark:text-white outline-none focus:border-cyan-400 transition"
+                onChange={(e) => onUpdate({ customLanguage: e.target.value })}
+              />
+            )}
           </div>
         </div>
 

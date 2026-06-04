@@ -8,8 +8,6 @@ import {
 } from "@ant-design/icons";
 import { useTranslations } from "next-intl";
 
-// Translations live in /messages/{locale}/aiReview.json (independent namespace)
-
 interface AIReviewResult {
   score: number;
   decision: "approve" | "needs_review" | "reject";
@@ -22,7 +20,8 @@ interface AIReviewModalProps {
   loading: boolean;
   onFix: () => void;
   onForcePublish: () => void;
-  onClose: () => void;
+  onClose: () => void;    
+  onApprove: () => void;  
 }
 
 const scoreConfig = {
@@ -53,7 +52,7 @@ const scoreConfig = {
 };
 
 export default function AIReviewModal({
-  open, result, loading, onFix, onForcePublish, onClose,
+  open, result, loading, onFix, onForcePublish, onClose, onApprove,
 }: AIReviewModalProps) {
   const t = useTranslations("aiReview");
   const config = result ? scoreConfig[result.decision] : null;
@@ -61,14 +60,14 @@ export default function AIReviewModal({
   return (
     <Modal
       open={open}
-      onCancel={onClose}
+      onCancel={onClose}        
       footer={null}
       centered
       width={480}
       closable={!loading}
-      mask={{ closable: false }}
+      mask={{ closable: !loading }}
     >
-      {/* Loading state */}
+     
       {loading && (
         <div className="flex flex-col items-center justify-center py-12 gap-4">
           <div className="w-14 h-14 rounded-full bg-cyan-50 dark:bg-cyan-900/20 flex items-center justify-center">
@@ -128,20 +127,23 @@ export default function AIReviewModal({
           {/* Actions */}
           <div className="flex flex-col gap-2 pt-1">
             {result.decision === "approve" ? (
+              // ✅ Score OK → bouton publie via onApprove (PAS onClose)
               <button
-                onClick={onClose}
+                onClick={onApprove}
                 className="w-full py-3 rounded-xl bg-emerald-500 text-white font-bold text-sm hover:bg-emerald-400 transition-all"
               >
                 ✅ {t("actions.publish")}
               </button>
             ) : (
               <>
+                {/* Corriger = fermer le modal, rester sur la page */}
                 <button
                   onClick={onFix}
                   className="w-full py-3 rounded-xl bg-cyan-500 text-white font-bold text-sm hover:bg-cyan-400 transition-all"
                 >
                   ✏️ {t("actions.fix")}
                 </button>
+                {/* Envoyer à l'admin quand même */}
                 <button
                   onClick={onForcePublish}
                   className="w-full py-3 rounded-xl border border-gray-200 dark:border-slate-700 text-gray-500 dark:text-slate-400 font-semibold text-sm hover:bg-gray-50 dark:hover:bg-slate-800 transition-all"
