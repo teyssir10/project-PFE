@@ -225,7 +225,20 @@
         "hoursAgo": "{count}h ago",
         "yesterday": "Yesterday",
         "daysAgo": "{count} days ago"
-      }
+       
+      },
+       "pages": {
+    "dashboard": "Dashboard",
+    "browseQuiz": "Browse Quiz",
+    "createQuiz": "Create Quiz",
+    "analytics": "Analytics",
+    "leaderboard": "Leaderboard",
+    "settings": "Settings",
+    "multiplayer": "Multiplayer",
+    "lobby": "Waiting Room",
+    "profile": "Profile",
+    "playQuiz": "Play Quiz"
+  }
   },
   "stepper": {
     "aiStep1": "Configure quiz",
@@ -321,7 +334,8 @@
     "editTitle": "Edit Quiz",
     "editSubtitle": "Update your quiz settings and questions",
     "editNext": "Next: Edit Questions",
-    "loadingQuiz": "Loading quiz…"
+    "loadingQuiz": "Loading quiz…",
+    "loadingDraft": "Loading draft..."
   },
   "categorySelector": {
     "science": "🔬 Science",

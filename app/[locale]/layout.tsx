@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "../globals.css";
 import { AuthProvider } from "@/lib/auth";
-import { ThemeProvider } from "@/components/ThemeProvider/page";
+import { ThemeProvider } from "@/components/ThemeProvider/index";
 import { AntdProvider } from "@/components/AntdProvider/page";
 import { App } from "antd";
 import { NextIntlClientProvider } from "next-intl";

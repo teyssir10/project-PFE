@@ -17,9 +17,9 @@ interface SaveQuizParams {
   aiScore?: number | null;
   aiRemarks?: string[] | null;
   editId?: string | null;
+  draftId?: string | null; // ✅ nouveau — supprime le brouillon après publication
 }
 
-// ✅ Normalise "medium" → "Medium", "HARD" → "Hard", etc.
 const capitalizeDifficulty = (s: string): string =>
   s ? s.charAt(0).toUpperCase() + s.slice(1).toLowerCase() : "Medium";
 
@@ -39,20 +39,27 @@ function calcDuration(questionCount: number, timePerQuestion: string): number {
 
 function detectQuestionType(questions: Question[]): string {
   if (!questions || questions.length === 0) return "multiple_choice";
-
   const normalize = (type: string): string => {
     if (type === "short")    return "short_answer";
     if (type === "tf")       return "true_false";
     if (type === "multiple") return "multiple_choice";
     return type;
   };
-
   const types = new Set(questions.map((q) => normalize(q.type)));
-
   if (types.size > 1)               return "mixed";
   if (types.has("true_false"))      return "true_false";
   if (types.has("short_answer"))    return "short_answer";
   return "multiple_choice";
+}
+
+// ✅ Supprime le brouillon si draftId fourni
+async function deleteDraftIfExists(draftId?: string | null) {
+  if (!draftId) return;
+  const { error } = await supabase
+    .from("quiz_drafts")
+    .delete()
+    .eq("id", draftId);
+  if (error) console.warn("Could not delete draft:", error.message);
 }
 
 export async function saveQuiz({
@@ -71,9 +78,10 @@ export async function saveQuiz({
   aiScore = null,
   aiRemarks = null,
   editId = null,
+  draftId = null, // ✅
 }: SaveQuizParams): Promise<void> {
 
-  const safeDifficulty = capitalizeDifficulty(quizDifficulty); // ✅ normalisé une fois
+  const safeDifficulty = capitalizeDifficulty(quizDifficulty);
   const questionType   = detectQuestionType(questions);
 
   // ── MODE EDIT ──────────────────────────────────────────────────────────
@@ -82,7 +90,7 @@ export async function saveQuiz({
       .from("quizzes")
       .update({
         title:             quizTitle,
-        difficulty:        safeDifficulty,        // ✅
+        difficulty:        safeDifficulty,
         cover_image:       coverImage ?? null,
         question_count:    questions.length,
         time_per_question: parseInt(timePerQuestion) || 30,
@@ -110,7 +118,7 @@ export async function saveQuiz({
           type:              q.type,
           time_limit:        getEffectiveTimeLimit(q),
           points:            q.points,
-          difficulty:        safeDifficulty,      // ✅
+          difficulty:        safeDifficulty,
           indice:            q.indice || null,
           correct_answer:    q.type === "short" ? (q.correctAnswer?.trim() || null) : null,
           order_index:       i,
@@ -119,6 +127,9 @@ export async function saveQuiz({
         } as any);
       if (qError) throw qError;
     }
+
+    // ✅ Supprime le brouillon après édition réussie
+    await deleteDraftIfExists(draftId);
     return;
   }
 
@@ -129,7 +140,7 @@ export async function saveQuiz({
       title:             quizTitle,
       creator_id:        userId,
       creator_name:      `${userFirstname} ${userLastname}`.trim(),
-      difficulty:        safeDifficulty,          // ✅
+      difficulty:        safeDifficulty,
       cover_image:       coverImage ?? null,
       question_count:    questions.length,
       time_per_question: parseInt(timePerQuestion) || 30,
@@ -163,7 +174,7 @@ export async function saveQuiz({
         type:              q.type,
         time_limit:        getEffectiveTimeLimit(q),
         points:            q.points,
-        difficulty:        safeDifficulty,        // ✅
+        difficulty:        safeDifficulty,
         indice:            q.indice || null,
         correct_answer:    q.type === "short" ? (q.correctAnswer?.trim() || null) : null,
         order_index:       i,
@@ -172,4 +183,7 @@ export async function saveQuiz({
       } as any);
     if (qError) throw qError;
   }
+
+  // ✅ Supprime le brouillon après création réussie
+  await deleteDraftIfExists(draftId);
 }

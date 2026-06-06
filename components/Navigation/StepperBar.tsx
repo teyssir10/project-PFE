@@ -74,7 +74,7 @@ export default function StepperBar({
         user_id:           user.id,
         title:             current?.title           || "Untitled Quiz",
         description:       current?.description     || "",
-        difficulty:        capitalizeDifficulty(current?.difficulty || "Medium"),
+        difficulty:        (current?.difficulty || "medium").toLowerCase(),
         questions:         current?.questions       || [],
         time_per_question: current?.timePerQuestion ?? 20,
         cover_image:       current?.coverImage      ?? null,
@@ -82,23 +82,59 @@ export default function StepperBar({
         current_step:      currentStep,
         saved_at:          new Date().toISOString(),
       };
+
+      // ✅ Log du payload pour diagnostiquer
+      console.log("📦 Draft payload:", JSON.stringify(payload, null, 2));
+
       let draftId = savedDraftId.current;
       if (draftId) {
-        const { error } = await supabase.from("quiz_drafts").update(payload).eq("id", draftId).eq("user_id", user.id);
-        if (error) throw error;
+        const { error } = await supabase
+          .from("quiz_drafts")
+          .update(payload)
+          .eq("id", draftId)
+          .eq("user_id", user.id);
+
+        if (error) {
+          // ✅ Log détaillé de l'erreur Supabase
+          console.error("Supabase UPDATE error:", {
+            message: error.message,
+            details: error.details,
+            hint:    error.hint,
+            code:    error.code,
+          });
+          throw error;
+        }
       } else {
-        const { data, error } = await supabase.from("quiz_drafts").insert(payload).select("id").single();
-        if (error) throw error;
+        const { data, error } = await supabase
+          .from("quiz_drafts")
+          .insert(payload)
+          .select("id")
+          .single();
+
+        if (error) {
+          // ✅ Log détaillé de l'erreur Supabase
+          console.error("Supabase INSERT error:", {
+            message: error.message,
+            details: error.details,
+            hint:    error.hint,
+            code:    error.code,
+          });
+          throw error;
+        }
+
         draftId = (data as { id: string }).id;
         savedDraftId.current = draftId;
         onDraftSaved?.(draftId);
       }
+
       setDraftSaved(true);
       message.success("Draft saved!");
       setTimeout(() => setDraftSaved(false), 3000);
-    } catch (err) {
-      console.error("Save draft error:", err);
-      message.error("Failed to save draft.");
+    } catch (err: any) {
+      // ✅ Affiche l'erreur réelle dans le message utilisateur
+      const errMsg = err?.message || err?.details || JSON.stringify(err) || "Unknown error";
+      console.error("Save draft error (full):", err);
+      message.error(`Failed to save draft: ${errMsg}`);
     } finally {
       setSavingDraft(false);
     }
@@ -153,7 +189,6 @@ export default function StepperBar({
                   <span className={`w-2 h-2 rounded-full shrink-0 transition-all ${
                     isDone ? "bg-cyan-400" : isActive ? "bg-cyan-500 ring-2 ring-cyan-200 dark:ring-cyan-800" : "bg-gray-300 dark:bg-slate-600"
                   }`} />
-                  {/* Full label on md+, short on mobile */}
                   <span className={`text-xs font-medium whitespace-nowrap ${
                     isActive ? "text-gray-800 dark:text-white" : isDone ? "text-cyan-500" : "text-gray-400 dark:text-slate-500"
                   }`}>

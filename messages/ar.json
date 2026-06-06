@@ -224,7 +224,21 @@
         "hoursAgo": "منذ {count} ساعة",
         "yesterday": "أمس",
         "daysAgo": "منذ {count} أيام"
-      }
+        
+        
+      },
+      "pages": {
+    "dashboard": "لوحة التحكم",
+    "browseQuiz": "تصفح الاختبارات",
+    "createQuiz": "إنشاء اختبار",
+    "analytics": "التحليلات",
+    "leaderboard": "المتصدرون",
+    "settings": "الإعدادات",
+    "multiplayer": "متعدد اللاعبين",
+    "lobby": "غرفة الانتظار",
+    "profile": "الملف الشخصي",
+    "playQuiz": "لعب"
+  }
   },
   "stepper": {
     "aiStep1": "ضبط الاختبار",
@@ -320,7 +334,8 @@
     "editTitle": "تعديل الاختبار",
     "editSubtitle": "حدّث إعدادات اختبارك وأسئلته",
     "editNext": "التالي: تعديل الأسئلة",
-    "loadingQuiz": "جارٍ تحميل الاختبار..."
+    "loadingQuiz": "جارٍ تحميل الاختبار...",
+    "loadingDraft": "جاري تحميل المسودة..."
   },
   "categorySelector": {
     

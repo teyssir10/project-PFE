@@ -73,12 +73,12 @@ function SidebarContent({ questions, currentIndex, statuses, onJump, answered, s
         ))}
       </div>
 
-      {/* Mascot — desktop only */}
-      <div className="hidden md:block absolute pointer-events-none select-none z-10">
-        <Image src={play} alt="PandoMind mascot" width={180} height={180} className="object-contain drop-shadow-xl" priority />
-      </div>
-
       <div className="mt-auto">
+        {/* Mascot — just above progress bar */}
+        <div className="hidden md:flex justify-center mb-1 mt-4 pointer-events-none select-none">
+          <Image src={play} alt="PandoMind mascot" width={120} height={120} className="object-contain drop-shadow-xl" priority />
+        </div>
+
         <div className="flex justify-between text-xs mb-2">
           <span className="text-gray-400 dark:text-slate-500 font-medium">{t("progress")}</span>
           <span className="font-bold text-cyan-500">{progress}%</span>

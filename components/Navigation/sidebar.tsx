@@ -70,10 +70,10 @@ function NavLinks({ onClickItem }: { onClickItem?: () => void }) {
                 key={item.href}
                 href={item.href}
                 onClick={onClickItem}
-                className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 font-medium text-sm group
+                className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 font-medium text-sm group no-underline
                   ${isActive
-                    ? "bg-cyan-50 dark:bg-cyan-900/30 text-cyan-600 dark:text-white"
-                    : "text-gray-700 dark:text-white hover:bg-gray-50 dark:hover:bg-slate-700/50 hover:text-cyan-500 dark:hover:text-cyan-400"
+                    ? "!text-cyan-600 dark:!text-white bg-cyan-50 dark:bg-cyan-900/30"
+                    : "!text-gray-700 dark:!text-white hover:bg-gray-50 dark:hover:bg-slate-700/50 hover:!text-cyan-500 dark:hover:!text-cyan-400"
                   }`}
               >
                 <Icon className="text-lg flex-shrink-0 group-hover:scale-110 transition-transform" />

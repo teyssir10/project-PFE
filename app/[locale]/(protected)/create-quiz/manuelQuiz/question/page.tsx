@@ -15,10 +15,11 @@ import { useResumeDraft } from "@/hooks/Useresumedraft";
 import { useSearchParams } from "next/navigation";
 import { getQuizWithQuestions } from "@/lib/api/quiz";
 import { useLocale } from "next-intl";
+import { supabase } from "@/lib/supabase";
 
 export default function ManualQuiz() {
   const searchParams = useSearchParams();
-  const editId = searchParams.get("edit"); // ✅ used to detect edit mode
+  const editId = searchParams.get("edit");
   const t = useTranslations("manualQuizEditor");
   const tStepper = useTranslations("stepper");
   const { message } = useAntdApp();
@@ -114,8 +115,23 @@ export default function ManualQuiz() {
         status:    publishResult?.status    ?? "published",
         aiScore:   publishResult?.aiScore   ?? null,
         aiRemarks: publishResult?.aiRemarks ?? null,
-        editId:    editId ?? null, // ✅ passes editId → saveQuiz does UPDATE not INSERT
+        editId:    editId ?? null,
       });
+
+      // ✅ Supprime le brouillon après publication réussie
+      const resolvedDraftId = draftId ?? urlDraftId;
+      if (resolvedDraftId && user) {
+        const { error: deleteError } = await supabase
+          .from("quiz_drafts")
+          .delete()
+          .eq("id", resolvedDraftId)
+          .eq("user_id", user.id);
+
+        if (deleteError) {
+          console.warn("Draft deletion failed:", deleteError.message);
+          // On ne bloque pas la publication si la suppression échoue
+        }
+      }
 
       if (publishResult?.status === "pending_admin") {
         router.push(`/${locale}/settings`);

@@ -180,16 +180,23 @@ export default function Topbar({ username }: TopbarProps) {
     </div>
   )
 
-  const pageNames: Record<string, string> = {
-    "dashboard": "Dashboard", "browse-quiz": "Browse Quiz", "create-quiz": "Create Quiz",
-    "analytics": "Analytics", "leaderboard": "Leaderboard", "settings": "Settings",
-    "room": "Multiplayer", "multiplayerroom": "Multiplayer", "lobby": "Waiting Room",
-    "profile": "Profile", "play-quiz": "Play Quiz", "play": "Play Quiz",
-  }
-
   const formatName = (pathname: string) => {
+    const pageNames: Record<string, string> = {
+      "dashboard":       t("pages.dashboard"),
+      "browse-quiz":     t("pages.browseQuiz"),
+      "create-quiz":     t("pages.createQuiz"),
+      "analytics":       t("pages.analytics"),
+      "leaderboard":     t("pages.leaderboard"),
+      "settings":        t("pages.settings"),
+      "room":            t("pages.multiplayer"),
+      "multiplayerroom": t("pages.multiplayer"),
+      "lobby":           t("pages.lobby"),
+      "profile":         t("pages.profile"),
+      "play-quiz":       t("pages.playQuiz"),
+      "play":            t("pages.playQuiz"),
+    }
     const segments = pathname.split("/").filter(Boolean)
-    if (segments.length === 0) return "Dashboard"
+    if (segments.length === 0) return t("pages.dashboard")
     for (let i = segments.length - 1; i >= 0; i--) {
       if (pageNames[segments[i]]) return pageNames[segments[i]]
     }

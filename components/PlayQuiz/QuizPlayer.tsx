@@ -13,6 +13,20 @@ const isCorrect = (val: any): boolean => val === true || val === "true";
 export default function QuizPlayer({ quiz }: { quiz: QuizFull }) {
   const t = useTranslations("quizPlay");
   const router = useRouter();
+
+  // ── Countdown 3-2-1 ─────────────────────────────────────────────────────
+  const [countdown, setCountdown] = useState<number | null>(3);
+
+  useEffect(() => {
+    if (countdown === null) return;
+    if (countdown === 0) { setCountdown(null); return; }
+    const timer = setTimeout(() => setCountdown(c => (c ?? 1) - 1), 1000);
+    return () => clearTimeout(timer);
+  }, [countdown]);
+
+  const isCountingDown = countdown !== null;
+  // ────────────────────────────────────────────────────────────────────────
+
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selected, setSelected] = useState<string | null>(null);
   const [confirmed, setConfirmed] = useState(false);
@@ -24,21 +38,12 @@ export default function QuizPlayer({ quiz }: { quiz: QuizFull }) {
     Array(quiz.questions.length).fill("unanswered")
   );
 
-  const question = quiz.questions[currentIndex];
-  const isLast   = currentIndex === quiz.questions.length - 1;
-
-  if (!question) {
-    return (
-      <div className="flex items-center justify-center h-screen text-gray-500">
-        {t("noQuestions")}
-      </div>
-    );
-  }
-
-  const hint      = question.indice;
-  const isLocked  = statuses[currentIndex] !== "unanswered";
-  const isShort   = question.type === "short" || question.type === "short_answer";
-  const isTrueFalse = question.type === "tf" || question.type === "true_false";
+  const question    = quiz.questions[currentIndex];
+  const isLast      = currentIndex === quiz.questions.length - 1;
+  const hint        = question?.indice;
+  const isLocked    = statuses[currentIndex] !== "unanswered";
+  const isShort     = question?.type === "short" || question?.type === "short_answer";
+  const isTrueFalse = question?.type === "tf"    || question?.type === "true_false";
 
   const goNext = useCallback(() => {
     if (isLast) {
@@ -61,8 +66,9 @@ export default function QuizPlayer({ quiz }: { quiz: QuizFull }) {
     goNext();
   }, [isLocked, statuses, currentIndex, goNext]);
 
+  // Timer — blocked during countdown
   useEffect(() => {
-    if (isLocked) return;
+    if (isLocked || isCountingDown) return;
     if (timeLeft === 0) {
       const newStatuses = [...statuses];
       newStatuses[currentIndex] = "wrong";
@@ -73,7 +79,7 @@ export default function QuizPlayer({ quiz }: { quiz: QuizFull }) {
     }
     const timer = setTimeout(() => setTimeLeft(p => p - 1), 1000);
     return () => clearTimeout(timer);
-  }, [timeLeft, isLocked]);
+  }, [timeLeft, isLocked, isCountingDown]);
 
   const handleSelect = (opt: PlayOption) => {
     if (isLocked || confirmed) return;
@@ -104,12 +110,64 @@ export default function QuizPlayer({ quiz }: { quiz: QuizFull }) {
     setConfirmed(true);
   };
 
+  if (!question) {
+    return <div className="flex items-center justify-center h-screen text-gray-500">{t("noQuestions")}</div>;
+  }
+
   const answeredCount = statuses.filter(s => s === "correct" || s === "wrong").length;
   const skippedCount  = statuses.filter(s => s === "skipped").length;
   const remaining     = statuses.filter(s => s === "unanswered").length;
   const isTimeout     = selected === "__timeout__";
   const wasAnswered   = confirmed;
   const canConfirm    = isShort ? shortInput.trim().length > 0 : !!selected;
+
+  // ── Countdown overlay ────────────────────────────────────────────────────
+  if (isCountingDown) {
+    return (
+      <div className="fixed inset-0 z-50 flex flex-col items-center justify-center
+        bg-gradient-to-br from-gray-50 via-cyan-50/30 to-teal-50/20
+        dark:from-slate-950 dark:via-slate-900 dark:to-slate-950">
+
+        {/* Animated ring */}
+        <div className="relative flex items-center justify-center mb-8">
+          <svg className="w-44 h-44 -rotate-90" viewBox="0 0 120 120">
+            <circle cx="60" cy="60" r="50" fill="none"
+              stroke="#e2e8f0" className="dark:stroke-[#164e63]" strokeWidth="8" />
+            <circle cx="60" cy="60" r="50" fill="none"
+              stroke="#06b6d4" strokeWidth="8"
+              strokeLinecap="round"
+              strokeDasharray={`${2 * Math.PI * 50}`}
+              strokeDashoffset={`${2 * Math.PI * 50 * ((countdown ?? 0) / 3)}`}
+              style={{ transition: "stroke-dashoffset 0.9s linear" }}
+            />
+          </svg>
+          <div className="absolute flex flex-col items-center">
+            <span
+              key={countdown}
+              className="text-7xl font-black text-gray-900 dark:text-white leading-none"
+              style={{ animation: "countPop 0.35s cubic-bezier(0.34,1.56,0.64,1)" }}
+            >
+              {countdown === 0 ? "GO!" : countdown}
+            </span>
+          </div>
+        </div>
+
+        <p className="text-cyan-500 dark:text-cyan-400 text-sm font-bold tracking-widest uppercase mb-2">
+          Get Ready!
+        </p>
+        <p className="text-gray-900 dark:text-white font-extrabold text-xl text-center px-8">{quiz.title}</p>
+        <p className="text-gray-400 dark:text-slate-500 text-xs mt-2">{quiz.questions.length} questions</p>
+
+        <style>{`
+          @keyframes countPop {
+            0%   { transform: scale(2); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+          }
+        `}</style>
+      </div>
+    );
+  }
+  // ─────────────────────────────────────────────────────────────────────────
 
   return (
     <div className="flex h-screen bg-gradient-to-br from-slate-50 via-cyan-50/30 to-teal-50/30 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 overflow-hidden">
@@ -146,10 +204,8 @@ export default function QuizPlayer({ quiz }: { quiz: QuizFull }) {
           onExit={() => router.push("/dashboard")}
         />
 
-        {/* ✅ padding réduit sur mobile */}
         <div className="flex-1 px-4 md:px-10 py-5 md:py-8 max-w-3xl w-full mx-auto relative z-10">
 
-          {/* Question counter + score */}
           <div className="flex items-center justify-between mb-4 md:mb-6">
             <span className="px-3 py-1 rounded-full bg-cyan-100 dark:bg-cyan-900/40 text-cyan-600 dark:text-cyan-400 text-xs font-bold tracking-widest uppercase">
               {t("question")} {currentIndex + 1} / {quiz.questions.length}
@@ -162,19 +218,16 @@ export default function QuizPlayer({ quiz }: { quiz: QuizFull }) {
             </div>
           </div>
 
-          {/* Question card */}
           <div className="bg-white dark:bg-slate-900 rounded-2xl border border-gray-100 dark:border-slate-800 shadow-sm p-5 md:p-8 mb-4 md:mb-6">
             <h2 className="text-base md:text-xl font-bold text-gray-900 dark:text-white leading-snug">
               {question.text}
             </h2>
-
             {!isLocked && showHint && hint && (
               <div className="mt-4 flex items-start gap-3 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-700 rounded-xl px-4 py-3 text-sm text-amber-800 dark:text-amber-300">
                 <span className="text-base mt-0.5">💡</span>
                 <p>{hint}</p>
               </div>
             )}
-
             {isTimeout && (
               <div className="mt-4 flex items-start gap-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-700 rounded-xl px-4 py-3 text-sm text-red-700 dark:text-red-300">
                 <span className="text-base mt-0.5">⏱</span>
@@ -183,7 +236,6 @@ export default function QuizPlayer({ quiz }: { quiz: QuizFull }) {
             )}
           </div>
 
-          {/* Short answer */}
           {isShort ? (
             <div className="space-y-3 mb-4 md:mb-6">
               <input
@@ -212,7 +264,6 @@ export default function QuizPlayer({ quiz }: { quiz: QuizFull }) {
               )}
             </div>
           ) : (
-            /* MCQ + True/False */
             <div className="space-y-2 md:space-y-3 mb-4 md:mb-6">
               {question.options.map((opt, i) => {
                 let state: "default" | "correct" | "wrong" | "selected" | "reveal" = "default";
@@ -239,9 +290,7 @@ export default function QuizPlayer({ quiz }: { quiz: QuizFull }) {
             </div>
           )}
 
-          {/* ✅ Footer — stacked on mobile, row on desktop */}
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-            {/* Status text */}
             <p className="text-sm text-gray-400 dark:text-slate-500">
               {confirmed || isLocked ? (
                 statuses[currentIndex] === "correct" ? (
@@ -263,43 +312,31 @@ export default function QuizPlayer({ quiz }: { quiz: QuizFull }) {
               )}
             </p>
 
-            {/* Action buttons */}
             <div className="flex gap-2 items-center justify-end">
               {!isLocked && !confirmed && hint && !showHint && (
-                <button
-                  onClick={() => setShowHint(true)}
-                  className="flex items-center gap-1.5 px-3 md:px-4 py-2 rounded-lg border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs font-medium text-gray-500 dark:text-slate-400 hover:border-gray-300 transition-all"
-                >
+                <button onClick={() => setShowHint(true)}
+                  className="flex items-center gap-1.5 px-3 md:px-4 py-2 rounded-lg border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs font-medium text-gray-500 dark:text-slate-400 hover:border-gray-300 transition-all">
                   <svg xmlns="http://www.w3.org/2000/svg" className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
                   </svg>
                   {t("useHint")}
                 </button>
               )}
-
               {!isLocked && !confirmed && !canConfirm && (
-                <button
-                  onClick={handleSkip}
-                  className="px-4 md:px-5 py-2 md:py-2.5 rounded-xl border border-gray-200 dark:border-slate-700 text-sm text-gray-500 dark:text-slate-400 hover:border-gray-400 transition font-medium"
-                >
+                <button onClick={handleSkip}
+                  className="px-4 md:px-5 py-2 md:py-2.5 rounded-xl border border-gray-200 dark:border-slate-700 text-sm text-gray-500 dark:text-slate-400 hover:border-gray-400 transition font-medium">
                   {t("skip")} →
                 </button>
               )}
-
               {canConfirm && !confirmed && !isLocked && (
-                <button
-                  onClick={handleConfirm}
-                  className="px-6 md:px-8 py-2 md:py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-teal-400 hover:from-cyan-400 hover:to-teal-300 text-white font-bold text-sm transition shadow-lg shadow-cyan-500/25"
-                >
+                <button onClick={handleConfirm}
+                  className="px-6 md:px-8 py-2 md:py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-teal-400 hover:from-cyan-400 hover:to-teal-300 text-white font-bold text-sm transition shadow-lg shadow-cyan-500/25">
                   {t("confirm")}
                 </button>
               )}
-
               {(wasAnswered || isLocked) && (
-                <button
-                  onClick={goNext}
-                  className="px-6 md:px-8 py-2 md:py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-teal-400 hover:from-cyan-400 hover:to-teal-300 text-white font-bold text-sm transition shadow-lg shadow-cyan-500/25"
-                >
+                <button onClick={goNext}
+                  className="px-6 md:px-8 py-2 md:py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-teal-400 hover:from-cyan-400 hover:to-teal-300 text-white font-bold text-sm transition shadow-lg shadow-cyan-500/25">
                   {isLast ? t("finish") : t("next")}
                 </button>
               )}
