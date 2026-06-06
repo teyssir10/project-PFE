@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, Fragment } from "react";
-import { Avatar, Button, Card, Progress, Tag, Modal, Form, Input, Select, message, Spin } from "antd";
+import { Avatar, Button, Card, Progress, Tag, Modal, Form, Input, Select, App, Spin } from "antd";
 import {
   EditOutlined, TrophyOutlined, UserOutlined,
   StarOutlined, ClockCircleOutlined, CheckCircleOutlined,
@@ -76,6 +76,7 @@ const editSchema = yup.object({
 });
 
 export default function ProfilePage() {
+  const { message } = App.useApp();
   const t = useTranslations("profile");
   const { user } = useAuth();
   const [editModalOpen, setEditModalOpen] = useState(false);

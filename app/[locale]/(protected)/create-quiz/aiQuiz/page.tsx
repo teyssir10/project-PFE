@@ -10,11 +10,12 @@ import PreviewPanel from "@/components/createquiz/AIquiz/PreviewPanel";
 import { useTranslations } from "next-intl";
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/lib/supabase";
-import { message } from "antd";
+import { App } from "antd";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 export default function AIQuiz() {
+  const { message } = App.useApp();
   const t = useTranslations("aiQuiz");
   const tStepper = useTranslations("stepper");
   const { user } = useAuth();

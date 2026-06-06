@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { message } from "antd";
+import { App } from "antd";
 import { DEFAULT_FORM_STATE, QuizFormState } from "@/types/aiquiz";
 
 // ─── Type pour une question générée ──────────────────────────────────────────
@@ -11,6 +11,7 @@ export interface GeneratedQuestion {
 }
 
 export function useQuizForm() {
+  const { message } = App.useApp();
   const [form, setForm] = useState<QuizFormState>(DEFAULT_FORM_STATE);
   const [loading, setLoading] = useState(false);
   const [step, setStep] = useState(1);

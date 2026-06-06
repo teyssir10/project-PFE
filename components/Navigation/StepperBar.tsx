@@ -6,7 +6,7 @@ import { Step } from "@/types/stepperBar";
 import { useTranslations } from "next-intl";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/lib/auth";
-import { message } from "antd";
+import { App } from "antd";
 import AIReviewModal from "@/components/createquiz/manual/AIReviewModal";
 
 interface DraftData {
@@ -30,6 +30,7 @@ interface StepperBarProps {
 export default function StepperBar({
   currentStep, withSidebar = false, steps, onPublish, draftData, onDraftSaved, skipAIReview = false,
 }: StepperBarProps) {
+  const { message } = App.useApp();
   const t = useTranslations("stepper");
   const { user } = useAuth();
   const [savingDraft, setSavingDraft] = useState(false);
@@ -184,7 +185,8 @@ export default function StepperBar({
         open={reviewOpen} result={reviewResult} loading={reviewLoading}
         onFix={() => setReviewOpen(false)}
         onForcePublish={handleForcePublish}
-        onClose={handleApproveAndPublish}
+        onPublish={handleApproveAndPublish}
+        onClose={() => setReviewOpen(false)}
       />
     </>
   );

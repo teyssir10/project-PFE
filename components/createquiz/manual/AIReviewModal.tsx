@@ -22,6 +22,7 @@ interface AIReviewModalProps {
   loading: boolean;
   onFix: () => void;
   onForcePublish: () => void;
+  onPublish: () => void;
   onClose: () => void;
 }
 
@@ -53,7 +54,7 @@ const scoreConfig = {
 };
 
 export default function AIReviewModal({
-  open, result, loading, onFix, onForcePublish, onClose,
+  open, result, loading, onFix, onForcePublish, onPublish, onClose,
 }: AIReviewModalProps) {
   const t = useTranslations("aiReview");
   const config = result ? scoreConfig[result.decision] : null;
@@ -129,7 +130,7 @@ export default function AIReviewModal({
           <div className="flex flex-col gap-2 pt-1">
             {result.decision === "approve" ? (
               <button
-                onClick={onClose}
+                onClick={onPublish}
                 className="w-full py-3 rounded-xl bg-emerald-500 text-white font-bold text-sm hover:bg-emerald-400 transition-all"
               >
                 ✅ {t("actions.publish")}

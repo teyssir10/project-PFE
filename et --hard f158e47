@@ -1,0 +1,50 @@
+[33maa91cb3[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m More correction
+[33m4aabaa7[m fix: fetch questions without options join
+[33mda36838[m option table
+[33mf158e47[m correction
+[33m36c4ce8[m complete multiplayer feature
+[33m6e43862[m complete multiplayer feature
+[33mfb236c2[m modification
+[33mdf06e72[m modification
+[33m246ace3[m complete multiplayer feature
+[33m066044c[m complete multiplayer feature
+[33m9be716e[m AI integration
+[33m6bd7a6f[m feat: add multiplayer room feature
+[33m3d26f9c[m admin page
+[33mda98161[m mise à jour
+[33me5493ae[m connect dashboard with database
+[33m6bfc816[m mise à jour
+[33md17c28a[m last
+[33m6e443e6[m last
+[33m9fc6d33[m play-quiz  Page
+[33mce84f83[m Merge branch 'main' of https://github.com/teyssir10/project-PFE
+[33ma2c46a0[m my changes
+[33m2a4d913[m Quiz Configuration Page
+[33m4e2fbd6[m Add browse quizzes page
+[33m8aa8cdc[m Add browse quizzes page
+[33m2cbaa9a[m create ManualQuiz page
+[33me408a3a[m Add profile page
+[33mec93806[m create AI quiz generation page
+[33mf0239dd[m create AI quiz generation page
+[33m2a0b822[m Add profile page
+[33m5640787[m create quiz page
+[33m83e1a4c[m Improve dashboard UI details and alignment
+[33m8509cb1[m mise à jour de navbar
+[33m4c6e2b9[m fix:dashboard by adding topbar
+[33m7f90a9b[m mise à jour de navbar
+[33m85002bb[m fix: resolve merge conflicts on layout and navbar
+[33mf8b9cf4[m fixing sidebar
+[33mae07df4[m contact-us page
+[33m0615a73[m email-confirmed
+[33m44f891f[m quizz page
+[33m5f44e79[m quizz page
+[33md2126bc[m redesign dashboard UI with sidebar
+[33m7c907c8[m dark mode
+[33m8f28397[m dark mode
+[33maf2b36d[m New feature in the auth module: redirect to /login after email confirmation
+[33m5dc6b4a[m New feature in the auth module: redirect to /login after email confirmation
+[33m29fa2e4[m refactor: split auth into separate login and register pages
+[33m3124916[m last commit
+[33m4cc9d67[m seccond commit
+[33m7e01715[m first commit
+[33m924035f[m Initial commit from Create Next App

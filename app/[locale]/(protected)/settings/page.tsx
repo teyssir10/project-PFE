@@ -4,7 +4,7 @@ import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/lib/auth";
 import { useTranslations, useLocale } from "next-intl";
 import { useRouter } from "next/navigation";
-import { Spin, Switch, message } from "antd";
+import { Spin, Switch, App } from "antd";
 import {
   UserOutlined, LockOutlined, GlobalOutlined, BulbOutlined,
   CameraOutlined, CheckOutlined, LogoutOutlined, FileTextOutlined,
@@ -40,6 +40,7 @@ function timeAgo(dateStr: string): string {
 }
 
 export default function SettingsPage() {
+  const { message } = App.useApp();
   const { user } = useAuth();
   const t = useTranslations("settings");
   const locale = useLocale();

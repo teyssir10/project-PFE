@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useRef, useState } from "react";
-import { Spin, message } from "antd";
+import { Spin, App } from "antd";
 import { CameraOutlined } from "@ant-design/icons";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/lib/auth";
@@ -18,6 +18,7 @@ export default function AvatarUpload({
   size = 100,
   onUploadSuccess,
 }: AvatarUploadProps) {
+  const { message } = App.useApp();
   const { user } = useAuth();
   const inputRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);

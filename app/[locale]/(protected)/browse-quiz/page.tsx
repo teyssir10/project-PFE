@@ -8,12 +8,13 @@ import { useSearchParams} from 'next/navigation'
 import { fetchQuizzes, deleteQuiz } from "@/lib/api/quiz";
 import { fetchFavorites, addFavorite, removeFavorite } from "@/lib/api/favorites";
 import { useAuth } from "@/lib/auth";
-import { Modal, Spin, message } from "antd";
+import { Modal, Spin, App } from "antd";
 import { useTranslations, useLocale } from "next-intl";
 import { useQuizModeStore } from "@/store/useQuizModeStore";
 import { supabase } from "@/lib/supabase";
 
 export default function QuizPage() {
+  const { message } = App.useApp();
   const t = useTranslations("browsePage");
   const router = useRouter();
   const locale = useLocale();

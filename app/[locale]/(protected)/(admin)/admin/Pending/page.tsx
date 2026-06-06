@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useAuth } from "@/lib/auth";
-import { message } from "antd";
+import { App } from "antd";
 import { useTranslations } from "next-intl";
 
 interface Option {
@@ -40,6 +40,7 @@ const DIFFICULTY_COLORS: Record<string, string> = {
 };
 
 export default function AdminPendingQuizzesPage() {
+  const { message } = App.useApp();
   const t = useTranslations("adminPending");
   const { user } = useAuth();
   const [quizzes, setQuizzes] = useState<PendingQuiz[]>([]);
