@@ -1,6 +1,6 @@
 "use client";
 
-import { useState ,useEffect} from "react";
+import { useState, useEffect } from "react";
 import { useAntdApp } from "@/hooks/useAntdApp";
 import { useAuth } from "@/lib/auth";
 import { useRouter } from "next/navigation";
@@ -14,10 +14,11 @@ import { useTranslations } from "next-intl";
 import { useResumeDraft } from "@/hooks/Useresumedraft";
 import { useSearchParams } from "next/navigation";
 import { getQuizWithQuestions } from "@/lib/api/quiz";
+import { useLocale } from "next-intl";
 
 export default function ManualQuiz() {
-   const searchParams = useSearchParams();
-  const editId = searchParams.get("edit");
+  const searchParams = useSearchParams();
+  const editId = searchParams.get("edit"); // ✅ used to detect edit mode
   const t = useTranslations("manualQuizEditor");
   const tStepper = useTranslations("stepper");
   const { message } = useAntdApp();
@@ -25,9 +26,9 @@ export default function ManualQuiz() {
   const [draftId, setDraftId] = useState<string | undefined>();
   const { user } = useAuth();
   const router = useRouter();
+  const locale = useLocale();
 
   const { difficulty, coverImage, timePerQuestion, categoryId } = useQuizStore();
-  
 
   const MANUAL_STEPS = [
     { id: 1, label: tStepper("manualStep1") },
@@ -51,6 +52,8 @@ export default function ManualQuiz() {
   useState(() => {
     if (urlDraftId) setDraftId(urlDraftId);
   });
+
+  // ── Load existing quiz questions when editing ─────────────────────────────
   useEffect(() => {
     if (!editId) return;
 
@@ -62,13 +65,13 @@ export default function ManualQuiz() {
 
       if (data.questions && data.questions.length > 0) {
         const formatted = data.questions.map((q: any) => ({
-          id:            q.id,
-          text:          q.question_text ?? q.text ?? "",
-          indice:        q.indice ?? "",
-          type:          q.question_type ?? q.type ?? "multiple",
-          points:        q.points ?? "Standard (1x)",
-          correctAnswer: q.correct_answer ?? "",
-          timeLimit:     q.time_limit ?? null,
+          id:             q.id,
+          text:           q.question_text ?? q.text ?? "",
+          indice:         q.indice ?? "",
+          type:           q.question_type ?? q.type ?? "multiple",
+          points:         q.points ?? "Standard (1x)",
+          correctAnswer:  q.correct_answer ?? "",
+          timeLimit:      q.time_limit ?? null,
           correctOptionId: q.options?.find((o: any) => o.is_correct)?.id ?? null,
           options: q.options?.map((o: any) => ({
             id:   o.id,
@@ -84,6 +87,7 @@ export default function ManualQuiz() {
     loadQuizQuestions();
   }, [editId]);
 
+  // ── Save / Publish ────────────────────────────────────────────────────────
   const handleSave = async (publishResult?: PublishResult) => {
     if (!user) return message.error(t("mustLogin"));
 
@@ -96,24 +100,30 @@ export default function ManualQuiz() {
     setSaving(true);
     try {
       await saveQuiz({
-        quizTitle, questions, userId: user.id,
+        quizTitle,
+        questions,
+        userId:          user.id,
         userFirstname:   user.user_metadata?.firstname,
         userLastname:    user.user_metadata?.lastname,
         quizDifficulty:  difficulty,
-        coverImage, timePerQuestion, categoryId,
+        coverImage,
+        timePerQuestion,
+        categoryId,
         getEffectiveTimeLimit,
         source:    "manual",
         status:    publishResult?.status    ?? "published",
         aiScore:   publishResult?.aiScore   ?? null,
         aiRemarks: publishResult?.aiRemarks ?? null,
-        
+        editId:    editId ?? null, // ✅ passes editId → saveQuiz does UPDATE not INSERT
       });
 
       if (publishResult?.status === "pending_admin") {
-        router.push("/settings");
+        router.push(`/${locale}/settings`);
       } else {
-        message.success(t("saveSuccess"));
-        router.push("/browse-quiz");
+        message.success(
+          editId ? "✅ Quiz mis à jour avec succès !" : t("saveSuccess")
+        );
+        router.push(`/${locale}/browse-quiz`);
       }
     } catch (err: unknown) {
       const error = err as { message: string };
@@ -149,10 +159,6 @@ export default function ManualQuiz() {
           onSave={() => handleSave()} onTitleChange={setQuizTitle}
         />
 
-        {/*
-          ✅ Suppression de ml-64 → en RTL ça créait l'espace vide à gauche.
-          La sidebar est déjà dans le même flex container, flex-1 suffit.
-        */}
         <main className="flex-1 overflow-y-auto">
           <div className="h-[3px] w-full bg-gradient-to-r from-cyan-400 via-teal-400 to-cyan-500" />
           <div className="max-w-2xl mx-auto px-6 py-10 space-y-6">
@@ -160,9 +166,6 @@ export default function ManualQuiz() {
               <p className="text-xs font-bold text-cyan-500 tracking-widest uppercase mb-1">{t("step")}</p>
               <h1 className="text-xl font-extrabold text-gray-900 dark:text-white">
                 {t("question")} {activeIndex + 1}
-                {/*
-                  ✅ ms-2 remplace ml-2 → s'inverse automatiquement en RTL
-                */}
                 <span className="text-gray-300 dark:text-slate-600 font-normal text-base ms-2">
                   {t("of")} {questions.length}
                 </span>
@@ -173,7 +176,7 @@ export default function ManualQuiz() {
               question={activeQuestion} questionIndex={activeIndex} totalQuestions={questions.length}
               canDelete={questions.length > 1} onTypeChange={handleTypeChange}
               onTextChange={(text) => updateQuestion({ text })}
-              onExplanationChange={(indice) => updateQuestion({ indice})}
+              onExplanationChange={(indice) => updateQuestion({ indice })}
               onCorrectAnswerChange={(correctAnswer) => updateQuestion({ correctAnswer })}
               onSelectCorrect={(correctOptionId) => updateQuestion({ correctOptionId })}
               onUpdateOption={updateOption} onDeleteOption={deleteOption} onAddOption={addOption}

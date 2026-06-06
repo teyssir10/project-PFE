@@ -270,7 +270,30 @@
     "noQuizBtn": "Generate Quiz",
     "noQuizSub2": "to create your questions instantly.",
     "customCategoryPlaceholder": "Enter a category...",
-    "customLanguagePlaceholder": "Enter a language..."
+    "customLanguagePlaceholder": "Enter a language...",
+    "questionType": "Question type",
+  "questionTypeMultiple": "Multiple choice",
+  "questionTypeMultipleDesc": "4 options, one correct answer",
+  "questionTypeTrueFalse": "True / False",
+  "questionTypeTrueFalseDesc": "Statement to validate or refute",
+  "questionTypeShort": "Short answer",
+  "questionTypeShortDesc": "Player types their own answer",
+  "questionTypeMixed": "Mixed",
+  "questionTypeMixedDesc": "Combines all types automatically",
+  "difficultyEasy": "Easy",
+"difficultyMedium": "Medium",
+"difficultyHard": "Hard",
+"difficultyMixed": "Mixed",
+"catTechnology": "Technology",
+"catScience": "Science",
+"catHistory": "History",
+"catMath": "Math",
+"catCustom": "✏️ Custom",
+"langEnglish": "🇬🇧 English",
+"langFrench": "🇫🇷 French",
+"langSpanish": "🇪🇸 Spanish",
+"langArabic": "🇸🇦 Arabic",
+"langCustom": "✏️ Custom"
   },
   
   "manualQuiz": {
@@ -312,7 +335,13 @@
     "geo": "🌍 Geography",
     "cinema": "🎬 Cinema",
     "custom": "✏️ Custom...",
-    "customPlaceholder": "Type your own category..."
+    "customPlaceholder": "Type your own category...",
+    "loading": "Loading...",
+"saving": "Saving…",
+"confirm": "✓ Confirm",
+"alreadyExists": "Already exists — selected ✓",
+"added": "Added ✓",
+"errorSaving": "Error saving category"
   },
   "coverImage": {
     "clickOrDrag": "Click or drag to upload",

@@ -4,6 +4,8 @@ import { PlayQuestion } from "@/types/quiz";
 import Image from "next/image";
 import play from "@/public/play-quiz.png";
 import { useTranslations } from "next-intl";
+import { useState } from "react";
+import { CloseOutlined, AppstoreOutlined } from "@ant-design/icons";
 
 type Status = "unanswered" | "correct" | "wrong" | "skipped";
 
@@ -24,23 +26,29 @@ const statusStyle: Record<Status, string> = {
   skipped:    "bg-gradient-to-br from-amber-400 to-orange-400 border-2 border-transparent text-white shadow-md shadow-amber-200 dark:shadow-amber-900/30",
 };
 
-export default function QuizSidebar({ questions, currentIndex, statuses, onJump, answered, skipped, remaining }: Props) {
+function SidebarContent({ questions, currentIndex, statuses, onJump, answered, skipped, remaining, onClose }: Props & { onClose?: () => void }) {
   const t = useTranslations("quizSidebarPlay");
   const progress = Math.round(((answered + skipped) / questions.length) * 100);
 
   return (
-    <div className="sticky w-56 shrink-0 bg-white dark:bg-slate-900 border-r border-gray-100 dark:border-slate-800 flex flex-col py-6 px-5 shadow-sm">
-
-      <div className="flex items-center gap-2 mb-5">
-        <span className="w-6 h-6 rounded-lg bg-cyan-500 flex items-center justify-center text-white text-xs">📋</span>
-        <p className="text-xs font-extrabold tracking-widest uppercase text-gray-500 dark:text-slate-400">
-          {t("questions")}
-        </p>
+    <div className="flex flex-col h-full py-6 px-5">
+      <div className="flex items-center justify-between mb-5">
+        <div className="flex items-center gap-2">
+          <span className="w-6 h-6 rounded-lg bg-cyan-500 flex items-center justify-center text-white text-xs">📋</span>
+          <p className="text-xs font-extrabold tracking-widest uppercase text-gray-500 dark:text-slate-400">
+            {t("questions")}
+          </p>
+        </div>
+        {onClose && (
+          <button onClick={onClose} className="p-1.5 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 dark:hover:bg-slate-700 transition-all">
+            <CloseOutlined />
+          </button>
+        )}
       </div>
 
       <div className="grid grid-cols-5 gap-2 mb-6">
         {questions.map((_, i) => (
-          <button key={i} onClick={() => onJump(i)}
+          <button key={i} onClick={() => { onJump(i); onClose?.(); }}
             className={`w-9 h-9 rounded-xl text-xs font-bold transition-all duration-200 ${statusStyle[statuses[i]]} ${
               i === currentIndex ? "ring-2 ring-cyan-500 ring-offset-2 scale-110" : ""
             }`}>
@@ -50,30 +58,23 @@ export default function QuizSidebar({ questions, currentIndex, statuses, onJump,
       </div>
 
       <div className="space-y-2.5 mb-6">
-        <div className="flex items-center justify-between text-xs">
-          <div className="flex items-center gap-2">
-            <span className="w-2.5 h-2.5 rounded-full bg-gradient-to-br from-emerald-400 to-teal-500" />
-            <span className="text-gray-500 dark:text-slate-400 font-medium">{t("answered")}</span>
+        {[
+          { color: "from-emerald-400 to-teal-500", label: t("answered"), value: answered },
+          { color: "from-amber-400 to-orange-400", label: t("skipped"),  value: skipped  },
+          { color: "bg-gray-200 dark:bg-slate-700", label: t("remaining"), value: remaining, plain: true },
+        ].map(({ color, label, value, plain }) => (
+          <div key={label} className="flex items-center justify-between text-xs">
+            <div className="flex items-center gap-2">
+              <span className={`w-2.5 h-2.5 rounded-full ${plain ? color : `bg-gradient-to-br ${color}`}`} />
+              <span className="text-gray-500 dark:text-slate-400 font-medium">{label}</span>
+            </div>
+            <span className="font-bold text-gray-700 dark:text-slate-300">{value}</span>
           </div>
-          <span className="font-bold text-gray-700 dark:text-slate-300">{answered}</span>
-        </div>
-        <div className="flex items-center justify-between text-xs">
-          <div className="flex items-center gap-2">
-            <span className="w-2.5 h-2.5 rounded-full bg-gradient-to-br from-amber-400 to-orange-400" />
-            <span className="text-gray-500 dark:text-slate-400 font-medium">{t("skipped")}</span>
-          </div>
-          <span className="font-bold text-gray-700 dark:text-slate-300">{skipped}</span>
-        </div>
-        <div className="flex items-center justify-between text-xs">
-          <div className="flex items-center gap-2">
-            <span className="w-2.5 h-2.5 rounded-full bg-gray-200 dark:bg-slate-700" />
-            <span className="text-gray-500 dark:text-slate-400 font-medium">{t("remaining")}</span>
-          </div>
-          <span className="font-bold text-gray-700 dark:text-slate-300">{remaining}</span>
-        </div>
+        ))}
       </div>
 
-      <div className="absolute py-123 pointer-events-none select-none z-10">
+      {/* Mascot — desktop only */}
+      <div className="hidden md:block absolute pointer-events-none select-none z-10">
         <Image src={play} alt="PandoMind mascot" width={180} height={180} className="object-contain drop-shadow-xl" priority />
       </div>
 
@@ -88,5 +89,38 @@ export default function QuizSidebar({ questions, currentIndex, statuses, onJump,
         </div>
       </div>
     </div>
+  );
+}
+
+export default function QuizSidebar(props: Props) {
+  const [mobileOpen, setMobileOpen] = useState(false);
+
+  return (
+    <>
+      {/* Desktop sidebar */}
+      <div className="hidden md:flex sticky top-0 w-56 shrink-0 bg-white dark:bg-slate-900 border-r border-gray-100 dark:border-slate-800 flex-col shadow-sm h-screen">
+        <SidebarContent {...props} />
+      </div>
+
+      {/* Mobile floating button */}
+      <button
+        onClick={() => setMobileOpen(true)}
+        className="md:hidden fixed bottom-4 left-4 z-40 w-12 h-12 rounded-full
+          bg-cyan-500 text-white shadow-lg shadow-cyan-500/30
+          flex items-center justify-center hover:bg-cyan-400 active:scale-95 transition-all"
+      >
+        <AppstoreOutlined className="text-lg" />
+      </button>
+
+      {/* Mobile overlay */}
+      {mobileOpen && (
+        <div className="fixed inset-0 z-50 md:hidden">
+          <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={() => setMobileOpen(false)} />
+          <div className="absolute left-0 top-0 h-full w-64 bg-white dark:bg-slate-900 shadow-2xl">
+            <SidebarContent {...props} onClose={() => setMobileOpen(false)} />
+          </div>
+        </div>
+      )}
+    </>
   );
 }

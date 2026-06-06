@@ -6,6 +6,14 @@ import { supabase } from "@/lib/supabase";
 import { useQuizStore } from "@/store/useQuizStore";
 import { Question } from "@/types/quiz";
 
+// ── Normalise les types sauvegardés vers le format interne ────────────────
+const normalizeType = (type: string): string => {
+  if (type === "multiple_choice") return "multiple";
+  if (type === "true_false")      return "truefalse";
+  if (type === "short_answer")    return "short";
+  return type ?? "multiple";
+};
+
 export function useResumeDraft({
   setQuizTitle,
   setQuestions,
@@ -33,30 +41,50 @@ export function useResumeDraft({
           .single();
 
         if (!error && data) {
-          // ── Restore store fields via setQuizData ───────────────────────
+          // ── Restore store fields ───────────────────────────────────────
           setQuizData({
-            title:           data.title           ?? "",
-            difficulty:      data.difficulty      ?? "Medium",
+            title:           data.title            ?? "",
+            difficulty:      data.difficulty       ?? "Medium",
             coverImage:      data.cover_image      ?? null,
             timePerQuestion: data.time_per_question?.toString() ?? "20",
           });
 
-          // ── Restore title in editor ────────────────────────────────────
+          // ── Restore title ──────────────────────────────────────────────
           if (data.title) setQuizTitle(data.title);
 
           // ── Restore questions ──────────────────────────────────────────
-          if (setQuestions && data.questions && Array.isArray(data.questions) && data.questions.length > 0) {
+          if (
+            setQuestions &&
+            data.questions &&
+            Array.isArray(data.questions) &&
+            data.questions.length > 0
+          ) {
             const restoredQuestions: Question[] = data.questions.map((q: any) => ({
-              id:              q.id              ?? crypto.randomUUID(),
-              text:            q.text            ?? "",
-              type:            q.type            ?? "multiple",
-              options:         q.options         ?? [],
-              correctOptionId: q.correctOptionId ?? null,
-              correctAnswer:   q.correctAnswer   ?? "",
-              indice:     q.indice    ?? "",
-              timeLimit:       q.timeLimit       ?? "30",
-              customTime:      q.customTime      ?? "",
-              points:          q.points          ?? "Standard (1x)",
+              id:   q.id ?? crypto.randomUUID(),
+
+              // Supporte les deux formats : "text" et "question_text"
+              text: q.text ?? q.question_text ?? "",
+
+              // ✅ FIX : normalise "multiple_choice" → "multiple", etc.
+              type: normalizeType(q.type),
+
+              // Supporte les deux formats d'options
+              options: q.options?.map((o: any) => ({
+                id:   o.id   ?? crypto.randomUUID(),
+                text: o.text ?? o.option_text ?? "",
+              })) ?? [],
+
+              // Supporte les deux formats de bonne réponse
+              correctOptionId:
+                q.correctOptionId ??
+                q.options?.find((o: any) => o.is_correct)?.id ??
+                null,
+
+              correctAnswer: q.correctAnswer ?? q.correct_answer ?? "",
+              indice:        q.indice        ?? "",
+              timeLimit:     q.timeLimit     ?? "30",
+              customTime:    q.customTime    ?? "",
+              points:        q.points        ?? "Standard (1x)",
             }));
 
             setQuestions(restoredQuestions);

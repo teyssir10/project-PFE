@@ -1,8 +1,4 @@
 // app/layout.tsx
 export default function RootLayout({ children }: { children: React.ReactNode }) {
-  return (
-    <html suppressHydrationWarning>
-      <body suppressHydrationWarning>{children}</body>
-    </html>
-  );
+  return children;
 }

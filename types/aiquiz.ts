@@ -1,4 +1,5 @@
 export type Difficulty = "Easy" | "Medium" | "Hard" | "Mixed";
+export type QuestionType = "multiple_choice" | "true_false" | "short_answer" | "mixed";
 
 export interface QuizFormState {
   prompt: string;
@@ -12,6 +13,7 @@ export interface QuizFormState {
   title: string;
   timer: string;
   customTimer: number | null;
+  questionType: QuestionType;
 }
 
 export const DEFAULT_FORM_STATE: QuizFormState = {
@@ -26,6 +28,7 @@ export const DEFAULT_FORM_STATE: QuizFormState = {
   title: "",
   timer: "10",
   customTimer: null,
+  questionType: "multiple_choice",
 };
 
 export const SUGGESTIONS = [
@@ -42,18 +45,15 @@ export const DIFFICULTY_CONFIG: Record<Difficulty, { active: string }> = {
   Mixed:  { active: "bg-cyan-500 text-white shadow-cyan-200" },
 };
 
-export const CATEGORIES = [
-  { value: "Technology", label: "Technology" },
-  { value: "Science",    label: "Science" },
-  { value: "History",    label: "History" },
-  { value: "Math",       label: "Math" },
-  { value: "Custom",     label: "✏️ Custom" },
-];
+// ✅ Valeurs statiques uniquement — les labels traduits sont dans SettingsCard.tsx
+export const CATEGORY_VALUES = [
+  "Technology", "Science", "History", "Math", "Custom",
+] as const;
 
-export const LANGUAGES = [
-  { value: "English", label: "🇬🇧 English" },
-  { value: "French",  label: "🇫🇷 French" },
-  { value: "Spanish", label: "🇪🇸 Spanish" },
-  { value: "Arabic",  label: "🇸🇦 Arabic" },
-  { value: "Custom",  label: "✏️ Custom" },
-];
+export const LANGUAGE_VALUES = [
+  "English", "French", "Spanish", "Arabic", "Custom",
+] as const;
+
+export const QUESTION_TYPE_VALUES = [
+  "multiple_choice", "true_false", "short_answer", "mixed",
+] as const;

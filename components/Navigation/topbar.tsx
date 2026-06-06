@@ -5,7 +5,7 @@ import { useRouter, usePathname } from 'next/navigation'
 import {
   BellOutlined, UserOutlined, LogoutOutlined,
   RobotOutlined, PlusOutlined, EditOutlined,
-  CrownOutlined,
+  CrownOutlined, MenuOutlined,
 } from '@ant-design/icons'
 import { supabase } from '@/lib/supabase'
 import LightToDark from '../UI/Button/LightToDark'
@@ -14,6 +14,7 @@ import { useTranslations } from 'next-intl'
 import { useAuth } from '@/lib/auth'
 import { useLocale } from 'next-intl'
 import LanguageSwitcher from "@/components/LanguageSwitcher/LanguageSwitcher"
+import { useSidebar } from './sidebar'
 
 interface Notification {
   id: string
@@ -41,11 +42,11 @@ export default function Topbar({ username }: TopbarProps) {
   const router = useRouter()
   const pathname = usePathname()
   const locale = useLocale()
-  const currentPage = pathname.split("/").pop()
   const { mode, setMode } = useQuizModeStore()
   const { user } = useAuth()
+  const { openMobile } = useSidebar()
   const [isAdmin, setIsAdmin] = useState(false)
-
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null)
   const [notifications, setNotifications] = useState<Notification[]>([])
   const [unreadCount, setUnreadCount] = useState(0)
   const [notifOpen, setNotifOpen] = useState(false)
@@ -57,10 +58,11 @@ export default function Topbar({ username }: TopbarProps) {
     const checkAdmin = async () => {
       const { data } = await supabase
         .from("users")
-        .select("role")
+        .select("role, avatar_url")
         .eq("id", user.id)
         .single()
-      setIsAdmin(data?.role === "admin")
+      setIsAdmin(data?.role?.trim() === "admin")
+      if (data?.avatar_url) setAvatarUrl(data.avatar_url)
     }
     checkAdmin()
   }, [user])
@@ -68,7 +70,6 @@ export default function Topbar({ username }: TopbarProps) {
   useEffect(() => {
     if (!user) return
     fetchNotifications()
-
     const channel = supabase
       .channel("notifications")
       .on("postgres_changes", {
@@ -81,7 +82,6 @@ export default function Topbar({ username }: TopbarProps) {
         setUnreadCount(c => c + 1)
       })
       .subscribe()
-
     return () => { supabase.removeChannel(channel) }
   }, [user])
 
@@ -93,30 +93,20 @@ export default function Topbar({ username }: TopbarProps) {
       .eq("user_id", user.id)
       .order("created_at", { ascending: false })
       .limit(10)
-
     setNotifications(data ?? [])
     setUnreadCount((data ?? []).filter(n => !n.is_read).length)
   }
 
   const markAllRead = async () => {
     if (!user) return
-    await supabase
-      .from("notifications")
-      .update({ is_read: true })
-      .eq("user_id", user.id)
-      .eq("is_read", false)
+    await supabase.from("notifications").update({ is_read: true }).eq("user_id", user.id).eq("is_read", false)
     setNotifications(prev => prev.map(n => ({ ...n, is_read: true })))
     setUnreadCount(0)
   }
 
   const markOneRead = async (id: string) => {
-    await supabase
-      .from("notifications")
-      .update({ is_read: true })
-      .eq("id", id)
-    setNotifications(prev =>
-      prev.map(n => n.id === id ? { ...n, is_read: true } : n)
-    )
+    await supabase.from("notifications").update({ is_read: true }).eq("id", id)
+    setNotifications(prev => prev.map(n => n.id === id ? { ...n, is_read: true } : n))
     setUnreadCount(c => Math.max(0, c - 1))
   }
 
@@ -133,101 +123,57 @@ export default function Topbar({ username }: TopbarProps) {
   }
 
   const notifDropdown = (
-    <div className="w-80 rounded-2xl overflow-hidden shadow-xl
-      bg-white dark:bg-slate-900
-      border border-gray-100 dark:border-slate-700">
-
-      {/* Header */}
-      <div className="px-4 py-3 flex items-center justify-between
-        border-b border-gray-100 dark:border-slate-800">
+    <div className="w-80 rounded-2xl overflow-hidden shadow-xl bg-white dark:bg-slate-900 border border-gray-100 dark:border-slate-700">
+      <div className="px-4 py-3 flex items-center justify-between border-b border-gray-100 dark:border-slate-800">
         <div className="flex items-center gap-2">
-          <span className="text-sm font-bold text-gray-900 dark:text-white">
-            {t('notif.title')}
-          </span>
+          <span className="text-sm font-bold text-gray-900 dark:text-white">{t('notif.title')}</span>
           {unreadCount > 0 && (
-            <span className="px-1.5 py-0.5 rounded-full text-[10px] font-bold bg-cyan-500 text-white">
-              {unreadCount}
-            </span>
+            <span className="px-1.5 py-0.5 rounded-full text-[10px] font-bold bg-cyan-500 text-white">{unreadCount}</span>
           )}
         </div>
         {unreadCount > 0 && (
-          <button
-            onClick={markAllRead}
-            className="text-xs text-cyan-500 hover:text-cyan-400 font-medium transition-colors"
-          >
+          <button onClick={markAllRead} className="text-xs text-cyan-500 hover:text-cyan-400 font-medium transition-colors">
             {t('notif.markAllRead')}
           </button>
         )}
       </div>
-
-      {/* Liste */}
       <div className="max-h-80 overflow-y-auto divide-y divide-gray-50 dark:divide-slate-800">
         {notifications.length === 0 ? (
           <div className="py-10 text-center">
             <p className="text-2xl mb-2">🔔</p>
-            <p className="text-sm text-gray-400 dark:text-slate-500">
-              {t('notif.empty')}
-            </p>
+            <p className="text-sm text-gray-400 dark:text-slate-500">{t('notif.empty')}</p>
           </div>
         ) : (
           notifications.map((n) => (
-            <div
-              key={n.id}
-              onClick={async () => {
-                if (!n.is_read) await markOneRead(n.id)
-                setNotifOpen(false)
-                router.push(`/${locale}/notifications`)
-              }}
-              className={`px-4 py-3 flex items-start gap-3 cursor-pointer transition-colors
-                ${n.is_read
-                  ? "hover:bg-gray-50 dark:hover:bg-slate-800/50"
-                  : "bg-cyan-50/60 dark:bg-cyan-900/10 hover:bg-cyan-50 dark:hover:bg-cyan-900/20"
-                }`}
+            <div key={n.id}
+              onClick={async () => { if (!n.is_read) await markOneRead(n.id); setNotifOpen(false); router.push(`/${locale}/notifications`) }}
+              className={`px-4 py-3 flex items-start gap-3 cursor-pointer transition-colors ${
+                n.is_read ? "hover:bg-gray-50 dark:hover:bg-slate-800/50" : "bg-cyan-50/60 dark:bg-cyan-900/10 hover:bg-cyan-50 dark:hover:bg-cyan-900/20"
+              }`}
             >
-              <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0
-                bg-gray-100 dark:bg-slate-800 text-lg">
+              <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 bg-gray-100 dark:bg-slate-800 text-lg">
                 {typeIcon[n.type] ?? "🔔"}
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex items-start justify-between gap-2">
-                  <p className={`text-sm leading-snug truncate ${
-                    n.is_read
-                      ? "text-gray-600 dark:text-slate-300 font-medium"
-                      : "text-gray-900 dark:text-white font-bold"
-                  }`}>
+                  <p className={`text-sm leading-snug truncate ${n.is_read ? "text-gray-600 dark:text-slate-300 font-medium" : "text-gray-900 dark:text-white font-bold"}`}>
                     {n.title}
                   </p>
-                  {!n.is_read && (
-                    <span className="w-2 h-2 rounded-full bg-cyan-500 flex-shrink-0 mt-1" />
-                  )}
+                  {!n.is_read && <span className="w-2 h-2 rounded-full bg-cyan-500 flex-shrink-0 mt-1" />}
                 </div>
-                <p className="text-xs text-gray-400 dark:text-slate-500 mt-0.5 line-clamp-2">
-                  {n.message}
-                </p>
-                <p className="text-[10px] text-gray-300 dark:text-slate-600 mt-1">
-                  {formatDate(n.created_at)}
-                </p>
+                <p className="text-xs text-gray-400 dark:text-slate-500 mt-0.5 line-clamp-2">{n.message}</p>
+                <p className="text-[10px] text-gray-300 dark:text-slate-600 mt-1">{formatDate(n.created_at)}</p>
               </div>
             </div>
           ))
         )}
       </div>
-
-      {/* Footer */}
       <div className="px-4 py-3 border-t border-gray-100 dark:border-slate-800 flex items-center justify-between">
-        <button
-          onClick={() => {
-            setNotifOpen(false)
-            router.push(`/${locale}/notifications`)
-          }}
-          className="text-xs text-cyan-500 hover:text-cyan-400 font-semibold transition-colors"
-        >
+        <button onClick={() => { setNotifOpen(false); router.push(`/${locale}/notifications`) }}
+          className="text-xs text-cyan-500 hover:text-cyan-400 font-semibold transition-colors">
           {t('notif.viewAll')}
         </button>
-        <button
-          onClick={() => setNotifOpen(false)}
-          className="text-xs text-gray-400 hover:text-gray-500 transition-colors"
-        >
+        <button onClick={() => setNotifOpen(false)} className="text-xs text-gray-400 hover:text-gray-500 transition-colors">
           {t('notif.close')}
         </button>
       </div>
@@ -235,29 +181,18 @@ export default function Topbar({ username }: TopbarProps) {
   )
 
   const pageNames: Record<string, string> = {
-    "dashboard":   "Dashboard",
-    "browse-quiz": "Browse Quiz",
-    "create-quiz": "Create Quiz",
-    "analytics":   "Analytics",
-    "leaderboard": "Leaderboard",
-    "settings":    "Settings",
-    "room":        "Multiplayer",
-    "multiplayerroom": "Multiplayer",
-    "lobby":         "Waiting Room",
-    "profile":     "Profile",
-    "play-quiz":   "Play Quiz",
-    "play":        "Play Quiz",
+    "dashboard": "Dashboard", "browse-quiz": "Browse Quiz", "create-quiz": "Create Quiz",
+    "analytics": "Analytics", "leaderboard": "Leaderboard", "settings": "Settings",
+    "room": "Multiplayer", "multiplayerroom": "Multiplayer", "lobby": "Waiting Room",
+    "profile": "Profile", "play-quiz": "Play Quiz", "play": "Play Quiz",
   }
 
   const formatName = (pathname: string) => {
     const segments = pathname.split("/").filter(Boolean)
     if (segments.length === 0) return "Dashboard"
-
     for (let i = segments.length - 1; i >= 0; i--) {
-      const segment = segments[i]
-      if (pageNames[segment]) return pageNames[segment]
+      if (pageNames[segments[i]]) return pageNames[segments[i]]
     }
-
     const last = segments[segments.length - 1]
     return last.replace(/-/g, " ").replace(/\b\w/g, c => c.toUpperCase())
   }
@@ -270,124 +205,122 @@ export default function Topbar({ username }: TopbarProps) {
   const profileMenu = {
     items: [
       { key: 'user', label: <span>{username}</span> },
-      {
-        key: 'profile',
-        icon: <UserOutlined />,
-        label: t('profile'),
-        onClick: () => router.push(`/${locale}/profile`),
-      },
-      {
-        key: 'settings',
-        icon: <UserOutlined />,
-        label: t('settings'),
-        onClick: () => router.push(`/${locale}/settings`),
-      },
-      {
-        key: 'logout',
-        icon: <span className="!text-cyan-500"><LogoutOutlined /></span>,
-        label: <span className="text-cyan-500">{t('logout')}</span>,
-        onClick: handleLogout,
-      },
+      { key: 'profile', icon: <UserOutlined />, label: t('profile'), onClick: () => router.push(`/${locale}/profile`) },
+      { key: 'settings', icon: <UserOutlined />, label: t('settings'), onClick: () => router.push(`/${locale}/settings`) },
+      { key: 'logout', icon: <span className="!text-cyan-500"><LogoutOutlined /></span>, label: <span className="text-cyan-500">{t('logout')}</span>, onClick: handleLogout },
     ],
   }
 
   return (
-    /*
-      justify-between fonctionne bien en RTL (le navigateur inverse les côtés).
-      px-6 est symétrique donc pas de changement nécessaire.
-    */
-    <div className="sticky top-0 z-30 flex items-center justify-between h-16 px-6
+    <div className="sticky top-0 z-30 flex items-center justify-between h-16 px-3 md:px-6
       bg-white/80 dark:bg-slate-900/80 backdrop-blur-md
-      border-b border-gray-100 dark:border-slate-700 gap-1">
+      border-b border-gray-100 dark:border-slate-700 gap-1 min-w-0">
 
-      {/* Breadcrumb — start/end s'inversent en RTL automatiquement */}
-      <div className="flex items-center gap-4 w-full max-w-md">
-        <div className="flex items-center gap-2 text-sm">
-          <span className="font-bold text-cyan-500">PandoMind</span>
-          <span className="text-gray-400">/</span>
-          <span className="text-gray-800 dark:text-white font-medium">
+      {/* Left — hamburger + breadcrumb */}
+      <div className="flex items-center gap-2 min-w-0 flex-shrink-0">
+        {/* Hamburger mobile only */}
+        <button
+          onClick={openMobile}
+          className="md:hidden flex items-center justify-center w-9 h-9 rounded-xl
+            text-gray-500 dark:text-slate-400 hover:bg-gray-100 dark:hover:bg-slate-800 transition-all flex-shrink-0"
+        >
+          <MenuOutlined className="text-base" />
+        </button>
+        {/* Breadcrumb */}
+        <div className="flex items-center gap-1.5 text-sm min-w-0">
+          <span className="font-bold text-cyan-500 hidden sm:inline">PandoMind</span>
+          <span className="text-gray-400 hidden sm:inline">/</span>
+          <span className="text-gray-800 dark:text-white font-medium truncate max-w-[120px] sm:max-w-none">
             {formatName(pathname)}
           </span>
         </div>
       </div>
 
-      <div className="flex gap-4 items-center">
+      {/* Right — actions */}
+      <div className="flex gap-1.5 md:gap-3 items-center flex-shrink-0">
+
+        {/* Language — always visible */}
         <LanguageSwitcher />
 
-        <Dropdown
-          open={notifOpen}
-          onOpenChange={(open) => {
-            setNotifOpen(open)
-            if (open) fetchNotifications()
-          }}
-          popupRender={() => notifDropdown}
-          trigger={['click']}
-          placement="bottomRight"
-        >
-          <Badge count={unreadCount} size="small" color="#06b6d4">
-            <Button
-              className="rounded-full w-10 h-10 flex items-center justify-center transition hover:scale-110"
-            >
-              <BellOutlined />
-            </Button>
-          </Badge>
-        </Dropdown>
+        {/* Notifications — hidden on mobile */}
+        <div className="hidden sm:block">
+          <Dropdown
+            open={notifOpen}
+            onOpenChange={(open) => { setNotifOpen(open); if (open) fetchNotifications() }}
+            popupRender={() => notifDropdown}
+            trigger={['click']}
+            placement="bottomRight"
+          >
+            <Badge count={unreadCount} size="small" color="#06b6d4">
+              <Button className="rounded-full w-9 h-9 flex items-center justify-center transition hover:scale-110 !p-0">
+                <BellOutlined />
+              </Button>
+            </Badge>
+          </Dropdown>
+        </div>
 
         <LightToDark />
 
+        {/* Admin */}
         {isAdmin && (
           <Button
             onClick={() => router.push(`/${locale}/admin/dashboard`)}
-            className="!h-10 !px-4 !rounded-xl !font-bold !text-sm !border-0
-              !bg-gradient-to-r !from-red-500 !to-orange-400
-              !text-white !shadow-md hover:!shadow-red-500/30
-              hover:!scale-105 transition-all duration-200 flex items-center gap-2"
-           // Après
-icon={<CrownOutlined />}
->
-  {t('admin')}
-</Button>
+            className="!h-9 !px-2 md:!px-4 !rounded-xl !font-bold !text-xs md:!text-sm !border-0
+              !bg-gradient-to-r !from-red-500 !to-orange-400 !text-white !shadow-md
+              hover:!shadow-red-500/30 hover:!scale-105 transition-all duration-200 flex items-center gap-1"
+            icon={<CrownOutlined />}
+          >
+            <span className="hidden sm:inline">{t('admin')}</span>
+          </Button>
         )}
 
+        {/* Create quiz toggle or button */}
         {isCreateQuizPage ? (
-          <div className="flex items-center p-1 gap-1 bg-gray-100 dark:bg-slate-700 rounded-[16px]">
+          <div className="flex items-center p-0.5 gap-0.5 bg-gray-100 dark:bg-slate-700 rounded-[14px]">
             <Button
               onClick={() => setMode("ai")}
-              className={`h-[38px] rounded-[12px] font-bold text-[13px] border-0 tracking-[0.02em] transition-all duration-300 hover:scale-[1.02] ${
+              className={`!h-8 !rounded-[10px] !font-bold !text-[11px] md:!text-[13px] !border-0 !px-2 md:!px-3 tracking-[0.02em] transition-all duration-300 ${
                 mode === "ai"
                   ? "!text-white !bg-gradient-to-r !from-cyan-500 !to-[#00D4D0] shadow-[0_6px_16px_rgba(6,182,212,0.35)]"
                   : "!bg-transparent !text-gray-500 dark:!text-slate-400 hover:!text-cyan-500"
               }`}
               icon={<RobotOutlined />}
             >
-              {t('aiGenerate')}
+              <span className="hidden sm:inline">{t('aiGenerate')}</span>
             </Button>
             <Button
               onClick={() => setMode("manual")}
-              className={`h-[38px] rounded-[12px] font-bold text-[13px] border-0 tracking-[0.02em] transition-all duration-300 hover:scale-[1.02] ${
+              className={`!h-8 !rounded-[10px] !font-bold !text-[11px] md:!text-[13px] !border-0 !px-2 md:!px-3 tracking-[0.02em] transition-all duration-300 ${
                 mode === "manual"
                   ? "!text-white !bg-gradient-to-r !from-cyan-500 !to-[#00D4D0] shadow-[0_6px_16px_rgba(6,182,212,0.35)]"
                   : "!bg-transparent !text-gray-500 dark:!text-slate-400 hover:!text-cyan-500"
               }`}
               icon={<EditOutlined />}
             >
-              {t('manual')}
+              <span className="hidden sm:inline">{t('manual')}</span>
             </Button>
           </div>
         ) : (
           <Button
             onClick={() => router.push(`/${locale}/create-quiz`)}
-            className="!h-10 !px-4 !rounded-xl !text-white !font-bold !text-sm !bg-gradient-to-r !from-cyan-500 !to-[#00D4D0] !border-0 shadow-[0_6px_16px_rgba(6,182,212,0.35)] hover:scale-[1.03] transition-all duration-300"
+            className="!h-9 !px-2 md:!px-4 !rounded-xl !text-white !font-bold !text-xs md:!text-sm
+              !bg-gradient-to-r !from-cyan-500 !to-[#00D4D0] !border-0
+              shadow-[0_6px_16px_rgba(6,182,212,0.35)] hover:scale-[1.03] transition-all duration-300"
             icon={<PlusOutlined />}
           >
-            {t('generateQuiz')}
+            <span className="hidden sm:inline">{t('generateQuiz')}</span>
           </Button>
         )}
 
+        {/* Avatar */}
         <Dropdown menu={profileMenu} trigger={['click']}>
           <Avatar
-            className="!bg-gradient-to-br !from-cyan-500 !to-teal-900 !shadow-md hover:!shadow-xl ring-2 ring-white dark:ring-slate-800 transition-all duration-300 hover:scale-105 cursor-pointer"
-            icon={<UserOutlined />}
+            src={avatarUrl ?? undefined}
+            className="!shadow-md hover:!shadow-xl ring-2 ring-white dark:ring-slate-800
+              transition-all duration-300 hover:scale-105 cursor-pointer
+              !w-8 !h-8 md:!w-10 md:!h-10"
+            style={!avatarUrl ? { background: "linear-gradient(to bottom right, #06b6d4, #0f766e)" } : {}}
+            icon={!avatarUrl ? <UserOutlined /> : undefined}
           />
         </Dropdown>
       </div>

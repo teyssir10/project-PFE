@@ -32,7 +32,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     if (!user) { router.replace("/login"); return; }
     const check = async () => {
       const { data } = await supabase.from("users").select("role").eq("id", user.id).single();
-      if (data?.role !== "admin") router.replace("/dashboard");
+      // ✅ FIX: .trim() pour ignorer les espaces/retours à la ligne dans la BDD
+      if (data?.role?.trim() !== "admin") router.replace("/dashboard");
       else setChecking(false);
     };
     check();
@@ -115,7 +116,6 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       {sidebarOpen && (
         <div className="fixed inset-0 z-50 md:hidden">
           <div className="absolute inset-0 bg-black/60" onClick={() => setSidebarOpen(false)} />
-          {/* start-0 remplace left-0 → s'inverse en RTL */}
           <div className="absolute start-0 top-0 h-full">
             <Sidebar />
           </div>

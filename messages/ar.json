@@ -269,7 +269,30 @@
     "noQuizBtn": "توليد الاختبار",
     "noQuizSub2": "لإنشاء أسئلتك فوراً.",
      "customCategoryPlaceholder": "أدخل فئة...",
-    "customLanguagePlaceholder": "أدخل لغة..."
+    "customLanguagePlaceholder": "أدخل لغة...",
+     "questionType": "نوع الأسئلة",
+  "questionTypeMultiple": "اختيار متعدد",
+  "questionTypeMultipleDesc": "4 خيارات، إجابة واحدة صحيحة",
+  "questionTypeTrueFalse": "صح / خطأ",
+  "questionTypeTrueFalseDesc": "عبارة للتحقق منها",
+  "questionTypeShort": "إجابة قصيرة",
+  "questionTypeShortDesc": "يكتب اللاعب إجابته",
+  "questionTypeMixed": "مختلط",
+  "questionTypeMixedDesc": "يجمع جميع الأنواع تلقائياً",
+  "difficultyEasy": "سهل",
+"difficultyMedium": "متوسط",
+"difficultyHard": "صعب",
+"difficultyMixed": "مختلط",
+"catTechnology": "تكنولوجيا",
+"catScience": "علوم",
+"catHistory": "تاريخ",
+"catMath": "رياضيات",
+"catCustom": "✏️ مخصص",
+"langEnglish": "🇬🇧 الإنجليزية",
+"langFrench": "🇫🇷 الفرنسية",
+"langSpanish": "🇪🇸 الإسبانية",
+"langArabic": "🇸🇦 العربية",
+"langCustom": "✏️ مخصص"
   },
   
   "manualQuiz": {
@@ -300,6 +323,7 @@
     "loadingQuiz": "جارٍ تحميل الاختبار..."
   },
   "categorySelector": {
+    
     "science": "🔬 العلوم",
     "history": "📜 التاريخ",
     "tech": "💻 التكنولوجيا",
@@ -311,7 +335,13 @@
     "geo": "🌍 الجغرافيا",
     "cinema": "🎬 السينما",
     "custom": "✏️ مخصص...",
-    "customPlaceholder": "اكتب فئتك الخاصة..."
+    "customPlaceholder": "اكتب فئتك الخاصة...",
+    "loading": "جارٍ التحميل...",
+"saving": "جارٍ الحفظ...",
+"confirm": "✓ تأكيد",
+"alreadyExists": "موجود بالفعل — تم التحديد ✓",
+"added": "تمت الإضافة ✓",
+"errorSaving": "خطأ في حفظ الفئة"
   },
   "coverImage": {
     "clickOrDrag": "انقر أو اسحب للرفع",
