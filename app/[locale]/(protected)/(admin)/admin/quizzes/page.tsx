@@ -12,7 +12,14 @@ interface Quiz {
   is_published: boolean;
   created_at: string;
   question_count: number;
-  categories: { name: string; icon: string } | null;
+  categories: { name: string; icon: string } | { name: string; icon: string }[] | null;
+}
+
+// ✅ Helper pour accéder à categories qu'il soit objet ou tableau
+function getCategory(cat: Quiz["categories"]): { name: string; icon: string } | null {
+  if (!cat) return null;
+  if (Array.isArray(cat)) return cat[0] ?? null;
+  return cat;
 }
 
 const diffColors: Record<string, string> = {
@@ -38,13 +45,7 @@ export default function AdminQuizzesPage() {
       .from("quizzes")
       .select("id, title, difficulty, players, is_published, created_at, question_count, categories(name, icon)")
       .order("created_at", { ascending: false });
-    
-    const formatted = (data as any[])?.map(q => ({
-      ...q,
-      categories: Array.isArray(q.categories) ? q.categories[0] : q.categories
-    })) ?? [];
-
-    setQuizzes(formatted);
+    setQuizzes((data as Quiz[]) ?? []);
     setLoading(false);
   };
 
@@ -123,51 +124,54 @@ export default function AdminQuizzesPage() {
         ) : filtered.length === 0 ? (
           <div className="py-16 text-center text-gray-400 dark:text-slate-500 text-sm">{t("noResults")}</div>
         ) : (
-          filtered.map(q => (
-            <div key={q.id} className="grid grid-cols-12 px-5 py-4 items-center border-b border-gray-100 dark:border-slate-800 last:border-0 hover:bg-gray-50 dark:hover:bg-slate-800/40 transition-colors">
-              <div className="col-span-4 flex items-center gap-3">
-                <div className="w-9 h-9 rounded-xl bg-gray-100 dark:bg-slate-800 flex items-center justify-center text-lg flex-shrink-0">
-                  {q.categories?.icon ?? "🎯"}
+          filtered.map(q => {
+            const cat = getCategory(q.categories);
+            return (
+              <div key={q.id} className="grid grid-cols-12 px-5 py-4 items-center border-b border-gray-100 dark:border-slate-800 last:border-0 hover:bg-gray-50 dark:hover:bg-slate-800/40 transition-colors">
+                <div className="col-span-4 flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-xl bg-gray-100 dark:bg-slate-800 flex items-center justify-center text-lg flex-shrink-0">
+                    {cat?.icon ?? "🎯"}
+                  </div>
+                  <p className="text-sm font-semibold text-gray-900 dark:text-white truncate">{q.title}</p>
                 </div>
-                <p className="text-sm font-semibold text-gray-900 dark:text-white truncate">{q.title}</p>
-              </div>
-              <div className="col-span-2 text-center">
-                <span className="text-xs text-gray-500 dark:text-slate-400">{q.categories?.name ?? "—"}</span>
-              </div>
-              <div className="col-span-1 text-center">
-                <span className={`text-xs px-2 py-0.5 rounded-full font-semibold ${diffColors[q.difficulty] ?? "bg-gray-100 text-gray-600 dark:bg-slate-700 dark:text-slate-300"}`}>{q.difficulty}</span>
-              </div>
-              <div className="col-span-1 text-center">
-                <span className="text-sm text-gray-700 dark:text-slate-300">{q.question_count ?? 0}</span>
-              </div>
-              <div className="col-span-1 text-center">
-                <span className="text-sm text-gray-700 dark:text-slate-300">{q.players ?? 0}</span>
-              </div>
-              <div className="col-span-1 text-center">
-                <span className={`text-xs px-2 py-0.5 rounded-full font-semibold ${
-                  q.is_published
-                    ? "bg-cyan-100 text-cyan-700 dark:bg-cyan-500/20 dark:text-cyan-400"
-                    : "bg-gray-100 text-gray-600 dark:bg-slate-700 dark:text-slate-400"
-                }`}>
-                  {q.is_published ? t("actions.unpublish") === t("actions.unpublish") && "Publié" : "Brouillon"}
-                </span>
-              </div>
-              <div className="col-span-2 flex items-center justify-center gap-2">
-                <button onClick={() => togglePublish(q.id, q.is_published)} disabled={updating === q.id}
-                  className={`text-xs px-3 py-1.5 rounded-lg font-semibold transition-all ${
+                <div className="col-span-2 text-center">
+                  <span className="text-xs text-gray-500 dark:text-slate-400">{cat?.name ?? "—"}</span>
+                </div>
+                <div className="col-span-1 text-center">
+                  <span className={`text-xs px-2 py-0.5 rounded-full font-semibold ${diffColors[q.difficulty] ?? "bg-gray-100 text-gray-600 dark:bg-slate-700 dark:text-slate-300"}`}>{q.difficulty}</span>
+                </div>
+                <div className="col-span-1 text-center">
+                  <span className="text-sm text-gray-700 dark:text-slate-300">{q.question_count ?? 0}</span>
+                </div>
+                <div className="col-span-1 text-center">
+                  <span className="text-sm text-gray-700 dark:text-slate-300">{q.players ?? 0}</span>
+                </div>
+                <div className="col-span-1 text-center">
+                  <span className={`text-xs px-2 py-0.5 rounded-full font-semibold ${
                     q.is_published
-                      ? "bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-slate-700 dark:text-slate-300 dark:hover:bg-slate-600"
-                      : "bg-cyan-50 text-cyan-600 hover:bg-cyan-100 dark:bg-cyan-500/20 dark:text-cyan-400 dark:hover:bg-cyan-500/30"
+                      ? "bg-cyan-100 text-cyan-700 dark:bg-cyan-500/20 dark:text-cyan-400"
+                      : "bg-gray-100 text-gray-600 dark:bg-slate-700 dark:text-slate-400"
                   }`}>
-                  {updating === q.id ? "..." : q.is_published ? t("actions.unpublish") : t("actions.publish")}
-                </button>
-                <button onClick={() => deleteQuiz(q.id)}
-                  className="text-xs px-3 py-1.5 rounded-lg font-semibold bg-red-50 text-red-600 hover:bg-red-100 dark:bg-red-500/10 dark:text-red-400 dark:hover:bg-red-500/20 transition-all">
-                  {t("actions.delete")}
-                </button>
+                    {q.is_published ? "Publié" : "Brouillon"}
+                  </span>
+                </div>
+                <div className="col-span-2 flex items-center justify-center gap-2">
+                  <button onClick={() => togglePublish(q.id, q.is_published)} disabled={updating === q.id}
+                    className={`text-xs px-3 py-1.5 rounded-lg font-semibold transition-all ${
+                      q.is_published
+                        ? "bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-slate-700 dark:text-slate-300 dark:hover:bg-slate-600"
+                        : "bg-cyan-50 text-cyan-600 hover:bg-cyan-100 dark:bg-cyan-500/20 dark:text-cyan-400 dark:hover:bg-cyan-500/30"
+                    }`}>
+                    {updating === q.id ? "..." : q.is_published ? t("actions.unpublish") : t("actions.publish")}
+                  </button>
+                  <button onClick={() => deleteQuiz(q.id)}
+                    className="text-xs px-3 py-1.5 rounded-lg font-semibold bg-red-50 text-red-600 hover:bg-red-100 dark:bg-red-500/10 dark:text-red-400 dark:hover:bg-red-500/20 transition-all">
+                    {t("actions.delete")}
+                  </button>
+                </div>
               </div>
-            </div>
-          ))
+            );
+          })
         )}
       </div>
     </div>

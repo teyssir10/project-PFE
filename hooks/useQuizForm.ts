@@ -16,7 +16,6 @@ const capitalizeDifficulty = (s: string): string =>
   s ? s.charAt(0).toUpperCase() + s.slice(1).toLowerCase() : "Medium";
 
 export function useQuizForm() {
-  const { message } = App.useApp();
   const [form, setForm] = useState<QuizFormState>(DEFAULT_FORM_STATE);
   const [loading, setLoading] = useState(false);
   const [step, setStep] = useState(1);
