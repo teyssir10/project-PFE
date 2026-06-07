@@ -72,12 +72,12 @@ export default function ProfilePage() {
         .order("played_at", { ascending: false })
         .limit(4);
 
-      setQuizHistory(historyData ?? []);
+// ✅ Double cast via unknown
+setQuizHistory((historyData as unknown as QuizHistory[]) ?? []);
       setLoadingProfile(false);
     };
     fetchAll();
   }, [user]);
-
   const displayName = profile?.firstname
     ? `${profile.firstname} ${profile.lastname ?? ""}`.trim()
     : user?.email?.split("@")[0] ?? "User";
