@@ -220,7 +220,20 @@
       "hoursAgo": "Il y a {count}h",
       "yesterday": "Hier",
       "daysAgo": "Il y a {count} jours"
-    }
+      
+    },
+     "pages": {
+    "dashboard": "Tableau de bord",
+    "browseQuiz": "Explorer les Quiz",
+    "createQuiz": "Créer un Quiz",
+    "analytics": "Analytiques",
+    "leaderboard": "Classement",
+    "settings": "Paramètres",
+    "multiplayer": "Multijoueur",
+    "lobby": "Salle d'attente",
+    "profile": "Profil",
+    "playQuiz": "Jouer"
+  }
   },
   "stepper": {
     "aiStep1": "Configurer le quiz",
@@ -263,7 +276,32 @@
     "noQuizYet": "Aucun quiz généré",
     "noQuizSub": "Remplissez le formulaire et cliquez sur",
     "noQuizBtn": "Générer le Quiz",
-    "noQuizSub2": "pour créer vos questions instantanément."
+    "noQuizSub2": "pour créer vos questions instantanément.",
+    "customCategoryPlaceholder": "Entrez une catégorie...",
+    "customLanguagePlaceholder": "Entrez une langue...",
+     "questionType": "Type de questions",
+  "questionTypeMultiple": "Choix multiple",
+  "questionTypeMultipleDesc": "4 options, une bonne réponse",
+  "questionTypeTrueFalse": "Vrai / Faux",
+  "questionTypeTrueFalseDesc": "Affirmation à valider ou réfuter",
+  "questionTypeShort": "Réponse courte",
+  "questionTypeShortDesc": "Le joueur saisit sa propre réponse",
+  "questionTypeMixed": "Mixte",
+  "questionTypeMixedDesc": "Combine tous les types automatiquement",
+  "difficultyEasy": "Facile",
+"difficultyMedium": "Moyen",
+"difficultyHard": "Difficile",
+"difficultyMixed": "Mixte",
+"catTechnology": "Technologie",
+"catScience": "Science",
+"catHistory": "Histoire",
+"catMath": "Mathématiques",
+"catCustom": "✏️ Personnalisé",
+"langEnglish": "🇬🇧 Anglais",
+"langFrench": "🇫🇷 Français",
+"langSpanish": "🇪🇸 Espagnol",
+"langArabic": "🇸🇦 Arabe",
+"langCustom": "✏️ Personnalisé"
   },
   "manualQuiz": {
     "step": "Étape 1 sur 3",
@@ -285,7 +323,14 @@
     "perQuestion": "s par question",
     "back": "← Retour",
     "continue": "Continuer vers les Questions",
-    "alertTitle": "Veuillez entrer un titre de quiz"
+    "alertTitle": "Veuillez entrer un titre de quiz",
+      "editMode": "Mode édition",
+    "editTitle": "Modifier le quiz",
+    "editSubtitle": "Mettez à jour les paramètres et les questions",
+    "editNext": "Suivant : Modifier les questions",
+    "loadingQuiz": "Chargement du quiz...",
+     "loadingDraft": "Chargement du brouillon..."
+ 
   },
   "categorySelector": {
     "science": "🔬 Science",
@@ -299,7 +344,13 @@
     "geo": "🌍 Géographie",
     "cinema": "🎬 Cinéma",
     "custom": "✏️ Personnalisé...",
-    "customPlaceholder": "Tapez votre propre catégorie..."
+    "customPlaceholder": "Tapez votre propre catégorie...",
+    "loading": "Chargement...",
+"saving": "Enregistrement...",
+"confirm": "✓ Confirmer",
+"alreadyExists": "Existe déjà — sélectionné ✓",
+"added": "Ajouté ✓",
+"errorSaving": "Erreur lors de la sauvegarde"
   },
   "coverImage": {
     "clickOrDrag": "Cliquez ou glissez pour télécharger",
@@ -384,7 +435,8 @@
     "selectCorrect": "Veuillez sélectionner une bonne réponse pour chaque question",
     "enterShortAnswer": "Veuillez entrer la bonne réponse pour les questions à réponse courte",
     "saveSuccess": "Quiz sauvegardé avec succès ! 🎉",
-    "saveError": "Erreur : "
+    "saveError": "Erreur : ",
+    "loadingDraft": "Chargement du brouillon..."
   },
   "browsePage": {
     "searchPlaceholder": "Rechercher des quiz...",
@@ -421,7 +473,8 @@
     "finish": "🎉 Terminer",
     "changeOrConfirm": "Modifiez ou confirmez votre réponse",
     "quizNotFound": "Quiz introuvable.",
-    "goBack": "Retour"
+    "goBack": "Retour",
+     "changeOrConfirm": "Changer ou confirmer votre réponse"
   },
   "quizSidebarPlay": {
     "questions": "Questions",
@@ -700,10 +753,14 @@
       "myquizzes": "Mes Quiz"
     },
     "profile": {
-      "firstName": "Prénom",
-      "lastName": "Nom de famille",
-      "email": "Adresse e-mail",
-      "bio": "Biographie"
+     "firstName": "Prénom",
+    "lastName": "Nom",
+    "email": "Adresse e-mail",
+    "country": "Pays",
+    "countryPlaceholder": "ex. Tunisie",
+    "region": "Région",
+    "regionPlaceholder": "ex. Tunis"
+
     },
     "security": {
       "currentPwd": "Mot de passe actuel",
@@ -950,5 +1007,14 @@
     "userMode": "Mode Utilisateur",
     "logout": "Déconnexion",
     "mobileTitle": "PandoMind Admin"
+  },
+    "landingLeaderboard": {
+    "title": "Classement",
+    "subtitle": "Découvrez les meilleurs joueurs et grimpez dans le classement",
+    "rank": "Rang",
+    "user": "Utilisateur",
+    "score": "Score",
+    "quizzes": "Quiz",
+    "empty": "Aucun joueur pour l'instant"
   }
 }

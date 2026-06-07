@@ -225,7 +225,20 @@
         "hoursAgo": "{count}h ago",
         "yesterday": "Yesterday",
         "daysAgo": "{count} days ago"
-      }
+       
+      },
+       "pages": {
+    "dashboard": "Dashboard",
+    "browseQuiz": "Browse Quiz",
+    "createQuiz": "Create Quiz",
+    "analytics": "Analytics",
+    "leaderboard": "Leaderboard",
+    "settings": "Settings",
+    "multiplayer": "Multiplayer",
+    "lobby": "Waiting Room",
+    "profile": "Profile",
+    "playQuiz": "Play Quiz"
+  }
   },
   "stepper": {
     "aiStep1": "Configure quiz",
@@ -268,7 +281,32 @@
     "noQuizYet": "No quiz generated yet",
     "noQuizSub": "Fill in the form and click",
     "noQuizBtn": "Generate Quiz",
-    "noQuizSub2": "to create your questions instantly."
+    "noQuizSub2": "to create your questions instantly.",
+    "customCategoryPlaceholder": "Enter a category...",
+    "customLanguagePlaceholder": "Enter a language...",
+    "questionType": "Question type",
+  "questionTypeMultiple": "Multiple choice",
+  "questionTypeMultipleDesc": "4 options, one correct answer",
+  "questionTypeTrueFalse": "True / False",
+  "questionTypeTrueFalseDesc": "Statement to validate or refute",
+  "questionTypeShort": "Short answer",
+  "questionTypeShortDesc": "Player types their own answer",
+  "questionTypeMixed": "Mixed",
+  "questionTypeMixedDesc": "Combines all types automatically",
+  "difficultyEasy": "Easy",
+"difficultyMedium": "Medium",
+"difficultyHard": "Hard",
+"difficultyMixed": "Mixed",
+"catTechnology": "Technology",
+"catScience": "Science",
+"catHistory": "History",
+"catMath": "Math",
+"catCustom": "✏️ Custom",
+"langEnglish": "🇬🇧 English",
+"langFrench": "🇫🇷 French",
+"langSpanish": "🇪🇸 Spanish",
+"langArabic": "🇸🇦 Arabic",
+"langCustom": "✏️ Custom"
   },
   
   "manualQuiz": {
@@ -291,7 +329,13 @@
     "perQuestion": "s per question",
     "back": "← Back",
     "continue": "Continue to Questions",
-    "alertTitle": "Please enter a quiz title"
+    "alertTitle": "Please enter a quiz title",
+    "editMode": "Edit Mode",
+    "editTitle": "Edit Quiz",
+    "editSubtitle": "Update your quiz settings and questions",
+    "editNext": "Next: Edit Questions",
+    "loadingQuiz": "Loading quiz…",
+    "loadingDraft": "Loading draft..."
   },
   "categorySelector": {
     "science": "🔬 Science",
@@ -305,7 +349,13 @@
     "geo": "🌍 Geography",
     "cinema": "🎬 Cinema",
     "custom": "✏️ Custom...",
-    "customPlaceholder": "Type your own category..."
+    "customPlaceholder": "Type your own category...",
+    "loading": "Loading...",
+"saving": "Saving…",
+"confirm": "✓ Confirm",
+"alreadyExists": "Already exists — selected ✓",
+"added": "Added ✓",
+"errorSaving": "Error saving category"
   },
   "coverImage": {
     "clickOrDrag": "Click or drag to upload",
@@ -391,7 +441,8 @@
     "selectCorrect": "Please select a correct answer for each question",
     "enterShortAnswer": "Please enter the correct answer for short answer questions",
     "saveSuccess": "Quiz saved successfully! 🎉",
-    "saveError": "Error: "
+    "saveError": "Error: ",
+     "loadingDraft": "Loading draft..."
   },
   
   "browsePage": {
@@ -430,7 +481,8 @@
     "finish": "🎉 Finish",
     "changeOrConfirm": "Change or confirm your answer",
     "quizNotFound": "Quiz not found.",
-    "goBack": "Go back"
+    "goBack": "Go back",
+    "changeOrConfirm": "Change or confirm your answer"
   },
   "quizSidebarPlay": {
     "questions": "Questions",
@@ -676,6 +728,7 @@
     "no_results": "No players match your search",
     "anonymous": "Anonymous",
     "you": "You"
+    
   },
  "settings": {
     "title": "Settings",
@@ -693,9 +746,12 @@
     },
     "profile": {
       "firstName": "First name",
-      "lastName": "Last name",
-      "email": "Email address",
-      "bio": "Bio"
+    "lastName": "Last name",
+    "email": "Email address",
+    "country": "Country",
+    "countryPlaceholder": "e.g. Tunisia",
+    "region": "Region",
+    "regionPlaceholder": "e.g. Tunis"
     },
     "security": {
       "currentPwd": "Current password",
@@ -1000,6 +1056,15 @@
     "userMode": "User Mode",
     "logout": "Log out",
     "mobileTitle": "PandoMind Admin"
+  },
+  "landingLeaderboard": {
+    "title": "Leaderboard",
+    "subtitle": "Discover the best players and climb the rankings",
+    "rank": "Rank",
+    "user": "User",
+    "score": "Score",
+    "quizzes": "Quizzes",
+    "empty": "No players yet"
   }
 
   }

@@ -17,7 +17,6 @@ export default function LanguageSwitcher() {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
-  // Fermer le dropdown si on clique à l'extérieur
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (ref.current && !ref.current.contains(e.target as Node)) {
@@ -30,7 +29,8 @@ export default function LanguageSwitcher() {
 
   const switchLanguage = (newLocale: string) => {
     const newPath = pathname.replace(`/${currentLocale}`, `/${newLocale}`);
-    router.push(newPath);
+    const search = window.location.search; // ✅ garde ?edit=ID, ?draft=ID, etc.
+    router.push(newPath + search);
     setOpen(false);
   };
 
@@ -38,8 +38,6 @@ export default function LanguageSwitcher() {
 
   return (
     <div className="relative" ref={ref}>
-      
-      {/* Bouton compact */}
       <button
         onClick={() => setOpen(!open)}
         className="flex items-center gap-1 px-2 py-1 rounded-full
@@ -52,7 +50,6 @@ export default function LanguageSwitcher() {
         <span className="text-[10px] text-gray-400">{open ? "▲" : "▼"}</span>
       </button>
 
-      {/* Dropdown */}
       {open && (
         <div
           className="absolute right-0 mt-2 w-40 rounded-xl shadow-lg
@@ -74,7 +71,6 @@ export default function LanguageSwitcher() {
             >
               <span>{flag}</span>
               <span>{label}</span>
-
               {currentLocale === code && (
                 <span className="ml-auto text-cyan-500">✓</span>
               )}

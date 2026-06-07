@@ -9,10 +9,10 @@ import {
 } from "@ant-design/icons";
 import Stats from "@/components/LayoutDashboard/stats";
 import QuickActions from "@/components/LayoutDashboard/Quick-Actions";
-
-
 import { supabase } from "@/lib/supabase";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
+import { useQuizModeStore } from "@/store/useQuizModeStore";
+import { useRecommendations } from "@/hooks/useRecommendations";
 
 const difficultyColor: Record<string, string> = {
   Easy:   "!bg-cyan-50 !text-cyan-700 !border-cyan-200",
@@ -25,14 +25,19 @@ export default function Page() {
   const t = useTranslations("dashboard");
   const { user } = useAuth();
   const router = useRouter();
+  const locale = useLocale();
+  const { setMode } = useQuizModeStore();
+
   const username = user?.user_metadata?.firstname || user?.email?.split("@")[0] || "User";
 
-  const [recentActivity, setRecentActivity] = useState<any[]>([]);
-  const [recommendedQuizzes, setRecommendedQuizzes] = useState<any[]>([]);
+  const [recentActivity, setRecentActivity]   = useState<any[]>([]);
   const [loadingActivity, setLoadingActivity] = useState(true);
-  const [loadingRecommended, setLoadingRecommended] = useState(true);
 
-  
+  const {
+    recommendations: recommendedQuizzes,
+    loading: loadingRecommended,
+    refetch: refetchRecommended,
+  } = useRecommendations(user?.id);
 
   useEffect(() => {
     if (!user) return;
@@ -50,26 +55,11 @@ export default function Page() {
     fetchRecentActivity();
   }, [user]);
 
-  useEffect(() => {
-    const fetchRecommended = async () => {
-      setLoadingRecommended(true);
-      const { data, error } = await supabase
-        .from("quizzes")
-        .select(`*, categories (name, icon)`)
-        .eq("is_published", true)
-        .order("players", { ascending: false })
-        .limit(3);
-      if (!error && data) setRecommendedQuizzes(data);
-      setLoadingRecommended(false);
-    };
-    fetchRecommended();
-  }, []);
-
   const formatDate = (date: string) => {
-    const diff = Date.now() - new Date(date).getTime();
+    const diff  = Date.now() - new Date(date).getTime();
     const hours = Math.floor(diff / (1000 * 60 * 60));
-    const days = Math.floor(hours / 24);
-    if (hours < 1) return t("justNow");
+    const days  = Math.floor(hours / 24);
+    if (hours < 1)  return t("justNow");
     if (hours < 24) return t("hoursAgo", { hours });
     if (days === 1) return t("yesterday");
     return t("daysAgo", { days });
@@ -92,13 +82,13 @@ export default function Page() {
           </div>
           <div className="relative z-10 flex gap-2 flex-shrink-0">
             <button
-              onClick={() => router.push("/browse-quiz")}
+              onClick={() => router.push(`/${locale}/browse-quiz`)}
               className="px-4 py-2 rounded-xl text-xs font-bold bg-white/15 text-white border border-white/25 hover:bg-white/25 transition-all"
             >
               {t("browseQuizzes")}
             </button>
             <button
-              onClick={() => router.push("/create-quiz/manuelQuiz")}
+              onClick={() => { setMode("ai"); router.push(`/${locale}/create-quiz`); }}
               className="px-4 py-2 rounded-xl text-xs font-bold bg-white text-cyan-600 hover:bg-cyan-50 transition-all shadow-sm"
             >
               ✨ {t("generateAI")}
@@ -112,18 +102,15 @@ export default function Page() {
         {/* ── MAIN GRID ── */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
 
-          {/* Recent Activity */}
+          {/* ── RECENT ACTIVITY ── */}
           <Card
             className="!rounded-2xl !border !border-cyan-100 !shadow-sm !bg-white dark:!bg-slate-800 dark:!border-slate-700"
             styles={{ body: { padding: "20px" } }}
           >
             <div className="flex items-center justify-between mb-5">
-              <div className="flex items-center gap-2">
-                <h2 className="text-base font-bold text-gray-800 dark:text-white">
-                  {t("recentActivity")}
-                </h2>
-                
-              </div>
+              <h2 className="text-base font-bold text-gray-800 dark:text-white">
+                {t("recentActivity")}
+              </h2>
               <ClockCircleOutlined className="text-cyan-400 text-base" />
             </div>
 
@@ -159,7 +146,12 @@ export default function Page() {
                           </span>
                         </div>
                         <div className="flex items-center gap-2">
-                          <Progress percent={percent} size="small" strokeColor="#06b6d4" className="!mb-0 flex-1" />
+                          <Progress
+                            percent={percent}
+                            size="small"
+                            strokeColor="#06b6d4"
+                            className="!mb-0 flex-1"
+                          />
                           <span className="text-xs font-bold text-cyan-600 dark:text-cyan-300 flex-shrink-0">
                             {item.score}/{item.quizzes?.question_count ?? "?"}
                           </span>
@@ -172,23 +164,22 @@ export default function Page() {
             )}
           </Card>
 
-          {/* Right column */}
+          {/* ── RIGHT COLUMN ── */}
           <div className="space-y-5">
             <QuickActions />
 
-            {/* Recommended */}
+            {/* ── RECOMMENDED ── */}
             <Card
               className="!rounded-2xl !border !border-cyan-100 !shadow-sm !bg-white dark:!bg-slate-800 dark:!border-slate-700"
               styles={{ body: { padding: "20px" } }}
-              
             >
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-base font-bold text-gray-800 dark:text-white">
                   {t("recommended")}
                 </h2>
-                <Tag className="!rounded-full !text-xs !font-bold !bg-cyan-500 !text-white !border-0">
-                  AI ✨
-                </Tag>
+                <span className="text-[10px] px-2 py-0.5 rounded-full bg-cyan-50 dark:bg-cyan-900/20 border border-cyan-100 dark:border-cyan-800/40 text-cyan-600 dark:text-cyan-300 font-semibold">
+                  AI ✦
+                </span>
               </div>
 
               {loadingRecommended ? (
@@ -207,23 +198,28 @@ export default function Page() {
                     >
                       <div className="flex items-center gap-3">
                         <div className="w-10 h-10 rounded-xl bg-cyan-50 dark:bg-slate-600 flex items-center justify-center text-lg border border-cyan-100 dark:border-slate-500">
-                          {quiz.categories?.icon || "🎯"}
+                          {(quiz as any).categories?.icon || "🎯"}
                         </div>
                         <div>
-                          <p className="font-bold text-gray-800 dark:text-white text-sm">{quiz.title}</p>
+                          <p className="font-bold text-gray-800 dark:text-white text-sm">
+                            {quiz.title}
+                          </p>
                           <p className="text-xs text-gray-400 dark:text-gray-400">
-                            {quiz.question_count} {t("questions")} • {quiz.categories?.name || "General"}
+                            {quiz.question_count} {t("questions")} •{" "}
+                            {quiz.category?.name || (quiz as any).categories?.name || "General"}
                           </p>
                         </div>
                       </div>
+
                       <div className="flex items-center gap-2">
                         <Tag className={`!rounded-full !text-xs !font-bold ${difficultyColor[quiz.difficulty] ?? ""}`}>
                           {quiz.difficulty}
                         </Tag>
+                        {/* ✅ Bouton play corrigé */}
                         <Button
                           size="small"
                           icon={<CaretRightOutlined />}
-                          onClick={() => router.push(`/play-quiz/${quiz.id}/play`)}
+                          onClick={() => router.push(`/${locale}/play-quiz/${quiz.id}/play`)}
                           className="!bg-gradient-to-r !from-cyan-500 !to-teal-400 !text-white !border-0 !rounded-lg opacity-0 group-hover:opacity-100 transition-all"
                         />
                       </div>
@@ -232,10 +228,11 @@ export default function Page() {
                 </div>
               )}
 
+              {/* ✅ Bouton refresh */}
               <Button
                 block
                 icon={<ThunderboltOutlined />}
-                onClick={() => router.push("/browse-quiz")}
+                onClick={refetchRecommended}
                 className="!mt-4 !bg-gradient-to-r !from-cyan-500 !to-teal-400 !text-white !border-0 !rounded-xl !font-bold hover:!opacity-90"
               >
                 {t("getMore")}

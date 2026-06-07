@@ -10,17 +10,13 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ success: false, error: "No questions provided." }, { status: 400 });
   }
 
-  // ✅ Serialize questions safely regardless of their internal format
   const serialized = questions.map((q: any, i: number) => {
-    // Get question text
     const text = q.text || q.question || "(empty question)";
 
-    // Get options — handle both {id, text} objects and plain strings
     const options: string[] = Array.isArray(q.options)
       ? q.options.map((o: any) => (typeof o === "string" ? o : o.text || "(empty option)"))
       : [];
 
-    // Get correct answer — handle correctOptionId or correctAnswer
     let correct = "(none marked)";
     if (q.correctOptionId && Array.isArray(q.options)) {
       const found = q.options.find((o: any) => o.id === q.correctOptionId);
@@ -29,8 +25,13 @@ export async function POST(req: NextRequest) {
       correct = q.correctAnswer;
     }
 
-    return `Q${i + 1} [${q.type || "multiple"}]: ${text}
-Options: ${options.length > 0 ? options.join(" | ") : "N/A"}
+    // ✅ Affiche clairement le type pour que l'IA comprenne
+    const typeLabel = q.type === "short" || q.type === "short_answer"
+      ? "short_answer (free text — no options required)"
+      : q.type || "multiple_choice";
+
+    return `Q${i + 1} [${typeLabel}]: ${text}
+Options: ${options.length > 0 ? options.join(" | ") : q.type === "short" || q.type === "short_answer" ? "N/A (short answer question)" : "N/A"}
 Correct: ${correct}`;
   }).join("\n\n");
 
@@ -43,17 +44,23 @@ Correct: ${correct}`;
 
 Scoring rules:
 - score >= 75 → decision must be "approve"
-- score 50 to 74 → decision must be "needs_review"  
+- score 50 to 74 → decision must be "needs_review"
 - score < 50 → decision must be "reject"
 
+IMPORTANT QUESTION TYPE RULES:
+- "short_answer" questions require NO options. They expect a free-text answer. NEVER penalize a short_answer question for missing options. It is valid as long as it has a correct_answer text.
+- "multiple_choice" questions MUST have at least 2 options and a correct answer marked.
+- "true_false" questions MUST have exactly 2 options (True/False).
+
 Check for these issues:
-- Questions with no correct answer marked
-- Correct answer that doesn't match any option
+- multiple_choice or true_false questions with no options
+- Questions with no correct answer marked (except short_answer which uses correct_answer text)
+- Correct answer that doesn't match any option (only for multiple_choice/true_false)
 - Nonsensical, random, or offensive content
-- Empty questions or options
+- Empty question text
 - Overall educational value
 
-Return ONLY the JSON object. No indice, no markdown, no extra text.`;
+Return ONLY the JSON object. No markdown, no extra text.`;
 
   const userPrompt = `Review this quiz:
 Title: "${title || "Untitled"}"
@@ -79,7 +86,6 @@ ${serialized}`;
 
     const parsed = JSON.parse(content);
 
-    // ✅ Validate required fields
     if (
       typeof parsed.score !== "number" ||
       !["approve", "needs_review", "reject"].includes(parsed.decision) ||

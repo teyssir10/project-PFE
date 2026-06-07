@@ -45,9 +45,9 @@ export default function QuizCard({ quiz, isFavorite, onToggleFavorite, isHostMod
         code: newCode,
         host_id: user.id,
         quiz_id: quiz.id,
-        room_status: "waiting",       // ✅
-        game_phase: "idle",           // ✅
-        current_question_index: 0,   // ✅
+        room_status: "waiting",
+        game_phase: "idle",
+        current_question_index: 0,
       })
       .select()
       .single();
@@ -68,9 +68,42 @@ export default function QuizCard({ quiz, isFavorite, onToggleFavorite, isHostMod
     Mixed:  { color: "text-purple-600", bg: "bg-purple-50 border-purple-200", icon: "🟣" },
   };
 
-  const diff = difficultyConfig[quiz.difficulty ?? ""] ?? difficultyConfig["Easy"];
+  const questionTypeConfig: Record<string, { label: string; icon: string; color: string; bg: string; border: string }> = {
+    multiple_choice: {
+      label: "Choix multiple",
+      icon:  "≡",
+      color: "text-cyan-600 dark:text-cyan-400",
+      bg:    "bg-cyan-50 dark:bg-cyan-900/30",
+      border:"border-cyan-200 dark:border-cyan-700",
+    },
+    true_false: {
+      label: "Vrai / Faux",
+      icon:  "⇄",
+      color: "text-blue-600 dark:text-blue-400",
+      bg:    "bg-blue-50 dark:bg-blue-900/30",
+      border:"border-blue-200 dark:border-blue-700",
+    },
+    short_answer: {
+      label: "Réponse courte",
+      icon:  "✎",
+      color: "text-purple-600 dark:text-purple-400",
+      bg:    "bg-purple-50 dark:bg-purple-900/30",
+      border:"border-purple-200 dark:border-purple-700",
+    },
+    mixed: {
+      label: "Mixte",
+      icon:  "⊞",
+      color: "text-teal-600 dark:text-teal-400",
+      bg:    "bg-teal-50 dark:bg-teal-900/30",
+      border:"border-teal-200 dark:border-teal-700",
+    },
+  };
+
+  const diff          = difficultyConfig[quiz.difficulty ?? ""] ?? difficultyConfig["Easy"];
+  const qType         = questionTypeConfig[quiz.question_type ?? "multiple_choice"] ?? questionTypeConfig["multiple_choice"];
   const questionCount = quiz.questionCount ?? quiz.question_count ?? 0;
-  const minutes = Math.ceil((quiz.time_per_question ?? 30) * questionCount / 60);
+  const categoryName  = quiz.categoryName ?? quiz.category ?? null;
+  const categoryIcon  = quiz.categoryIcon ?? null;
 
   return (
     <div className="bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1 overflow-hidden border border-gray-100 group dark:bg-slate-700 dark:border-slate-600">
@@ -104,14 +137,14 @@ export default function QuizCard({ quiz, isFavorite, onToggleFavorite, isHostMod
           )}
         </div>
 
-        {/* Difficulty badge */}
+        {/* Difficulty badge — top right */}
         {quiz.difficulty && (
           <div className={`absolute top-3 right-3 flex items-center gap-1 text-xs px-2.5 py-1 rounded-full font-semibold border ${diff.bg} ${diff.color} dark:bg-slate-600/50 dark:border-slate-500 dark:text-slate-300`}>
             {diff.icon} {quiz.difficulty}
           </div>
         )}
 
-        {/* Source badge */}
+        {/* Source badge — bottom left */}
         {quiz.source && (
           <div className={`absolute bottom-3 left-3 flex items-center gap-1 text-xs px-2.5 py-1 rounded-full font-semibold border ${
             quiz.source === "ai"
@@ -122,7 +155,17 @@ export default function QuizCard({ quiz, isFavorite, onToggleFavorite, isHostMod
           </div>
         )}
 
-        {/* Edit / Delete */}
+        {/* Category pill — bottom right (hidden when owner hovers) */}
+        {categoryName && (
+          <div className={`absolute bottom-3 right-3 transition-opacity duration-200 ${isOwner ? "group-hover:opacity-0" : ""}`}>
+            <span className="inline-flex items-center gap-1 text-[11px] font-semibold px-2.5 py-1 rounded-full bg-black/40 backdrop-blur-sm text-white border border-white/20">
+              {categoryIcon && <span>{categoryIcon}</span>}
+              {categoryName}
+            </span>
+          </div>
+        )}
+
+        {/* Edit / Delete — bottom right (owner only) */}
         {isOwner && (
           <div className="absolute bottom-3 right-3 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
             <button
@@ -145,11 +188,13 @@ export default function QuizCard({ quiz, isFavorite, onToggleFavorite, isHostMod
 
       {/* Body */}
       <div className="p-4">
-        {quiz.category && (
-          <span className="text-xs text-cyan-500 font-semibold uppercase tracking-wide">
-            {quiz.category}
+
+        {/* Question type badge only */}
+        <div className="flex items-center gap-2 flex-wrap mb-1">
+          <span className={`inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full border ${qType.bg} ${qType.color} ${qType.border}`}>
+            {qType.icon} {qType.label}
           </span>
-        )}
+        </div>
 
         <div className="flex items-start justify-between mt-1">
           <h3 className="font-bold text-gray-900 text-lg leading-tight line-clamp-2 flex-1 dark:text-white">

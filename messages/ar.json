@@ -224,7 +224,21 @@
         "hoursAgo": "منذ {count} ساعة",
         "yesterday": "أمس",
         "daysAgo": "منذ {count} أيام"
-      }
+        
+        
+      },
+      "pages": {
+    "dashboard": "لوحة التحكم",
+    "browseQuiz": "تصفح الاختبارات",
+    "createQuiz": "إنشاء اختبار",
+    "analytics": "التحليلات",
+    "leaderboard": "المتصدرون",
+    "settings": "الإعدادات",
+    "multiplayer": "متعدد اللاعبين",
+    "lobby": "غرفة الانتظار",
+    "profile": "الملف الشخصي",
+    "playQuiz": "لعب"
+  }
   },
   "stepper": {
     "aiStep1": "ضبط الاختبار",
@@ -267,7 +281,32 @@
     "noQuizYet": "لم يتم توليد اختبار بعد",
     "noQuizSub": "املأ النموذج وانقر على",
     "noQuizBtn": "توليد الاختبار",
-    "noQuizSub2": "لإنشاء أسئلتك فوراً."
+    "noQuizSub2": "لإنشاء أسئلتك فوراً.",
+     "customCategoryPlaceholder": "أدخل فئة...",
+    "customLanguagePlaceholder": "أدخل لغة...",
+     "questionType": "نوع الأسئلة",
+  "questionTypeMultiple": "اختيار متعدد",
+  "questionTypeMultipleDesc": "4 خيارات، إجابة واحدة صحيحة",
+  "questionTypeTrueFalse": "صح / خطأ",
+  "questionTypeTrueFalseDesc": "عبارة للتحقق منها",
+  "questionTypeShort": "إجابة قصيرة",
+  "questionTypeShortDesc": "يكتب اللاعب إجابته",
+  "questionTypeMixed": "مختلط",
+  "questionTypeMixedDesc": "يجمع جميع الأنواع تلقائياً",
+  "difficultyEasy": "سهل",
+"difficultyMedium": "متوسط",
+"difficultyHard": "صعب",
+"difficultyMixed": "مختلط",
+"catTechnology": "تكنولوجيا",
+"catScience": "علوم",
+"catHistory": "تاريخ",
+"catMath": "رياضيات",
+"catCustom": "✏️ مخصص",
+"langEnglish": "🇬🇧 الإنجليزية",
+"langFrench": "🇫🇷 الفرنسية",
+"langSpanish": "🇪🇸 الإسبانية",
+"langArabic": "🇸🇦 العربية",
+"langCustom": "✏️ مخصص"
   },
   
   "manualQuiz": {
@@ -290,9 +329,16 @@
     "perQuestion": "ث لكل سؤال",
     "back": "→ رجوع",
     "continue": "المتابعة إلى الأسئلة",
-    "alertTitle": "الرجاء إدخال عنوان الاختبار"
+    "alertTitle": "الرجاء إدخال عنوان الاختبار",
+    "editMode": "وضع التعديل",
+    "editTitle": "تعديل الاختبار",
+    "editSubtitle": "حدّث إعدادات اختبارك وأسئلته",
+    "editNext": "التالي: تعديل الأسئلة",
+    "loadingQuiz": "جارٍ تحميل الاختبار...",
+    "loadingDraft": "جاري تحميل المسودة..."
   },
   "categorySelector": {
+    
     "science": "🔬 العلوم",
     "history": "📜 التاريخ",
     "tech": "💻 التكنولوجيا",
@@ -304,7 +350,13 @@
     "geo": "🌍 الجغرافيا",
     "cinema": "🎬 السينما",
     "custom": "✏️ مخصص...",
-    "customPlaceholder": "اكتب فئتك الخاصة..."
+    "customPlaceholder": "اكتب فئتك الخاصة...",
+    "loading": "جارٍ التحميل...",
+"saving": "جارٍ الحفظ...",
+"confirm": "✓ تأكيد",
+"alreadyExists": "موجود بالفعل — تم التحديد ✓",
+"added": "تمت الإضافة ✓",
+"errorSaving": "خطأ في حفظ الفئة"
   },
   "coverImage": {
     "clickOrDrag": "انقر أو اسحب للرفع",
@@ -390,7 +442,8 @@
     "selectCorrect": "يرجى اختيار إجابة صحيحة لكل سؤال",
     "enterShortAnswer": "يرجى إدخال الإجابة الصحيحة للأسئلة ذات الإجابة القصيرة",
     "saveSuccess": "تم حفظ الاختبار بنجاح! 🎉",
-    "saveError": "خطأ: "
+    "saveError": "خطأ: ",
+    "loadingDraft": "جارٍ تحميل المسودة..."
   },
   
   "browsePage": {
@@ -429,7 +482,8 @@
     "finish": "🎉 إنهاء",
     "changeOrConfirm": "قم بتعديل أو تأكيد إجابتك",
     "quizNotFound": "الاختبار غير موجود.",
-    "goBack": "رجوع"
+    "goBack": "رجوع",
+    "changeOrConfirm": "تغيير أو تأكيد إجابتك"
   },
   "quizSidebarPlay": {
     "questions": "الأسئلة",
@@ -691,11 +745,14 @@
       "drafts": "المسودات",
       "myquizzes": "اختباراتي"
     },
-    "profile": {
+    "profile": { 
       "firstName": "الاسم الأول",
-      "lastName": "اسم العائلة",
-      "email": "البريد الإلكتروني",
-      "bio": "نبذة شخصية"
+    "lastName": "اسم العائلة",
+    "email": "البريد الإلكتروني",
+    "country": "البلد",
+    "countryPlaceholder": "مثال: تونس",
+    "region": "المنطقة",
+    "regionPlaceholder": "مثال: تونس العاصمة"
     },
     "security": {
       "currentPwd": "كلمة المرور الحالية",
@@ -1006,7 +1063,18 @@
     "userMode": "وضع المستخدم",
     "logout": "تسجيل الخروج",
     "mobileTitle": "PandoMind Admin"
+  },
+    "landingLeaderboard": {
+    "title": "لوحة المتصدرين",
+    "subtitle": "اكتشف أفضل اللاعبين وتسلق التصنيفات",
+    "rank": "الترتيب",
+    "user": "المستخدم",
+    "score": "النقاط",
+    "quizzes": "الاختبارات",
+    "empty": "لا يوجد لاعبون بعد"
   }
+
+  
 }
 
 

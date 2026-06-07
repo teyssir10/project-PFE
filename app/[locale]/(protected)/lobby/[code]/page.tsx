@@ -110,7 +110,7 @@ export default function LobbyPage() {
     try {
       // ✅ insertGameState → startGame
       await startGame(room.id);
-      router.push(`/play-quiz/${room.quiz_id}/play?roomId=${room.id}`);
+   router.push(`/play-quiz/${room.quiz_id}/play?roomId=${room.id}`);
     } catch (e) {
       console.error("Start game error:", e);
       setStarting(false);

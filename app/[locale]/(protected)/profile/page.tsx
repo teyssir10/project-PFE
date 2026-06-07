@@ -1,20 +1,16 @@
 "use client";
 
 import React, { useState, useEffect, Fragment } from "react";
-import { Avatar, Button, Card, Progress, Tag, Modal, Form, Input, Select, App, Spin } from "antd";
+import { Spin } from "antd";
 import {
-  EditOutlined, TrophyOutlined, UserOutlined,
-  StarOutlined, ClockCircleOutlined, CheckCircleOutlined,
-  CloseCircleOutlined, RiseOutlined, GlobalOutlined, LockOutlined,
-  EnvironmentOutlined, FireOutlined, ThunderboltOutlined,
+  EditOutlined, ClockCircleOutlined,
+  CheckCircleOutlined, CloseCircleOutlined,
 } from "@ant-design/icons";
 import { useAuth } from "@/lib/auth";
-import { Controller, useForm } from "react-hook-form";
-import * as yup from "yup";
-import { yupResolver } from "@hookform/resolvers/yup";
 import AvatarUpload from "@/components/AvatarUpload/AvatarUpload";
 import { supabase } from "@/lib/supabase";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
+import { useRouter } from "next/navigation";
 
 interface UserProfile {
   firstname: string | null;
@@ -34,24 +30,6 @@ interface QuizHistory {
   quizzes: { title: string; question_count: number } | null;
 }
 
-const COUNTRIES = [
-  { value: "Algeria",      label: "🇩🇿 Algeria"        },
-  { value: "Tunisia",      label: "🇹🇳 Tunisia"         },
-  { value: "Morocco",      label: "🇲🇦 Morocco"         },
-  { value: "Egypt",        label: "🇪🇬 Egypt"           },
-  { value: "France",       label: "🇫🇷 France"          },
-  { value: "Germany",      label: "🇩🇪 Germany"         },
-  { value: "Spain",        label: "🇪🇸 Spain"           },
-  { value: "Italy",        label: "🇮🇹 Italy"           },
-  { value: "UK",           label: "🇬🇧 United Kingdom"  },
-  { value: "USA",          label: "🇺🇸 United States"   },
-  { value: "Canada",       label: "🇨🇦 Canada"          },
-  { value: "Saudi Arabia", label: "🇸🇦 Saudi Arabia"    },
-  { value: "UAE",          label: "🇦🇪 UAE"             },
-  { value: "Turkey",       label: "🇹🇷 Turkey"          },
-  { value: "Other",        label: "🌐 Other"            },
-];
-
 const achievements = [
   { name: "Quiz Master",   desc: "Completed 20+ quizzes",  emoji: "🏆", bg: "bg-amber-50  dark:bg-amber-900/20",  text: "text-amber-600  dark:text-amber-400",  border: "border-amber-100  dark:border-amber-800/40"  },
   { name: "Perfect Score", desc: "Got 100% in 5 quizzes",  emoji: "⭐", bg: "bg-green-50  dark:bg-green-900/20",  text: "text-green-600  dark:text-green-400",  border: "border-green-100  dark:border-green-800/40"  },
@@ -60,38 +38,16 @@ const achievements = [
   { name: "Top 10",        desc: "Reached global top 10",  emoji: "🌍", bg: "bg-purple-50 dark:bg-purple-900/20", text: "text-purple-600 dark:text-purple-400", border: "border-purple-100 dark:border-purple-800/40" },
 ];
 
-const editSchema = yup.object({
-  firstname:       yup.string().optional(),
-  lastname:        yup.string().optional(),
-  country:         yup.string().optional(),
-  region:          yup.string().optional(),
-  password:        yup.string()
-                      .transform((v) => v === "" ? undefined : v)
-                      .min(6, "Min 6 characters")
-                      .optional(),
-  confirmPassword: yup.string()
-                      .transform((v) => v === "" ? undefined : v)
-                      .oneOf([yup.ref("password"), undefined], "Passwords do not match")
-                      .optional(),
-});
-
 export default function ProfilePage() {
-  const { message } = App.useApp();
   const t = useTranslations("profile");
   const { user } = useAuth();
-  const [editModalOpen, setEditModalOpen] = useState(false);
-  const [profile, setProfile]             = useState<UserProfile | null>(null);
-  const [quizHistory, setQuizHistory]     = useState<QuizHistory[]>([]);
-  const [globalRank, setGlobalRank]       = useState<number | null>(null);
+  const router = useRouter();
+  const locale = useLocale();
+
+  const [profile, setProfile]         = useState<UserProfile | null>(null);
+  const [quizHistory, setQuizHistory] = useState<QuizHistory[]>([]);
   const [loadingProfile, setLoadingProfile] = useState(true);
-  const [saving, setSaving]               = useState(false);
-  const [avatarUrl, setAvatarUrl]         = useState<string | null>(null);
-
-  const isDark = typeof document !== "undefined" && document.documentElement.classList.contains("dark");
-
-  const { control, handleSubmit, reset, formState: { errors } } = useForm({
-    resolver: yupResolver(editSchema),
-  });
+  const [avatarUrl, setAvatarUrl]     = useState<string | null>(null);
 
   useEffect(() => {
     if (!user) return;
@@ -107,12 +63,6 @@ export default function ProfilePage() {
       if (profileData) {
         setProfile(profileData);
         setAvatarUrl(profileData.avatar_url);
-        reset({
-          firstname: profileData.firstname ?? "",
-          lastname:  profileData.lastname  ?? "",
-          country:   profileData.country   ?? "",
-          region:    profileData.region    ?? "",
-        });
       }
 
       const { data: historyData } = await supabase
@@ -122,50 +72,11 @@ export default function ProfilePage() {
         .order("played_at", { ascending: false })
         .limit(4);
 
-      const formattedHistory = (historyData as any[])?.map(q => ({
-        ...q,
-        quizzes: Array.isArray(q.quizzes) ? q.quizzes[0] : q.quizzes
-      })) ?? [];
-
-      setQuizHistory(formattedHistory);
-
-      const { data: rankData } = await supabase
-        .from("users")
-        .select("id, total_score")
-        .order("total_score", { ascending: false });
-
-      if (rankData && profileData) {
-        const rank = rankData.findIndex((u) => u.id === user.id) + 1;
-        setGlobalRank(rank > 0 ? rank : null);
-      }
-
+      setQuizHistory(historyData ?? []);
       setLoadingProfile(false);
     };
     fetchAll();
   }, [user]);
-
-  const onSave = async (values: any) => {
-    if (!user) return;
-    setSaving(true);
-    try {
-      const { error } = await supabase
-        .from("users")
-        .update({ firstname: values.firstname || null, lastname: values.lastname || null, country: values.country || null, region: values.region || null })
-        .eq("id", user.id);
-      if (error) throw error;
-      if (values.password) {
-        const { error: pwErr } = await supabase.auth.updateUser({ password: values.password });
-        if (pwErr) throw pwErr;
-      }
-      setProfile((prev) => prev ? { ...prev, firstname: values.firstname || null, lastname: values.lastname || null, country: values.country || null, region: values.region || null } : prev);
-      message.success(t("saveSuccess"));
-      setEditModalOpen(false);
-    } catch (err: any) {
-      message.error(err.message ?? t("saveError"));
-    } finally {
-      setSaving(false);
-    }
-  };
 
   const displayName = profile?.firstname
     ? `${profile.firstname} ${profile.lastname ?? ""}`.trim()
@@ -197,24 +108,23 @@ export default function ProfilePage() {
 
           {/* ── HERO CARD ── */}
           <div className="relative bg-white dark:bg-slate-900 rounded-3xl border border-gray-100 dark:border-slate-800 shadow-sm overflow-hidden">
-            {/* top accent bar */}
             <div className="h-1 w-full bg-gradient-to-r from-cyan-400 via-teal-400 to-cyan-500" />
             <div className="p-6 md:p-8 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
               <div className="flex items-center gap-5">
                 <AvatarUpload
                   currentUrl={avatarUrl}
                   size={88}
-                  onUploadSuccess={(url) => {
-                    setAvatarUrl(url);
-                  }}
+                  onUploadSuccess={(url) => setAvatarUrl(url)}
                 />
                 <div>
                   <h1 className="text-2xl font-extrabold text-gray-900 dark:text-white tracking-tight">{displayName}</h1>
                   <p className="text-sm text-gray-400 dark:text-slate-500 mt-0.5">{user?.email}</p>
                   <div className="flex flex-wrap items-center gap-2 mt-3">
+                    {/* ✅ Affiche country — "Country not set" si vide */}
                     <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-cyan-50 dark:bg-cyan-900/30 text-cyan-600 dark:text-cyan-400 text-xs font-semibold border border-cyan-100 dark:border-cyan-800/40">
-                      🌍 {profile?.country ?? t("countryNotSet")}
+                      🌍 {profile?.country ? profile.country : t("countryNotSet")}
                     </span>
+                    {/* ✅ Affiche region seulement si définie */}
                     {profile?.region && (
                       <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-violet-50 dark:bg-violet-900/30 text-violet-600 dark:text-violet-400 text-xs font-semibold border border-violet-100 dark:border-violet-800/40">
                         📍 {profile.region}
@@ -226,8 +136,9 @@ export default function ProfilePage() {
                   </div>
                 </div>
               </div>
+
               <button
-                onClick={() => setEditModalOpen(true)}
+                onClick={() => router.push(`/${locale}/settings`)}
                 className="flex items-center gap-2 px-6 py-3 rounded-2xl bg-gradient-to-r from-cyan-500 to-teal-400 text-white text-sm font-bold shadow-md hover:opacity-90 hover:scale-[1.02] transition-all duration-200 self-start md:self-center"
               >
                 <EditOutlined />
@@ -250,14 +161,15 @@ export default function ProfilePage() {
                 </div>
                 <div className="p-6 space-y-0 divide-y divide-gray-50 dark:divide-slate-800">
                   {[
-                    { label: t("username"),      value: displayName                                  },
-                    { label: t("email"),         value: user?.email                                  },
-                    { label: t("country"),       value: profile?.country  ?? t("notSpecified")       },
-                    { label: t("region"),        value: profile?.region   ?? t("notSpecified")       },
-                    { label: t("memberSince"),   value: memberSince                                  },
-                    { label: t("quizzesPlayed"), value: String(profile?.quizzes_played ?? 0)         },
-                    { label: t("totalScore"),    value: (profile?.total_score ?? 0).toLocaleString() },
-                    { label: t("accuracy"),      value: `${profile?.accuracy ?? 0}%`                 },
+                    { label: t("username"),      value: displayName                                        },
+                    { label: t("email"),         value: user?.email                                        },
+                    // ✅ Affiche la valeur réelle depuis la table users
+                    { label: t("country"),       value: profile?.country || t("notSpecified")              },
+                    { label: t("region"),        value: profile?.region  || t("notSpecified")              },
+                    { label: t("memberSince"),   value: memberSince                                        },
+                    { label: t("quizzesPlayed"), value: String(profile?.quizzes_played ?? 0)               },
+                    { label: t("totalScore"),    value: (profile?.total_score ?? 0).toLocaleString()       },
+                    { label: t("accuracy"),      value: `${profile?.accuracy ?? 0}%`                       },
                   ].map((item, i) => (
                     <div key={i} className="flex items-center justify-between py-3 first:pt-0 last:pb-0">
                       <span className="text-xs text-gray-400 dark:text-slate-500 font-medium shrink-0">{item.label}</span>
@@ -301,7 +213,7 @@ export default function ProfilePage() {
                 </div>
                 <div className="p-6 space-y-5">
                   {[
-                    { label: t("successRate"),   value: profile?.accuracy      ?? 0, color: "#0891b2" },
+                    { label: t("successRate"),    value: profile?.accuracy       ?? 0, color: "#0891b2" },
                     { label: t("completionRate"), value: profile?.quizzes_played ?? 0, color: "#06b6d4" },
                   ].map((perf, i) => (
                     <div key={i}>
@@ -340,15 +252,12 @@ export default function ProfilePage() {
                       const passed  = percent >= 50;
                       return (
                         <div key={i} className="flex items-center gap-4 p-4 rounded-xl bg-gray-50 dark:bg-slate-800 hover:bg-cyan-50 dark:hover:bg-slate-700/60 transition-all border border-transparent hover:border-cyan-100 dark:hover:border-cyan-900/40 group">
-                          {/* Icon */}
                           <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${passed ? "bg-cyan-100 dark:bg-cyan-900/30" : "bg-red-50 dark:bg-red-900/20"}`}>
                             {passed
                               ? <CheckCircleOutlined className="text-cyan-500 text-base" />
                               : <CloseCircleOutlined className="text-red-400 text-base" />
                             }
                           </div>
-
-                          {/* Info */}
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center justify-between mb-1.5">
                               <p className="text-sm font-bold text-gray-800 dark:text-white truncate pr-2">
@@ -381,72 +290,6 @@ export default function ProfilePage() {
           </div>
         </div>
       </div>
-
-      {/* ── EDIT MODAL ── */}
-      <Modal
-        title={<span className="font-bold text-gray-900 dark:text-white">{t("editProfile")}</span>}
-        open={editModalOpen}
-        onCancel={() => setEditModalOpen(false)}
-        footer={null}
-        className="!rounded-2xl"
-      >
-        <form onSubmit={handleSubmit(onSave)} className="mt-4 space-y-4">
-          <div className="flex gap-3">
-            <div className="flex-1">
-              <label className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">{t("firstName")}</label>
-              <Controller name="firstname" control={control} render={({ field }) => (
-                <Input {...field} className="!rounded-xl !mt-1 dark:!bg-gray-800 dark:!border-gray-600 dark:!text-white" placeholder="First name" />
-              )} />
-            </div>
-            <div className="flex-1">
-              <label className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">{t("lastName")}</label>
-              <Controller name="lastname" control={control} render={({ field }) => (
-                <Input {...field} className="!rounded-xl !mt-1 dark:!bg-gray-800 dark:!border-gray-600 dark:!text-white" placeholder="Last name" />
-              )} />
-            </div>
-          </div>
-
-          <div className="flex gap-3">
-            <div className="flex-1">
-              <label className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">{t("country")}</label>
-              <Controller name="country" control={control} render={({ field }) => (
-                <Select {...field} className="w-full !mt-1" showSearch optionFilterProp="label" options={COUNTRIES} placeholder="Select country" suffixIcon={<GlobalOutlined className="text-slate-400" />} />
-              )} />
-            </div>
-            <div className="flex-1">
-              <label className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">{t("region")}</label>
-              <Controller name="region" control={control} render={({ field }) => (
-                <Input {...field} prefix={<EnvironmentOutlined className="text-slate-400" />} className="!rounded-xl !mt-1 dark:!bg-gray-800 dark:!border-gray-600 dark:!text-white" placeholder="e.g. Tunis, Paris..." />
-              )} />
-            </div>
-          </div>
-
-          <div>
-            <label className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">{t("newPassword")}</label>
-            <Controller name="password" control={control} render={({ field }) => (
-              <Input.Password {...field} prefix={<LockOutlined className="text-slate-400" />} className="!rounded-xl !mt-1 dark:!bg-gray-800 dark:!border-gray-600 dark:!text-white" placeholder="••••••••" />
-            )} />
-            {errors.password && <p className="text-red-500 text-xs mt-1">{errors.password.message}</p>}
-          </div>
-
-          <div>
-            <label className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">{t("confirmPassword")}</label>
-            <Controller name="confirmPassword" control={control} render={({ field }) => (
-              <Input.Password {...field} prefix={<LockOutlined className="text-slate-400" />} className="!rounded-xl !mt-1 dark:!bg-gray-800 dark:!border-gray-600 dark:!text-white" placeholder="••••••••" />
-            )} />
-            {errors.confirmPassword && <p className="text-red-500 text-xs mt-1">{errors.confirmPassword.message}</p>}
-          </div>
-
-          <Button
-            htmlType="submit"
-            loading={saving}
-            block
-            className="!h-11 !rounded-xl !bg-gradient-to-r !from-cyan-500 !to-teal-400 !text-white !border-0 !font-semibold hover:!opacity-90"
-          >
-            {t("saveChanges")}
-          </Button>
-        </form>
-      </Modal>
     </Fragment>
   );
 }

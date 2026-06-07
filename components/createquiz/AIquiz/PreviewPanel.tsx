@@ -154,8 +154,6 @@ export default function PreviewPanel({ loading, questions, onReset, quizTitle, o
 
             {/* Image section */}
             <div className="rounded-2xl border border-dashed border-gray-200 dark:border-slate-600 overflow-hidden">
-
-              {/* Pas encore générée */}
               {!imageUrl && !imageLoading && !retrySeconds && !imageError && (
                 <button
                   onClick={generateImage}
@@ -167,12 +165,11 @@ export default function PreviewPanel({ loading, questions, onReset, quizTitle, o
                   </div>
                   <div className="text-center">
                     <p className="text-sm font-semibold">Générer une image IA</p>
-                    <p className="text-xs mt-0.5 opacity-60">Powered by Pollinations AI</p>
+                    <p className="text-xs mt-0.5 opacity-60">Powered by Unsplash</p>
                   </div>
                 </button>
               )}
 
-              {/* Chargement API */}
               {imageLoading && (
                 <div className="w-full h-40 flex flex-col items-center justify-center gap-3 bg-gray-50 dark:bg-slate-700/50">
                   <LoadingOutlined className="text-cyan-500 text-3xl animate-spin" />
@@ -181,7 +178,6 @@ export default function PreviewPanel({ loading, questions, onReset, quizTitle, o
                 </div>
               )}
 
-              {/* Cold start retry */}
               {retrySeconds && !imageLoading && (
                 <div className="w-full h-40 flex flex-col items-center justify-center gap-3 bg-amber-50 dark:bg-amber-900/10">
                   <LoadingOutlined className="text-amber-500 text-2xl animate-spin" />
@@ -190,7 +186,6 @@ export default function PreviewPanel({ loading, questions, onReset, quizTitle, o
                 </div>
               )}
 
-              {/* Erreur */}
               {imageError && !imageLoading && !imageUrl && (
                 <div className="w-full h-40 flex flex-col items-center justify-center gap-3 bg-red-50 dark:bg-red-900/10">
                   <p className="text-sm text-red-500">❌ {imageError}</p>
@@ -198,10 +193,8 @@ export default function PreviewPanel({ loading, questions, onReset, quizTitle, o
                 </div>
               )}
 
-              {/* Image générée */}
               {imageUrl && !imageLoading && (
                 <div className="relative w-full h-40 bg-gray-100 dark:bg-slate-700 rounded-2xl overflow-hidden">
-                  {/* Spinner pendant que l'image se rend */}
                   {imgRendering && (
                     <div className="absolute inset-0 flex items-center justify-center bg-gray-100 dark:bg-slate-700 z-10">
                       <LoadingOutlined className="text-cyan-500 text-2xl animate-spin" />
@@ -232,44 +225,132 @@ export default function PreviewPanel({ loading, questions, onReset, quizTitle, o
             </div>
 
             {/* Questions */}
-            {questions.map((q, index) => (
-              <div key={index} className="p-5 rounded-xl border border-gray-100 dark:border-slate-700 bg-gray-50 dark:bg-slate-700/50 hover:border-cyan-200 dark:hover:border-cyan-700 transition-all duration-200">
-                <div className="flex items-start gap-3 mb-4">
-                  <span className="w-7 h-7 rounded-lg bg-cyan-500 text-white text-xs font-bold flex items-center justify-center flex-shrink-0 mt-0.5">
-                    {index + 1}
-                  </span>
-                  <p className="text-sm font-semibold text-gray-800 dark:text-white leading-relaxed">{q.question}</p>
-                </div>
+            {questions.map((q, index) => {
+              const isShortAnswer = q.type === "short_answer";
+              const isTrueFalse   = q.type === "true_false";
+              const isMCQ         = !isShortAnswer && !isTrueFalse;
+              const letters       = ["A", "B", "C", "D"];
 
-                <div className="grid grid-cols-2 gap-2 mb-3">
-                  {q.options.map((option, optIndex) => {
-                    const isCorrect = option === q.correct_answer;
-                    const letters = ["A","B","C","D"];
-                    return (
-                      <div key={optIndex} className={`flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium border transition-all ${
-                        isCorrect
-                          ? "bg-emerald-50 dark:bg-emerald-900/20 border-emerald-200 dark:border-emerald-700 text-emerald-700 dark:text-emerald-400"
-                          : "bg-white dark:bg-slate-600 border-gray-200 dark:border-slate-500 text-gray-600 dark:text-slate-300"
-                      }`}>
-                        <span className={`w-5 h-5 rounded-md flex items-center justify-center text-[10px] font-bold flex-shrink-0 ${
-                          isCorrect ? "bg-emerald-500 text-white" : "bg-gray-200 dark:bg-slate-500 text-gray-500 dark:text-slate-300"
-                        }`}>{letters[optIndex]}</span>
-                        {option}
+              return (
+                <div
+                  key={index}
+                  className="p-5 rounded-xl border border-gray-100 dark:border-slate-700 bg-gray-50 dark:bg-slate-700/50 hover:border-cyan-200 dark:hover:border-cyan-700 transition-all duration-200"
+                >
+                  {/* Numéro + badge type + question */}
+                  <div className="flex items-start gap-3 mb-4">
+                    <span className="w-7 h-7 rounded-lg bg-cyan-500 text-white text-xs font-bold flex items-center justify-center flex-shrink-0 mt-0.5">
+                      {index + 1}
+                    </span>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 mb-1.5 flex-wrap">
+                        {isShortAnswer && (
+                          <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 border border-purple-200 dark:border-purple-700">
+                            ✎ Réponse courte
+                          </span>
+                        )}
+                        {isTrueFalse && (
+                          <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 border border-blue-200 dark:border-blue-700">
+                            ⇄ Vrai / Faux
+                          </span>
+                        )}
+                        {isMCQ && (
+                          <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-cyan-100 dark:bg-cyan-900/30 text-cyan-600 dark:text-cyan-400 border border-cyan-200 dark:border-cyan-700">
+                            ≡ Choix multiple
+                          </span>
+                        )}
                       </div>
-                    );
-                  })}
-                </div>
-
-                {q.indice && (
-                  <div className="flex items-start gap-2 px-3 py-2 bg-amber-50 dark:bg-amber-900/20 rounded-lg border border-amber-100 dark:border-amber-800">
-                    <span className="text-amber-500 text-sm flex-shrink-0">💡</span>
-                    <p className="text-xs text-amber-700 dark:text-amber-300 leading-relaxed">
-                      <span className="font-semibold">Hint : </span>{q.indice}
-                    </p>
+                      <p className="text-sm font-semibold text-gray-800 dark:text-white leading-relaxed">
+                        {q.question}
+                      </p>
+                    </div>
                   </div>
-                )}
-              </div>
-            ))}
+
+                  {/* ── MCQ : grille 2×2 ── */}
+                  {isMCQ && (
+                    <div className="grid grid-cols-2 gap-2 mb-3">
+                      {q.options.map((option, optIndex) => {
+                        const isCorrect = option === q.correct_answer;
+                        return (
+                          <div
+                            key={optIndex}
+                            className={`flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium border transition-all ${
+                              isCorrect
+                                ? "bg-emerald-50 dark:bg-emerald-900/20 border-emerald-200 dark:border-emerald-700 text-emerald-700 dark:text-emerald-400"
+                                : "bg-white dark:bg-slate-600 border-gray-200 dark:border-slate-500 text-gray-600 dark:text-slate-300"
+                            }`}
+                          >
+                            <span className={`w-5 h-5 rounded-md flex items-center justify-center text-[10px] font-bold flex-shrink-0 ${
+                              isCorrect
+                                ? "bg-emerald-500 text-white"
+                                : "bg-gray-200 dark:bg-slate-500 text-gray-500 dark:text-slate-300"
+                            }`}>
+                              {letters[optIndex]}
+                            </span>
+                            {option}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+
+                  {/* ── Vrai / Faux : 2 boutons côte à côte ── */}
+                  {isTrueFalse && (
+                    <div className="flex gap-2 mb-3">
+                      {["True", "False"].map((opt) => {
+                        const isCorrect = opt === q.correct_answer;
+                        const isTrue    = opt === "True";
+                        return (
+                          <div
+                            key={opt}
+                            className={`flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold border transition-all ${
+                              isCorrect
+                                ? isTrue
+                                  ? "bg-emerald-50 dark:bg-emerald-900/20 border-emerald-300 dark:border-emerald-700 text-emerald-700 dark:text-emerald-400"
+                                  : "bg-red-50 dark:bg-red-900/20 border-red-300 dark:border-red-700 text-red-600 dark:text-red-400"
+                                : "bg-white dark:bg-slate-600 border-gray-200 dark:border-slate-500 text-gray-400 dark:text-slate-400"
+                            }`}
+                          >
+                            <span>{isTrue ? "✓" : "✗"}</span>
+                            {isTrue ? "Vrai" : "Faux"}
+                            {isCorrect && (
+                              <span className="ml-1 text-[9px] font-bold uppercase opacity-70">✔ correct</span>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+
+                  {/* ── Réponse courte : champ simulé + bonne réponse ── */}
+                  {isShortAnswer && (
+                    <div className="mb-3 space-y-2">
+                      <div className="w-full px-3 py-2.5 rounded-xl border border-dashed border-gray-300 dark:border-slate-500 bg-white dark:bg-slate-600 text-xs text-gray-400 dark:text-slate-500 italic">
+                        Le joueur saisit sa réponse ici...
+                      </div>
+                      <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-700">
+                        <span className="w-5 h-5 rounded-md bg-emerald-500 text-white text-[10px] font-bold flex items-center justify-center flex-shrink-0">
+                          ✓
+                        </span>
+                        <span className="text-xs text-emerald-700 dark:text-emerald-400 font-medium">
+                          {q.correct_answer}
+                        </span>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Hint */}
+                  {q.indice && (
+                    <div className="flex items-start gap-2 px-3 py-2 bg-amber-50 dark:bg-amber-900/20 rounded-lg border border-amber-100 dark:border-amber-800">
+                      <span className="text-amber-500 text-sm flex-shrink-0">💡</span>
+                      <p className="text-xs text-amber-700 dark:text-amber-300 leading-relaxed">
+                        <span className="font-semibold">Hint : </span>{q.indice}
+                      </p>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+
           </div>
         )}
       </div>

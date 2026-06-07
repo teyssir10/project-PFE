@@ -16,9 +16,12 @@ interface SaveQuizParams {
   status?: "published" | "pending_admin" | "draft";
   aiScore?: number | null;
   aiRemarks?: string[] | null;
-  // ✅ Nouveau champ pour le mode edit
   editId?: string | null;
+  draftId?: string | null; // ✅ nouveau — supprime le brouillon après publication
 }
+
+const capitalizeDifficulty = (s: string): string =>
+  s ? s.charAt(0).toUpperCase() + s.slice(1).toLowerCase() : "Medium";
 
 function buildOptions(q: Question) {
   if (q.type === "short" || !q.options?.length) return null;
@@ -29,9 +32,34 @@ function buildOptions(q: Question) {
   }));
 }
 
-function findCorrectOptionId(q: Question): string | null {
-  if (q.type === "short" || !q.options?.length) return null;
-  return q.options.find((o) => o.id === q.correctOptionId)?.id ?? null;
+function calcDuration(questionCount: number, timePerQuestion: string): number {
+  const seconds = questionCount * (parseInt(timePerQuestion) || 30);
+  return Math.ceil(seconds / 60);
+}
+
+function detectQuestionType(questions: Question[]): string {
+  if (!questions || questions.length === 0) return "multiple_choice";
+  const normalize = (type: string): string => {
+    if (type === "short")    return "short_answer";
+    if (type === "tf")       return "true_false";
+    if (type === "multiple") return "multiple_choice";
+    return type;
+  };
+  const types = new Set(questions.map((q) => normalize(q.type)));
+  if (types.size > 1)               return "mixed";
+  if (types.has("true_false"))      return "true_false";
+  if (types.has("short_answer"))    return "short_answer";
+  return "multiple_choice";
+}
+
+// ✅ Supprime le brouillon si draftId fourni
+async function deleteDraftIfExists(draftId?: string | null) {
+  if (!draftId) return;
+  const { error } = await supabase
+    .from("quiz_drafts")
+    .delete()
+    .eq("id", draftId);
+  if (error) console.warn("Could not delete draft:", error.message);
 }
 
 export async function saveQuiz({
@@ -50,179 +78,112 @@ export async function saveQuiz({
   aiScore = null,
   aiRemarks = null,
   editId = null,
+  draftId = null, // ✅
 }: SaveQuizParams): Promise<void> {
 
-  // ✅ MODE EDIT
-  // ── MODE EDIT ─────────────────────────────────────────────────────────
+  const safeDifficulty = capitalizeDifficulty(quizDifficulty);
+  const questionType   = detectQuestionType(questions);
+
+  // ── MODE EDIT ──────────────────────────────────────────────────────────
   if (editId) {
-    // 1. Mettre à jour les infos du quiz
     const { error: updateError } = await supabase
       .from("quizzes")
       .update({
         title:             quizTitle,
-        difficulty:        quizDifficulty,
+        difficulty:        safeDifficulty,
         cover_image:       coverImage ?? null,
         question_count:    questions.length,
         time_per_question: parseInt(timePerQuestion) || 30,
+        duration:          calcDuration(questions.length, timePerQuestion),
         category_id:       categoryId,
         status,
         is_published:      status === "published",
         ai_score:          aiScore,
         ai_remarks:        aiRemarks,
+        question_type:     questionType,
       })
       .eq("id", editId);
 
     if (updateError) throw updateError;
 
-    // 2. Récupérer les anciennes questions pour supprimer leurs options
-    const { data: oldQuestions } = await supabase
-      .from("questions")
-      .select("id")
-      .eq("quiz_id", editId);
+    await supabase.from("questions").delete().eq("quiz_id", editId);
 
-    if (oldQuestions && oldQuestions.length > 0) {
-      const oldQuestionIds = oldQuestions.map((q) => q.id);
-
-      // 3. Supprimer les options des anciennes questions
-      await supabase
-        .from("options")
-        .delete()
-        .in("question_id", oldQuestionIds);
-    }
-
-    // 4. Supprimer les anciennes questions
-    await supabase
-      .from("questions")
-      .delete()
-      .eq("quiz_id", editId);
-
-    // 5. Insérer les nouvelles questions
     for (let i = 0; i < questions.length; i++) {
       const q = questions[i];
-
-      const { data: insertedQ, error: qError } = await (supabase as any)
+      const { error: qError } = await (supabase as any)
         .from("questions")
         .insert({
-          quiz_id:        editId,
-          text:           q.text,
-          type:           q.type,
-          time_limit:     getEffectiveTimeLimit(q),
-          points:         q.points,
-          difficulty:     q.difficulty,
-          indice:         q.indice || null,
-          correct_answer: q.type === "short" ? (q.correctAnswer?.trim() || null) : null,
-          order_index:    i,
-        } as any)
-        .select()
-        .single();
-
+          quiz_id:           editId,
+          text:              q.text,
+          type:              q.type,
+          time_limit:        getEffectiveTimeLimit(q),
+          points:            q.points,
+          difficulty:        safeDifficulty,
+          indice:            q.indice || null,
+          correct_answer:    q.type === "short" ? (q.correctAnswer?.trim() || null) : null,
+          order_index:       i,
+          options:           buildOptions(q),
+          correct_option_id: q.type !== "short" ? (q.correctOptionId ?? null) : null,
+        } as any);
       if (qError) throw qError;
-
-      // 6. Insérer les options
-      if (q.type !== "short" && q.options.length > 0) {
-        const optionRows = q.options.map((o) => ({
-          question_id: insertedQ.id,
-          text:        o.text,
-          is_correct:  o.id === q.correctOptionId,
-        }));
-
-        const { data: insertedOptions, error: optError } = await (supabase as any)
-          .from("options")
-          .insert(optionRows as any[])
-          .select();
-
-        if (optError) throw optError;
-
-        // 7. Mettre à jour correct_option_id
-        if (insertedOptions && insertedOptions.length > 0) {
-          const localIndex = q.options.findIndex((o) => o.id === q.correctOptionId);
-          if (localIndex !== -1 && insertedOptions[localIndex]) {
-            const correctId = insertedOptions[localIndex].id as string;
-            await (supabase as any)
-              .from("questions")
-              .update({ correct_option_id: correctId } as any)
-              .eq("id", insertedQ.id);
-          }
-        }
-      }
     }
 
-    return; // ✅ Fin du mode edit
+    // ✅ Supprime le brouillon après édition réussie
+    await deleteDraftIfExists(draftId);
+    return;
   }
 
-  // ==================== MODE CRÉATION ====================
-
+  // ── MODE CRÉATION ──────────────────────────────────────────────────────
   const { data: quiz, error: quizError } = await supabase
     .from("quizzes")
     .insert({
       title:             quizTitle,
       creator_id:        userId,
       creator_name:      `${userFirstname} ${userLastname}`.trim(),
-      difficulty:        quizDifficulty,
+      difficulty:        safeDifficulty,
       cover_image:       coverImage ?? null,
       question_count:    questions.length,
       time_per_question: parseInt(timePerQuestion) || 30,
+      duration:          calcDuration(questions.length, timePerQuestion),
       category_id:       categoryId,
       featured:          false,
       is_community:      false,
       players:           0,
-      duration:          0,
       source,
       status,
       is_published:      status === "published",
       ai_score:          aiScore,
       ai_remarks:        aiRemarks,
+      question_type:     questionType,
     })
     .select()
     .single();
 
-  if (quizError) { console.error("Quiz insert error:", quizError); throw quizError; }
+  if (quizError) {
+    console.error("Quiz insert error:", quizError);
+    throw quizError;
+  }
 
   for (let i = 0; i < questions.length; i++) {
     const q = questions[i];
-
-    const { data: insertedQ, error: qError } = await (supabase as any)
+    const { error: qError } = await (supabase as any)
       .from("questions")
       .insert({
-        quiz_id:        quiz.id,
-        text:           q.text,
-        type:           q.type,
-        time_limit:     getEffectiveTimeLimit(q),
-        points:         q.points,
-        difficulty:     q.difficulty,
-        indice:         q.indice || null,
-        correct_answer: q.type === "short" ? (q.correctAnswer?.trim() || null) : null,
-        order_index:    i,
-      } as any)
-      .select()
-      .single();
-
+        quiz_id:           quiz.id,
+        text:              q.text,
+        type:              q.type,
+        time_limit:        getEffectiveTimeLimit(q),
+        points:            q.points,
+        difficulty:        safeDifficulty,
+        indice:            q.indice || null,
+        correct_answer:    q.type === "short" ? (q.correctAnswer?.trim() || null) : null,
+        order_index:       i,
+        options:           buildOptions(q),
+        correct_option_id: q.type !== "short" ? (q.correctOptionId ?? null) : null,
+      } as any);
     if (qError) throw qError;
-
-    if (q.type !== "short" && q.options.length > 0) {
-      const optionRows = q.options.map((o) => ({
-        question_id: insertedQ.id,
-        text:        o.text,
-        is_correct:  o.id === q.correctOptionId,
-      }));
-
-      const { data: insertedOptions, error: optError } = await (supabase as any)
-        .from("options")
-        .insert(optionRows as any[])
-        .select();
-
-      if (optError) throw optError;
-
-      if (insertedOptions && insertedOptions.length > 0) {
-        const localIndex = q.options.findIndex((o) => o.id === q.correctOptionId);
-        if (localIndex !== -1 && insertedOptions[localIndex]) {
-          const correctId = insertedOptions[localIndex].id as string;
-          await (supabase as any)
-            .from("questions")
-            .update({ correct_option_id: correctId } as any)
-            .eq("id", insertedQ.id);
-        }
-      }
-    }
   }
+
+  // ✅ Supprime le brouillon après création réussie
+  await deleteDraftIfExists(draftId);
 }

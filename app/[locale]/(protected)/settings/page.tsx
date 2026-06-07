@@ -35,8 +35,12 @@ const DIFFICULTY_STYLES: Record<string, string> = {
 
 function timeAgo(dateStr: string): string {
   const diff = Date.now() - new Date(dateStr).getTime();
-  const mins = Math.floor(diff / 60000); const hours = Math.floor(diff / 3600000); const days = Math.floor(diff / 86400000);
-  if (mins < 60) return `${mins}m ago`; if (hours < 24) return `${hours}h ago`; return `${days}d ago`;
+  const mins = Math.floor(diff / 60000);
+  const hours = Math.floor(diff / 3600000);
+  const days = Math.floor(diff / 86400000);
+  if (mins < 60) return `${mins}m ago`;
+  if (hours < 24) return `${hours}h ago`;
+  return `${days}d ago`;
 }
 
 export default function SettingsPage() {
@@ -50,20 +54,24 @@ export default function SettingsPage() {
   const [loading, setLoading] = useState(false);
   const [activeSection, setActiveSection] = useState<Section>("profile");
   const [saved, setSaved] = useState(false);
-  const [firstName, setFirstName] = useState(user?.user_metadata?.firstname || "");
-  const [lastName,  setLastName]  = useState(user?.user_metadata?.lastname  || "");
-  const [bio,       setBio]       = useState(user?.user_metadata?.bio       || "");
+
+  // ✅ États vides — chargés depuis la table `users`
+  const [firstName, setFirstName] = useState("");
+  const [lastName,  setLastName]  = useState("");
+  const [country,   setCountry]   = useState("");
+  const [region,    setRegion]    = useState("");
+
   const [currentPwd, setCurrentPwd] = useState("");
-  const [newPwd, setNewPwd] = useState("");
+  const [newPwd,     setNewPwd]     = useState("");
   const [confirmPwd, setConfirmPwd] = useState("");
-  const [darkMode, setDarkMode] = useState(false);
-  const [drafts, setDrafts] = useState<QuizDraft[]>([]);
-  const [draftsLoading, setDraftsLoading] = useState(false);
-  const [myQuizzes, setMyQuizzes] = useState<MyQuiz[]>([]);
+  const [darkMode,   setDarkMode]   = useState(false);
+
+  const [drafts,           setDrafts]           = useState<QuizDraft[]>([]);
+  const [draftsLoading,    setDraftsLoading]    = useState(false);
+  const [myQuizzes,        setMyQuizzes]        = useState<MyQuiz[]>([]);
   const [myQuizzesLoading, setMyQuizzesLoading] = useState(false);
   const [quizFilter, setQuizFilter] = useState<"all" | "published" | "pending_admin" | "rejected">("all");
 
-  // Status config uses i18n labels — built inside component to access `t`
   const STATUS_CONFIG: Record<string, { label: string; color: string; icon: string }> = {
     published:     { label: t("myquizzes.statusPublished"), icon: "✅", color: "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400" },
     pending_admin: { label: t("myquizzes.statusPending"),   icon: "⏳", color: "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400"         },
@@ -71,8 +79,27 @@ export default function SettingsPage() {
     draft:         { label: t("myquizzes.statusDraft"),     icon: "📝", color: "bg-gray-100 text-gray-600 dark:bg-slate-700 dark:text-slate-400"              },
   };
 
+  // ✅ Charge depuis la table `users` (même source que ProfilePage)
+  useEffect(() => {
+    if (!user) return;
+    const fetchProfile = async () => {
+      const { data } = await supabase
+        .from("users")
+        .select("firstname, lastname, country, region")
+        .eq("id", user.id)
+        .single();
+      if (data) {
+        setFirstName(data.firstname || "");
+        setLastName(data.lastname   || "");
+        setCountry(data.country     || "");
+        setRegion(data.region       || "");
+      }
+    };
+    fetchProfile();
+  }, [user]);
+
   useEffect(() => { setDarkMode(document.documentElement.classList.contains("dark")); }, []);
-  useEffect(() => { if (activeSection === "drafts" && user) fetchDrafts(); }, [activeSection, user]);
+  useEffect(() => { if (activeSection === "drafts"    && user) fetchDrafts();    }, [activeSection, user]);
   useEffect(() => { if (activeSection === "myquizzes" && user) fetchMyQuizzes(); }, [activeSection, user]);
 
   const fetchDrafts = async () => {
@@ -114,25 +141,47 @@ export default function SettingsPage() {
     localStorage.setItem("theme", c ? "dark" : "light");
   };
 
+  // ✅ Sauvegarde dans auth metadata ET dans la table `users`
   const saveProfile = async () => {
     setLoading(true);
-    const { error } = await supabase.auth.updateUser({ data: { firstname: firstName, lastname: lastName, bio } });
-    setLoading(false);
-    if (!error) { setSaved(true); setTimeout(() => setSaved(false), 2000); }
-    else message.error(t("saveError"));
+    try {
+      // 1. Auth metadata (optionnel mais cohérent)
+      await supabase.auth.updateUser({
+        data: { firstname: firstName, lastname: lastName, country, region },
+      });
+
+      // 2. ✅ Table `users` — lue par ProfilePage
+      const { error: dbError } = await supabase
+        .from("users")
+        .update({ firstname: firstName, lastname: lastName, country, region })
+        .eq("id", user!.id);
+
+      if (dbError) throw dbError;
+
+      setSaved(true);
+      setTimeout(() => setSaved(false), 2000);
+    } catch {
+      message.error(t("saveError"));
+    } finally {
+      setLoading(false);
+    }
   };
 
   const savePassword = async () => {
     if (newPwd !== confirmPwd) { message.error(t("security.pwdMismatch")); return; }
-    if (newPwd.length < 6) { message.error(t("security.pwdTooShort")); return; }
+    if (newPwd.length < 6)     { message.error(t("security.pwdTooShort")); return; }
     setLoading(true);
     const { error } = await supabase.auth.updateUser({ password: newPwd });
     setLoading(false);
-    if (!error) { message.success(t("security.pwdChanged")); setCurrentPwd(""); setNewPwd(""); setConfirmPwd(""); }
-    else message.error(t("saveError"));
+    if (!error) {
+      message.success(t("security.pwdChanged"));
+      setCurrentPwd(""); setNewPwd(""); setConfirmPwd("");
+    } else {
+      message.error(t("saveError"));
+    }
   };
 
-  const pendingCount = myQuizzes.filter(q => q.status === "pending_admin").length;
+  const pendingCount    = myQuizzes.filter(q => q.status === "pending_admin").length;
   const filteredQuizzes = quizFilter === "all" ? myQuizzes : myQuizzes.filter(q => q.status === quizFilter);
 
   const sections: { key: Section; icon: React.ReactNode; label: string; badge?: number }[] = [
@@ -190,24 +239,48 @@ export default function SettingsPage() {
                     <p className="text-xs text-gray-400">{user?.email}</p>
                   </div>
                 </div>
+
+                {/* First name + Last name */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  {[{ label: t("profile.firstName"), val: firstName, set: setFirstName }, { label: t("profile.lastName"), val: lastName, set: setLastName }].map((f, i) => (
+                  {[
+                    { label: t("profile.firstName"), val: firstName, set: setFirstName },
+                    { label: t("profile.lastName"),  val: lastName,  set: setLastName  },
+                  ].map((f, i) => (
                     <div key={i}>
                       <label className="block text-xs font-bold text-gray-500 dark:text-gray-400 mb-1.5">{f.label}</label>
-                      <input value={f.val} onChange={e => f.set(e.target.value)} className="w-full px-3 py-2.5 rounded-xl border border-gray-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-sm text-gray-800 dark:text-white focus:outline-none focus:border-cyan-400 focus:ring-2 focus:ring-cyan-100 transition-all" />
+                      <input value={f.val} onChange={e => f.set(e.target.value)}
+                        className="w-full px-3 py-2.5 rounded-xl border border-gray-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-sm text-gray-800 dark:text-white focus:outline-none focus:border-cyan-400 focus:ring-2 focus:ring-cyan-100 transition-all" />
                     </div>
                   ))}
                 </div>
+
+                {/* Email read-only */}
                 <div>
                   <label className="block text-xs font-bold text-gray-500 dark:text-gray-400 mb-1.5">{t("profile.email")}</label>
-                  <input value={user?.email || ""} disabled className="w-full px-3 py-2.5 rounded-xl border border-gray-100 dark:border-slate-700 bg-gray-50 dark:bg-slate-700/50 text-sm text-gray-400 cursor-not-allowed" />
+                  <input value={user?.email || ""} disabled
+                    className="w-full px-3 py-2.5 rounded-xl border border-gray-100 dark:border-slate-700 bg-gray-50 dark:bg-slate-700/50 text-sm text-gray-400 cursor-not-allowed" />
                 </div>
-                <div>
-                  <label className="block text-xs font-bold text-gray-500 dark:text-gray-400 mb-1.5">{t("profile.bio")}</label>
-                  <textarea value={bio} onChange={e => setBio(e.target.value)} rows={3} className="w-full px-3 py-2.5 rounded-xl border border-gray-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-sm text-gray-800 dark:text-white focus:outline-none focus:border-cyan-400 focus:ring-2 focus:ring-cyan-100 transition-all resize-none" />
+
+                {/* Country + Region */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-xs font-bold text-gray-500 dark:text-gray-400 mb-1.5">{t("profile.country")}</label>
+                    <input value={country} onChange={e => setCountry(e.target.value)}
+                      placeholder={t("profile.countryPlaceholder")}
+                      className="w-full px-3 py-2.5 rounded-xl border border-gray-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-sm text-gray-800 dark:text-white focus:outline-none focus:border-cyan-400 focus:ring-2 focus:ring-cyan-100 transition-all" />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-gray-500 dark:text-gray-400 mb-1.5">{t("profile.region")}</label>
+                    <input value={region} onChange={e => setRegion(e.target.value)}
+                      placeholder={t("profile.regionPlaceholder")}
+                      className="w-full px-3 py-2.5 rounded-xl border border-gray-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-sm text-gray-800 dark:text-white focus:outline-none focus:border-cyan-400 focus:ring-2 focus:ring-cyan-100 transition-all" />
+                  </div>
                 </div>
-                <button onClick={saveProfile} disabled={loading} className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-teal-400 text-white text-sm font-bold hover:opacity-90 transition-all shadow-sm disabled:opacity-60">
-                  {loading ? <Spin size="small" /> : saved ? <CheckOutlined /> : null}{saved ? t("saved") : t("save")}
+
+                <button onClick={saveProfile} disabled={loading}
+                  className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-teal-400 text-white text-sm font-bold hover:opacity-90 transition-all shadow-sm disabled:opacity-60">
+                  {loading ? <Spin size="small" /> : saved ? <CheckOutlined /> : null}
+                  {saved ? t("saved") : t("save")}
                 </button>
               </div>
             )}
@@ -223,15 +296,18 @@ export default function SettingsPage() {
                 ].map((f, i) => (
                   <div key={i}>
                     <label className="block text-xs font-bold text-gray-500 dark:text-gray-400 mb-1.5">{f.label}</label>
-                    <input type="password" value={f.value} onChange={e => f.setter(e.target.value)} className="w-full px-3 py-2.5 rounded-xl border border-gray-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-sm text-gray-800 dark:text-white focus:outline-none focus:border-cyan-400 focus:ring-2 focus:ring-cyan-100 transition-all" />
+                    <input type="password" value={f.value} onChange={e => f.setter(e.target.value)}
+                      className="w-full px-3 py-2.5 rounded-xl border border-gray-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-sm text-gray-800 dark:text-white focus:outline-none focus:border-cyan-400 focus:ring-2 focus:ring-cyan-100 transition-all" />
                   </div>
                 ))}
-                <button onClick={savePassword} disabled={loading} className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-teal-400 text-white text-sm font-bold hover:opacity-90 transition-all shadow-sm disabled:opacity-60">
+                <button onClick={savePassword} disabled={loading}
+                  className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-teal-400 text-white text-sm font-bold hover:opacity-90 transition-all shadow-sm disabled:opacity-60">
                   {loading && <Spin size="small" />}{t("security.changeBtn")}
                 </button>
                 <div className="mt-6 pt-5 border-t border-gray-100 dark:border-slate-700">
                   <p className="text-xs font-bold text-red-400 mb-3">{t("security.dangerZone")}</p>
-                  <button onClick={() => supabase.auth.signOut().then(() => router.push("/"))} className="flex items-center gap-2 px-4 py-2 rounded-xl border border-red-200 text-red-500 text-sm font-bold hover:bg-red-50 transition-all">
+                  <button onClick={() => supabase.auth.signOut().then(() => router.push("/"))}
+                    className="flex items-center gap-2 px-4 py-2 rounded-xl border border-red-200 text-red-500 text-sm font-bold hover:bg-red-50 transition-all">
                     <LogoutOutlined />{t("security.logout")}
                   </button>
                 </div>
@@ -242,7 +318,11 @@ export default function SettingsPage() {
             {activeSection === "language" && (
               <div className="space-y-4">
                 <h2 className="text-base font-extrabold text-gray-800 dark:text-white border-b border-gray-100 dark:border-slate-700 pb-3">{t("nav.language")}</h2>
-                {[{ code: "fr", label: "Français", flag: "🇫🇷" }, { code: "en", label: "English", flag: "🇬🇧" }, { code: "ar", label: "العربية", flag: "🇹🇳" }].map((lang) => (
+                {[
+                  { code: "fr", label: "Français", flag: "🇫🇷" },
+                  { code: "en", label: "English",  flag: "🇬🇧" },
+                  { code: "ar", label: "العربية",  flag: "🇹🇳" },
+                ].map((lang) => (
                   <button key={lang.code} onClick={() => router.push(`/${lang.code}/settings`)}
                     className={`w-full flex items-center justify-between px-4 py-3 rounded-xl border transition-all ${locale === lang.code ? "border-cyan-400 bg-cyan-50 dark:bg-cyan-900/20" : "border-gray-200 dark:border-slate-600 hover:border-cyan-200"}`}>
                     <div className="flex items-center gap-3">
@@ -261,7 +341,9 @@ export default function SettingsPage() {
                 <h2 className="text-base font-extrabold text-gray-800 dark:text-white border-b border-gray-100 dark:border-slate-700 pb-3">{t("nav.appearance")}</h2>
                 <div className="flex items-center justify-between p-4 rounded-xl border border-gray-200 dark:border-slate-600">
                   <div className="flex items-center gap-3">
-                    <div className="w-9 h-9 rounded-xl bg-slate-100 dark:bg-slate-700 flex items-center justify-center text-lg">{darkMode ? "🌙" : "☀️"}</div>
+                    <div className="w-9 h-9 rounded-xl bg-slate-100 dark:bg-slate-700 flex items-center justify-center text-lg">
+                      {darkMode ? "🌙" : "☀️"}
+                    </div>
                     <div>
                       <p className="font-bold text-sm text-gray-800 dark:text-white">{darkMode ? t("appearance.dark") : t("appearance.light")}</p>
                       <p className="text-xs text-gray-400">{t("appearance.themeSub")}</p>
@@ -278,9 +360,7 @@ export default function SettingsPage() {
                 <div className="flex items-center justify-between border-b border-gray-100 dark:border-slate-700 pb-3">
                   <h2 className="text-base font-extrabold text-gray-800 dark:text-white">{t("nav.drafts")}</h2>
                   {!draftsLoading && (
-                    <span className="text-xs text-gray-400 font-medium">
-                      {t("drafts.count", { count: drafts.length })}
-                    </span>
+                    <span className="text-xs text-gray-400 font-medium">{t("drafts.count", { count: drafts.length })}</span>
                   )}
                 </div>
                 {draftsLoading ? (
@@ -289,7 +369,8 @@ export default function SettingsPage() {
                   <div className="flex flex-col items-center py-14 gap-3 text-center">
                     <FileTextOutlined className="text-3xl text-gray-300" />
                     <p className="text-sm text-gray-400">{t("drafts.empty")}</p>
-                    <button onClick={() => router.push(`/${locale}/create-quiz`)} className="px-4 py-2 rounded-xl bg-cyan-500 text-white text-xs font-bold hover:bg-cyan-600 transition-all">
+                    <button onClick={() => router.push(`/${locale}/create-quiz`)}
+                      className="px-4 py-2 rounded-xl bg-cyan-500 text-white text-xs font-bold hover:bg-cyan-600 transition-all">
                       {t("drafts.createBtn")}
                     </button>
                   </div>
@@ -306,7 +387,9 @@ export default function SettingsPage() {
                               {draft.title || t("drafts.untitled")}
                             </p>
                             <div className="flex items-center gap-2 mt-1 flex-wrap">
-                              <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full capitalize ${DIFFICULTY_STYLES[draft.difficulty] ?? DIFFICULTY_STYLES.easy}`}>{draft.difficulty}</span>
+                              <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full capitalize ${DIFFICULTY_STYLES[draft.difficulty] ?? DIFFICULTY_STYLES.easy}`}>
+                                {draft.difficulty}
+                              </span>
                               <span className="text-[11px] text-cyan-600 dark:text-cyan-400 bg-cyan-50 dark:bg-cyan-900/20 px-2 py-0.5 rounded-full font-medium">
                                 {t("drafts.step", { current: draft.current_step, total: 3 })}
                               </span>
@@ -315,10 +398,12 @@ export default function SettingsPage() {
                           </div>
                         </div>
                         <div className="flex items-center gap-2 flex-shrink-0">
-                          <button onClick={() => deleteDraft(draft.id)} className="w-8 h-8 rounded-lg border border-gray-200 dark:border-slate-600 bg-white dark:bg-slate-700 flex items-center justify-center text-gray-400 hover:text-red-500 hover:border-red-200 hover:bg-red-50 transition-all">
+                          <button onClick={() => deleteDraft(draft.id)}
+                            className="w-8 h-8 rounded-lg border border-gray-200 dark:border-slate-600 bg-white dark:bg-slate-700 flex items-center justify-center text-gray-400 hover:text-red-500 hover:border-red-200 hover:bg-red-50 transition-all">
                             <DeleteOutlined className="text-sm" />
                           </button>
-                          <button onClick={() => resumeDraft(draft)} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-cyan-500 text-white text-xs font-bold hover:bg-cyan-600 transition-all">
+                          <button onClick={() => resumeDraft(draft)}
+                            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-cyan-500 text-white text-xs font-bold hover:bg-cyan-600 transition-all">
                             <PlayCircleOutlined /> {t("drafts.resume")}
                           </button>
                         </div>
@@ -329,18 +414,17 @@ export default function SettingsPage() {
               </div>
             )}
 
-            {/* MES QUIZ */}
+            {/* MY QUIZZES */}
             {activeSection === "myquizzes" && (
               <div className="space-y-5">
                 <div className="border-b border-gray-100 dark:border-slate-700 pb-3">
                   <h2 className="text-base font-extrabold text-gray-800 dark:text-white">{t("nav.myquizzes")}</h2>
                   <p className="text-xs text-gray-400 mt-0.5">{t("myquizzes.subtitle")}</p>
                 </div>
-
                 <div className="flex gap-2 flex-wrap">
                   {(["all", "pending_admin", "published", "rejected"] as const).map((f) => {
                     const count = f === "all" ? myQuizzes.length : myQuizzes.filter(q => q.status === f).length;
-                    const cfg = f === "all" ? null : STATUS_CONFIG[f];
+                    const cfg   = f === "all" ? null : STATUS_CONFIG[f];
                     return (
                       <button key={f} onClick={() => setQuizFilter(f)}
                         className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all flex items-center gap-1.5 ${quizFilter === f ? "bg-cyan-500 text-white shadow-sm" : "bg-gray-100 dark:bg-slate-700 text-gray-500 dark:text-slate-400 hover:bg-gray-200 dark:hover:bg-slate-600"}`}>
@@ -350,7 +434,6 @@ export default function SettingsPage() {
                     );
                   })}
                 </div>
-
                 {myQuizzesLoading ? (
                   <div className="flex justify-center py-10"><Spin /></div>
                 ) : filteredQuizzes.length === 0 ? (
@@ -368,18 +451,24 @@ export default function SettingsPage() {
                             <p className="text-sm font-bold text-gray-800 dark:text-white flex-1 truncate">{quiz.title}</p>
                             <span className={`text-[11px] px-2.5 py-0.5 rounded-full font-semibold ${cfg.color}`}>{cfg.icon} {cfg.label}</span>
                             {quiz.ai_score !== null && (
-                              <span className="text-[11px] px-2 py-0.5 rounded-full bg-gray-200 dark:bg-slate-600 text-gray-600 dark:text-slate-300 font-semibold">Score IA : {quiz.ai_score}/100</span>
+                              <span className="text-[11px] px-2 py-0.5 rounded-full bg-gray-200 dark:bg-slate-600 text-gray-600 dark:text-slate-300 font-semibold">
+                                Score IA : {quiz.ai_score}/100
+                              </span>
                             )}
                           </div>
                           <div className="flex items-center gap-2 text-[11px] text-gray-400 dark:text-slate-500 mb-2">
-                            <span>{quiz.difficulty}</span><span>•</span><span>{quiz.question_count} questions</span><span>•</span><span>{timeAgo(quiz.created_at)}</span>
+                            <span>{quiz.difficulty}</span><span>•</span>
+                            <span>{quiz.question_count} questions</span><span>•</span>
+                            <span>{timeAgo(quiz.created_at)}</span>
                           </div>
                           {quiz.ai_remarks && quiz.ai_remarks.length > 0 && quiz.status !== "published" && (
                             <div className="p-3 bg-amber-50 dark:bg-amber-900/20 rounded-xl border border-amber-100 dark:border-amber-800/40 mb-2">
                               <p className="text-[11px] font-bold text-amber-700 dark:text-amber-400 mb-1.5">🤖 {t("myquizzes.aiRemarks")} :</p>
                               <ul className="space-y-1">
                                 {quiz.ai_remarks.map((r, i) => (
-                                  <li key={i} className="text-[11px] text-amber-600 dark:text-amber-300 flex items-start gap-1.5"><span className="flex-shrink-0 mt-0.5">•</span>{r}</li>
+                                  <li key={i} className="text-[11px] text-amber-600 dark:text-amber-300 flex items-start gap-1.5">
+                                    <span className="flex-shrink-0 mt-0.5">•</span>{r}
+                                  </li>
                                 ))}
                               </ul>
                             </div>

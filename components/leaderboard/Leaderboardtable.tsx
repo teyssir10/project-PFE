@@ -8,21 +8,25 @@ import { Avatar, getDisplayName, getDisplayValue, flag, FilterType } from "./hel
 // ─── Table Header ─────────────────────────────────────────────────────────────
 export function LeaderboardHeader({ filter }: { filter: FilterType }) {
   const t = useTranslations("leaderboard");
+
+  const cols = [
+    { id: "rank",    label: "#",              cls: "col-span-1 text-center" },
+    { id: "player",  label: t("col_player"),  cls: "col-span-6 md:col-span-5" },
+    { id: "country", label: t("col_country"), cls: "col-span-2 text-center hidden md:block" },
+    { id: "quizzes", label: t("col_quizzes"), cls: "col-span-2 text-center" },
+    {
+      id: "metric",
+      label: filter === "accuracy" ? t("col_accuracy")
+           : filter === "quizzes"  ? t("col_quizzes")
+           : t("col_score"),
+      cls: "col-span-3 md:col-span-2 text-center",
+    },
+  ];
+
   return (
     <div className="grid grid-cols-12 px-5 py-3 bg-gray-50/80 dark:bg-slate-800/60 border-b border-gray-200 dark:border-slate-700">
-      {[
-        { label: "#",            cls: "col-span-1 text-center" },
-        { label: t("col_player"),  cls: "col-span-6 md:col-span-5" },
-        { label: t("col_country"), cls: "col-span-2 text-center hidden md:block" },
-        { label: t("col_quizzes"), cls: "col-span-2 text-center" },
-        {
-          label: filter === "accuracy" ? t("col_accuracy")
-               : filter === "quizzes"  ? t("col_quizzes")
-               : t("col_score"),
-          cls: "col-span-3 md:col-span-2 text-center",
-        },
-      ].map(({ label, cls }) => (
-        <div key={label} className={`${cls} text-[11px] font-bold uppercase tracking-widest text-gray-400 dark:text-slate-500`}>
+      {cols.map(({ id, label, cls }) => (
+        <div key={id} className={`${cls} text-[11px] font-bold uppercase tracking-widest text-gray-400 dark:text-slate-500`}>
           {label}
         </div>
       ))}
