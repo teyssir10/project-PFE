@@ -14,7 +14,7 @@ export default function QuizPlayer({ quiz }: { quiz: QuizFull }) {
   const t = useTranslations("quizPlay");
   const router = useRouter();
 
-  // ── Countdown 3-2-1 ─────────────────────────────────────────────────────
+  // ── Countdown 3-2-1 ──────────────────────────────────────────────────────
   const [countdown, setCountdown] = useState<number | null>(3);
 
   useEffect(() => {
@@ -25,16 +25,16 @@ export default function QuizPlayer({ quiz }: { quiz: QuizFull }) {
   }, [countdown]);
 
   const isCountingDown = countdown !== null;
-  // ────────────────────────────────────────────────────────────────────────
+  // ─────────────────────────────────────────────────────────────────────────
 
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [selected, setSelected] = useState<string | null>(null);
-  const [confirmed, setConfirmed] = useState(false);
-  const [score, setScore] = useState(0);
-  const [timeLeft, setTimeLeft] = useState(quiz.time_per_question ?? 30);
-  const [showHint, setShowHint] = useState(false);
-  const [shortInput, setShortInput] = useState("");
-  const [statuses, setStatuses] = useState<("unanswered" | "correct" | "wrong" | "skipped")[]>(
+  const [selected,     setSelected]     = useState<string | null>(null);
+  const [confirmed,    setConfirmed]    = useState(false);
+  const [score,        setScore]        = useState(0);
+  const [timeLeft,     setTimeLeft]     = useState(quiz.time_per_question ?? 30);
+  const [showHint,     setShowHint]     = useState(false);
+  const [shortInput,   setShortInput]   = useState("");
+  const [statuses,     setStatuses]     = useState<("unanswered" | "correct" | "wrong" | "skipped")[]>(
     Array(quiz.questions.length).fill("unanswered")
   );
 
@@ -66,7 +66,7 @@ export default function QuizPlayer({ quiz }: { quiz: QuizFull }) {
     goNext();
   }, [isLocked, statuses, currentIndex, goNext]);
 
-  // Timer — blocked during countdown
+  // Timer — bloqué pendant le countdown
   useEffect(() => {
     if (isLocked || isCountingDown) return;
     if (timeLeft === 0) {
@@ -128,7 +128,6 @@ export default function QuizPlayer({ quiz }: { quiz: QuizFull }) {
         bg-gradient-to-br from-gray-50 via-cyan-50/30 to-teal-50/20
         dark:from-slate-950 dark:via-slate-900 dark:to-slate-950">
 
-        {/* Animated ring */}
         <div className="relative flex items-center justify-center mb-8">
           <svg className="w-44 h-44 -rotate-90" viewBox="0 0 120 120">
             <circle cx="60" cy="60" r="50" fill="none"
@@ -147,16 +146,20 @@ export default function QuizPlayer({ quiz }: { quiz: QuizFull }) {
               className="text-7xl font-black text-gray-900 dark:text-white leading-none"
               style={{ animation: "countPop 0.35s cubic-bezier(0.34,1.56,0.64,1)" }}
             >
-              {countdown === 0 ? "GO!" : countdown}
+              {countdown === 0 ? t("go") : countdown}
             </span>
           </div>
         </div>
 
         <p className="text-cyan-500 dark:text-cyan-400 text-sm font-bold tracking-widest uppercase mb-2">
-          Get Ready!
+          {t("getReady")}
         </p>
-        <p className="text-gray-900 dark:text-white font-extrabold text-xl text-center px-8">{quiz.title}</p>
-        <p className="text-gray-400 dark:text-slate-500 text-xs mt-2">{quiz.questions.length} questions</p>
+        <p className="text-gray-900 dark:text-white font-extrabold text-xl text-center px-8">
+          {quiz.title}
+        </p>
+        <p className="text-gray-400 dark:text-slate-500 text-xs mt-2">
+          {t("questionsCount", { count: quiz.questions.length })}
+        </p>
 
         <style>{`
           @keyframes countPop {
@@ -301,7 +304,7 @@ export default function QuizPlayer({ quiz }: { quiz: QuizFull }) {
                   <span className="text-red-400 font-semibold">{t("wrongAnswer")}</span>
                 )
               ) : selected ? (
-                <span className="text-cyan-500">{t("changeOrConfirm") ?? "Change or confirm"}</span>
+                <span className="text-cyan-500">{t("changeOrConfirm")}</span>
               ) : (
                 <span>
                   {t("currentScore")}{" "}
@@ -314,8 +317,10 @@ export default function QuizPlayer({ quiz }: { quiz: QuizFull }) {
 
             <div className="flex gap-2 items-center justify-end">
               {!isLocked && !confirmed && hint && !showHint && (
-                <button onClick={() => setShowHint(true)}
-                  className="flex items-center gap-1.5 px-3 md:px-4 py-2 rounded-lg border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs font-medium text-gray-500 dark:text-slate-400 hover:border-gray-300 transition-all">
+                <button
+                  onClick={() => setShowHint(true)}
+                  className="flex items-center gap-1.5 px-3 md:px-4 py-2 rounded-lg border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs font-medium text-gray-500 dark:text-slate-400 hover:border-gray-300 transition-all"
+                >
                   <svg xmlns="http://www.w3.org/2000/svg" className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
                   </svg>
@@ -323,20 +328,26 @@ export default function QuizPlayer({ quiz }: { quiz: QuizFull }) {
                 </button>
               )}
               {!isLocked && !confirmed && !canConfirm && (
-                <button onClick={handleSkip}
-                  className="px-4 md:px-5 py-2 md:py-2.5 rounded-xl border border-gray-200 dark:border-slate-700 text-sm text-gray-500 dark:text-slate-400 hover:border-gray-400 transition font-medium">
-                  {t("skip")} →
+                <button
+                  onClick={handleSkip}
+                  className="px-4 md:px-5 py-2 md:py-2.5 rounded-xl border border-gray-200 dark:border-slate-700 text-sm text-gray-500 dark:text-slate-400 hover:border-gray-400 transition font-medium"
+                >
+                  {t("skip")}
                 </button>
               )}
               {canConfirm && !confirmed && !isLocked && (
-                <button onClick={handleConfirm}
-                  className="px-6 md:px-8 py-2 md:py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-teal-400 hover:from-cyan-400 hover:to-teal-300 text-white font-bold text-sm transition shadow-lg shadow-cyan-500/25">
+                <button
+                  onClick={handleConfirm}
+                  className="px-6 md:px-8 py-2 md:py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-teal-400 hover:from-cyan-400 hover:to-teal-300 text-white font-bold text-sm transition shadow-lg shadow-cyan-500/25"
+                >
                   {t("confirm")}
                 </button>
               )}
               {(wasAnswered || isLocked) && (
-                <button onClick={goNext}
-                  className="px-6 md:px-8 py-2 md:py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-teal-400 hover:from-cyan-400 hover:to-teal-300 text-white font-bold text-sm transition shadow-lg shadow-cyan-500/25">
+                <button
+                  onClick={goNext}
+                  className="px-6 md:px-8 py-2 md:py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-teal-400 hover:from-cyan-400 hover:to-teal-300 text-white font-bold text-sm transition shadow-lg shadow-cyan-500/25"
+                >
                   {isLast ? t("finish") : t("next")}
                 </button>
               )}

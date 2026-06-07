@@ -177,9 +177,7 @@ export default function Page() {
                 <h2 className="text-base font-bold text-gray-800 dark:text-white">
                   {t("recommended")}
                 </h2>
-                <span className="text-[10px] px-2 py-0.5 rounded-full bg-cyan-50 dark:bg-cyan-900/20 border border-cyan-100 dark:border-cyan-800/40 text-cyan-600 dark:text-cyan-300 font-semibold">
-                  AI ✦
-                </span>
+                
               </div>
 
               {loadingRecommended ? (

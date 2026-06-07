@@ -481,7 +481,10 @@
     "finish": "🎉 Finish",
     "quizNotFound": "Quiz not found.",
     "goBack": "Go back",
-    "changeOrConfirm": "Change or confirm your answer"
+    "changeOrConfirm": "Change or confirm your answer",
+    "go": "GO!",
+"getReady": "Get Ready!",
+"questionsCount": "{count} questions"
   },
   "quizSidebarPlay": {
     "questions": "Questions",
