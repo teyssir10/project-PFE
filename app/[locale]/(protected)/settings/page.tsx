@@ -55,10 +55,13 @@ export default function SettingsPage() {
   const [activeSection, setActiveSection] = useState<Section>("profile");
   const [saved, setSaved] = useState(false);
 
-  const [firstName, setFirstName] = useState("");
-  const [lastName,  setLastName]  = useState("");
-  const [country,   setCountry]   = useState("");
-  const [region,    setRegion]    = useState("");
+  const [firstName,       setFirstName]       = useState("");
+  const [lastName,        setLastName]        = useState("");
+  const [country,         setCountry]         = useState("");
+  const [region,          setRegion]          = useState("");
+  const [avatarUrl,       setAvatarUrl]       = useState<string | null>(null);
+  const [avatarUploading, setAvatarUploading] = useState(false);
+  const fileInputRef = React.useRef<HTMLInputElement>(null);
 
   const [currentPwd, setCurrentPwd] = useState("");
   const [newPwd,     setNewPwd]     = useState("");
@@ -78,19 +81,21 @@ export default function SettingsPage() {
     draft:         { label: t("myquizzes.statusDraft"),     icon: "📝", color: "bg-gray-100 text-gray-600 dark:bg-slate-700 dark:text-slate-400"              },
   };
 
+  // ── Charge profil + avatar depuis la table users ──
   useEffect(() => {
     if (!user) return;
     const fetchProfile = async () => {
       const { data } = await supabase
         .from("users")
-        .select("firstname, lastname, country, region")
+        .select("firstname, lastname, country, region, avatar_url")
         .eq("id", user.id)
         .single();
       if (data) {
-        setFirstName(data.firstname || "");
-        setLastName(data.lastname   || "");
-        setCountry(data.country     || "");
-        setRegion(data.region       || "");
+        setFirstName(data.firstname  || "");
+        setLastName(data.lastname    || "");
+        setCountry(data.country      || "");
+        setRegion(data.region        || "");
+        setAvatarUrl(data.avatar_url || null);
       }
     };
     fetchProfile();
@@ -139,22 +144,66 @@ export default function SettingsPage() {
     localStorage.setItem("theme", c ? "dark" : "light");
   };
 
+  // ── Upload avatar ──
+  const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !user) return;
 
+    if (!file.type.startsWith("image/")) {
+      message.error("Veuillez sélectionner une image.");
+      return;
+    }
+    if (file.size > 2 * 1024 * 1024) {
+      message.error("Image trop lourde (max 2MB).");
+      return;
+    }
+
+    setAvatarUploading(true);
+    try {
+      const ext  = file.name.split(".").pop();
+      const path = `avatars/${user.id}.${ext}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from("avatars")
+        .upload(path, file, { upsert: true });
+
+      if (uploadError) throw uploadError;
+
+      const { data: urlData } = supabase.storage
+        .from("avatars")
+        .getPublicUrl(path);
+
+      const publicUrl = urlData.publicUrl;
+
+      await supabase
+        .from("users")
+        .update({ avatar_url: publicUrl })
+        .eq("id", user.id);
+
+      setAvatarUrl(publicUrl);
+      message.success("Photo de profil mise à jour !");
+    } catch (err) {
+      console.error(err);
+      message.error("Erreur lors de l'upload.");
+    } finally {
+      setAvatarUploading(false);
+      // Reset input pour permettre re-upload du même fichier
+      if (fileInputRef.current) fileInputRef.current.value = "";
+    }
+  };
+
+  // ── Sauvegarde profil ──
   const saveProfile = async () => {
     setLoading(true);
     try {
-
       await supabase.auth.updateUser({
         data: { firstname: firstName, lastname: lastName, country, region },
       });
-
       const { error: dbError } = await supabase
         .from("users")
         .update({ firstname: firstName, lastname: lastName, country, region })
         .eq("id", user!.id);
-
       if (dbError) throw dbError;
-
       setSaved(true);
       setTimeout(() => setSaved(false), 2000);
     } catch {
@@ -198,7 +247,7 @@ export default function SettingsPage() {
       </div>
       <div className="flex flex-col lg:flex-row gap-6">
 
-        {/* Sidebar */}
+        {/* Sidebar nav */}
         <div className="w-full lg:w-56 flex-shrink-0">
           <div className="bg-white dark:bg-slate-800 border border-cyan-100 dark:border-slate-700 rounded-2xl p-2 space-y-1">
             {sections.map((s) => (
@@ -218,26 +267,58 @@ export default function SettingsPage() {
         <div className="flex-1">
           <div className="bg-white dark:bg-slate-800 border border-cyan-100 dark:border-slate-700 rounded-2xl p-6">
 
-            {/* PROFILE */}
+            {/* ── PROFILE ── */}
             {activeSection === "profile" && (
               <div className="space-y-5">
                 <h2 className="text-base font-extrabold text-gray-800 dark:text-white border-b border-gray-100 dark:border-slate-700 pb-3">{t("nav.profile")}</h2>
+
+                {/* Avatar */}
                 <div className="flex items-center gap-4">
                   <div className="relative">
-                    <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-cyan-400 to-teal-400 flex items-center justify-center text-white text-2xl font-extrabold shadow-md">
-                      {firstName?.[0]?.toUpperCase() || user?.email?.[0]?.toUpperCase() || "U"}
+                    {/* Input file caché */}
+                    <input
+                      ref={fileInputRef}
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={handleAvatarUpload}
+                    />
+                    {/* Photo ou initiale */}
+                    <div className="w-16 h-16 rounded-2xl overflow-hidden shadow-md">
+                      {avatarUrl ? (
+                        <img
+                          src={avatarUrl}
+                          alt="avatar"
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <div className="w-full h-full bg-gradient-to-br from-cyan-400 to-teal-400 flex items-center justify-center text-white text-2xl font-extrabold">
+                          {firstName?.[0]?.toUpperCase() || user?.email?.[0]?.toUpperCase() || "U"}
+                        </div>
+                      )}
                     </div>
-                    <button className="absolute -bottom-1 -right-1 w-6 h-6 bg-cyan-500 rounded-full flex items-center justify-center shadow-sm hover:bg-cyan-600 transition-all">
-                      <CameraOutlined className="text-white text-[10px]" />
+                    {/* Bouton caméra */}
+                    <button
+                      onClick={() => fileInputRef.current?.click()}
+                      disabled={avatarUploading}
+                      className="absolute -bottom-1 -right-1 w-6 h-6 bg-cyan-500 rounded-full flex items-center justify-center shadow-sm hover:bg-cyan-600 transition-all disabled:opacity-60"
+                    >
+                      {avatarUploading
+                        ? <Spin size="small" />
+                        : <CameraOutlined className="text-white text-[10px]" />
+                      }
                     </button>
                   </div>
                   <div>
                     <p className="font-bold text-gray-800 dark:text-white text-sm">{firstName} {lastName}</p>
                     <p className="text-xs text-gray-400">{user?.email}</p>
+                    <p className="text-[11px] text-gray-300 dark:text-slate-600 mt-0.5">
+                      Cliquez sur l'icône pour changer la photo
+                    </p>
                   </div>
                 </div>
 
-                {/* First name + Last name */}
+                {/* Prénom + Nom */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {[
                     { label: t("profile.firstName"), val: firstName, set: setFirstName },
@@ -258,7 +339,7 @@ export default function SettingsPage() {
                     className="w-full px-3 py-2.5 rounded-xl border border-gray-100 dark:border-slate-700 bg-gray-50 dark:bg-slate-700/50 text-sm text-gray-400 cursor-not-allowed" />
                 </div>
 
-                {/* Country + Region */}
+                {/* Pays + Région */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-xs font-bold text-gray-500 dark:text-gray-400 mb-1.5">{t("profile.country")}</label>
@@ -282,7 +363,7 @@ export default function SettingsPage() {
               </div>
             )}
 
-            {/* SECURITY */}
+            {/* ── SECURITY ── */}
             {activeSection === "security" && (
               <div className="space-y-5">
                 <h2 className="text-base font-extrabold text-gray-800 dark:text-white border-b border-gray-100 dark:border-slate-700 pb-3">{t("nav.security")}</h2>
@@ -311,7 +392,7 @@ export default function SettingsPage() {
               </div>
             )}
 
-            {/* LANGUAGE */}
+            {/* ── LANGUAGE ── */}
             {activeSection === "language" && (
               <div className="space-y-4">
                 <h2 className="text-base font-extrabold text-gray-800 dark:text-white border-b border-gray-100 dark:border-slate-700 pb-3">{t("nav.language")}</h2>
@@ -332,7 +413,7 @@ export default function SettingsPage() {
               </div>
             )}
 
-            {/* APPEARANCE */}
+            {/* ── APPEARANCE ── */}
             {activeSection === "appearance" && (
               <div className="space-y-4">
                 <h2 className="text-base font-extrabold text-gray-800 dark:text-white border-b border-gray-100 dark:border-slate-700 pb-3">{t("nav.appearance")}</h2>
@@ -351,7 +432,7 @@ export default function SettingsPage() {
               </div>
             )}
 
-            {/* DRAFTS */}
+            {/* ── DRAFTS ── */}
             {activeSection === "drafts" && (
               <div className="space-y-4">
                 <div className="flex items-center justify-between border-b border-gray-100 dark:border-slate-700 pb-3">
@@ -411,7 +492,7 @@ export default function SettingsPage() {
               </div>
             )}
 
-            {/* MY QUIZZES */}
+            {/* ── MY QUIZZES ── */}
             {activeSection === "myquizzes" && (
               <div className="space-y-5">
                 <div className="border-b border-gray-100 dark:border-slate-700 pb-3">

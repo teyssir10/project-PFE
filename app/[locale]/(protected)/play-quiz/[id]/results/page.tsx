@@ -27,56 +27,51 @@ export default function ResultsPage() {
   const [displayScore, setDisplayScore] = useState(0);
   const [displayPct, setDisplayPct]     = useState(0);
   const [visible, setVisible]           = useState(false);
+
   const saved = useRef(false);
 
- useEffect(() => {
-  if (!user || !id) return;
+  useEffect(() => {
+    if (!user || !id) return;
+    const lockKey = `quiz_saved_${id}_${user.id}_${score}_${total}`;
+    if (sessionStorage.getItem(lockKey)) return;
+    sessionStorage.setItem(lockKey, "1");
 
-  const lockKey = `quiz_saved_${id}_${user.id}_${score}_${total}`;
-  
-  if (sessionStorage.getItem(lockKey)) return;
-  sessionStorage.setItem(lockKey, "1");
+    const saveResult = async () => {
+      try {
+        await supabase.from("quiz_history").insert({
+          user_id:   user.id,
+          quiz_id:   id,
+          score:     score,
+          played_at: new Date().toISOString(),
+        });
+        await supabase.rpc("increment_players", { quiz_id: id });
 
-  const saveResult = async () => {
-    try {
+        const xpGained = score * 10;
+        const { data: userData } = await supabase
+          .from("users")
+          .select("total_score, quizzes_played, accuracy")
+          .eq("id", user.id)
+          .single();
 
-      await supabase.from("quiz_history").insert({
-        user_id:   user.id,
-        quiz_id:   id,
-        score:     score,
-        played_at: new Date().toISOString(),
-      });
-
-      await supabase.rpc("increment_players", { quiz_id: id });
-
-      const xpGained = score * 10;
-      const { data: userData } = await supabase
-        .from("users")
-        .select("total_score, quizzes_played, accuracy")
-        .eq("id", user.id)
-        .single();
-
-      if (userData) {
-        const newPlayed   = (userData.quizzes_played ?? 0) + 1;
-        const newScore    = (userData.total_score ?? 0) + xpGained;
-        const newAccuracy = Math.round(
-          ((userData.accuracy ?? 0) * (newPlayed - 1) + percentage) / newPlayed
-        );
-
-        await supabase.from("users").update({
-          total_score:    newScore,
-          quizzes_played: newPlayed,
-          accuracy:       newAccuracy,
-        }).eq("id", user.id);
+        if (userData) {
+          const newPlayed   = (userData.quizzes_played ?? 0) + 1;
+          const newScore    = (userData.total_score ?? 0) + xpGained;
+          const newAccuracy = Math.round(
+            ((userData.accuracy ?? 0) * (newPlayed - 1) + percentage) / newPlayed
+          );
+          await supabase.from("users").update({
+            total_score:    newScore,
+            quizzes_played: newPlayed,
+            accuracy:       newAccuracy,
+          }).eq("id", user.id);
+        }
+      } catch (err) {
+        console.error("Erreur sauvegarde résultat:", err);
+        sessionStorage.removeItem(lockKey);
       }
-    } catch (err) {
-      console.error("Erreur sauvegarde résultat:", err);
-      sessionStorage.removeItem(lockKey);
-    }
-  };
-
-  saveResult();
-}, [user, id, score, total]);
+    };
+    saveResult();
+  }, [user, id, score, total]);
 
   useEffect(() => {
     setTimeout(() => setVisible(true), 100);
@@ -92,10 +87,10 @@ export default function ResultsPage() {
 
   const getMessage = () => {
     if (percentage === 100) return { title: t("msg100Title", { name: firstName }), sub: t("msg100Sub"), badge: t("msg100Badge"), badgeColor: "from-yellow-400 to-amber-500" };
-    if (percentage >= 80)  return { title: t("msg80Title", { name: firstName }),  sub: t("msg80Sub"),  badge: t("msg80Badge"),  badgeColor: "from-teal-400 to-cyan-500" };
-    if (percentage >= 50)  return { title: t("msg50Title", { name: firstName }),  sub: t("msg50Sub"),  badge: t("msg50Badge"),  badgeColor: "from-blue-400 to-indigo-500" };
-    if (percentage >= 25)  return { title: t("msg25Title", { name: firstName }),  sub: t("msg25Sub"),  badge: t("msg25Badge"),  badgeColor: "from-orange-400 to-amber-500" };
-    return                        { title: t("msg0Title",  { name: firstName }),  sub: t("msg0Sub"),   badge: t("msg0Badge"),   badgeColor: "from-rose-500 to-red-500" };
+    if (percentage >= 80)  return { title: t("msg80Title",  { name: firstName }), sub: t("msg80Sub"),  badge: t("msg80Badge"),  badgeColor: "from-teal-400 to-cyan-500" };
+    if (percentage >= 50)  return { title: t("msg50Title",  { name: firstName }), sub: t("msg50Sub"),  badge: t("msg50Badge"),  badgeColor: "from-blue-400 to-indigo-500" };
+    if (percentage >= 25)  return { title: t("msg25Title",  { name: firstName }), sub: t("msg25Sub"),  badge: t("msg25Badge"),  badgeColor: "from-orange-400 to-amber-500" };
+    return                        { title: t("msg0Title",   { name: firstName }), sub: t("msg0Sub"),   badge: t("msg0Badge"),   badgeColor: "from-rose-500 to-red-500" };
   };
 
   const { title, sub, badge, badgeColor } = getMessage();
@@ -109,10 +104,10 @@ export default function ResultsPage() {
     : [t("tipLoser1"),  t("tipLoser2"),  t("tipLoser3")];
 
   const stats = [
-    { label: t("correct"),  value: score,            icon: "✅", border: "border-emerald-200 dark:border-emerald-800", text: "text-emerald-500",                                                                            bg: "bg-emerald-50 dark:bg-emerald-900/20" },
-    { label: t("wrong"),    value: wrong,             icon: "❌", border: "border-rose-200 dark:border-rose-800",       text: "text-rose-500",                                                                              bg: "bg-rose-50 dark:bg-rose-900/20" },
-    { label: t("total"),    value: total,             icon: "📝", border: "border-slate-200 dark:border-slate-700",     text: "text-slate-600 dark:text-slate-300",                                                         bg: "bg-slate-50 dark:bg-slate-800/50" },
-    { label: t("xpGained"), value: `+${score * 10}`, icon: "⚡", border: isWinner ? "border-cyan-200 dark:border-cyan-800" : "border-pink-200 dark:border-pink-800", text: isWinner ? "text-cyan-500" : "text-pink-500",   bg: isWinner ? "bg-cyan-50 dark:bg-cyan-900/20" : "bg-pink-50 dark:bg-pink-900/20" },
+    { label: t("correct"),  value: score,            icon: "✅", border: "border-emerald-200 dark:border-emerald-800", text: "text-emerald-500", bg: "bg-emerald-50 dark:bg-emerald-900/20" },
+    { label: t("wrong"),    value: wrong,             icon: "❌", border: "border-rose-200 dark:border-rose-800",       text: "text-rose-500",    bg: "bg-rose-50 dark:bg-rose-900/20" },
+    { label: t("total"),    value: total,             icon: "📝", border: "border-slate-200 dark:border-slate-700",     text: "text-slate-600 dark:text-slate-300", bg: "bg-slate-50 dark:bg-slate-800/50" },
+    { label: t("xpGained"), value: `+${score * 10}`, icon: "⚡", border: isWinner ? "border-cyan-200 dark:border-cyan-800" : "border-pink-200 dark:border-pink-800", text: isWinner ? "text-cyan-500" : "text-pink-500", bg: isWinner ? "bg-cyan-50 dark:bg-cyan-900/20" : "bg-pink-50 dark:bg-pink-900/20" },
   ];
 
   const analysisItems = [
@@ -136,23 +131,29 @@ export default function ResultsPage() {
         </>)}
       </div>
 
-      <div className={`relative z-10 max-w-5xl mx-auto px-6 py-8 flex flex-col gap-6 transition-all duration-700
+      <div className={`relative z-10 max-w-5xl mx-auto px-4 sm:px-6 py-6 flex flex-col gap-5 transition-all duration-700
         ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
 
-        {/* HERO */}
+        {/* ── HERO ── */}
         <div className={`w-full rounded-3xl overflow-hidden border-2 ${isWinner ? "border-teal-200 dark:border-teal-800" : "border-rose-200 dark:border-rose-800"}`}>
           <div className={`h-2 w-full bg-gradient-to-r ${isWinner ? "from-cyan-400 to-teal-500" : "from-rose-400 to-pink-500"}`} />
-          <div className="bg-white dark:bg-slate-900 px-8 py-6 flex items-center gap-8">
+
+          {/* Mobile layout : colonne, Desktop : ligne */}
+          <div className="bg-white dark:bg-slate-900 px-5 py-5 flex flex-col sm:flex-row items-center gap-5 sm:gap-8">
+
+            {/* Panda */}
             <div className="shrink-0" style={{ animation: isWinner ? "float 3s ease-in-out infinite" : "sway 2.5s ease-in-out infinite" }}>
-              <Image src={isWinner ? winnerPanda : cryPanda} alt={isWinner ? "Winner panda" : "Cry panda"} width={120} height={120} className="drop-shadow-xl" priority />
+              <Image src={isWinner ? winnerPanda : cryPanda} alt="panda" width={90} height={90} className="drop-shadow-xl" priority />
             </div>
-            <div className="flex-1 space-y-1">
+
+            {/* Texte */}
+            <div className="flex-1 space-y-1 text-center sm:text-left">
               <p className="text-xs font-bold text-gray-400 dark:text-slate-500 uppercase tracking-widest">{t("title")}</p>
-              <h1 className={`text-3xl font-black leading-tight ${isWinner ? "text-teal-600 dark:text-teal-400" : "text-rose-500 dark:text-rose-400"}`}>
+              <h1 className={`text-2xl sm:text-3xl font-black leading-tight ${isWinner ? "text-teal-600 dark:text-teal-400" : "text-rose-500 dark:text-rose-400"}`}>
                 {title}
               </h1>
               <p className="text-sm text-gray-500 dark:text-slate-400">{sub}</p>
-              <div className="flex items-center gap-4 pt-2">
+              <div className="flex items-center justify-center sm:justify-start gap-3 pt-2 flex-wrap">
                 <div className="flex items-center gap-1.5">
                   <span className="w-2 h-2 rounded-full bg-emerald-400" />
                   <span className="text-xs font-semibold text-gray-500 dark:text-slate-400">{score} {t("correct")}</span>
@@ -167,9 +168,11 @@ export default function ResultsPage() {
                 </div>
               </div>
             </div>
-            <div className="shrink-0 flex flex-col items-center gap-3">
+
+            {/* Cercle score */}
+            <div className="shrink-0 flex flex-col items-center gap-2">
               <div className="relative">
-                <svg width="110" height="110" viewBox="0 0 160 160">
+                <svg width="90" height="90" viewBox="0 0 160 160">
                   <circle cx="80" cy="80" r={radius} fill="none" stroke="currentColor"
                     className="text-gray-100 dark:text-slate-800" strokeWidth="14" />
                   <circle cx="80" cy="80" r={radius} fill="none"
@@ -181,7 +184,7 @@ export default function ResultsPage() {
                   />
                 </svg>
                 <div className="absolute inset-0 flex flex-col items-center justify-center">
-                  <span className={`text-2xl font-black ${isWinner ? "text-teal-500" : "text-rose-500"}`}>
+                  <span className={`text-lg font-black ${isWinner ? "text-teal-500" : "text-rose-500"}`}>
                     {displayScore}/{total}
                   </span>
                   <span className="text-xs font-bold text-gray-400">{displayPct}%</span>
@@ -194,22 +197,23 @@ export default function ResultsPage() {
           </div>
         </div>
 
-        {/* STATS */}
-        <div className="grid grid-cols-4 gap-4">
+        {/* ── STATS : 2 cols mobile, 4 cols desktop ── */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           {stats.map(({ label, value, icon, border, text, bg }) => (
-            <div key={label} className={`flex flex-col items-center gap-2 rounded-2xl p-5 border-2 ${border} ${bg} shadow-sm`}>
+            <div key={label} className={`flex flex-col items-center gap-2 rounded-2xl p-4 border-2 ${border} ${bg} shadow-sm`}>
               <span className="text-2xl">{icon}</span>
-              <span className={`text-2xl font-black ${text}`}>{value}</span>
-              <span className="text-xs font-semibold text-gray-400 dark:text-slate-500">{label}</span>
+              <span className={`text-xl font-black ${text}`}>{value}</span>
+              <span className="text-xs font-semibold text-gray-400 dark:text-slate-500 text-center">{label}</span>
             </div>
           ))}
         </div>
 
-        {/* TWO COLUMNS */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* ── TWO COLUMNS ── */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+
           {/* LEFT */}
-          <div className="space-y-6">
-            <div className="bg-white dark:bg-slate-900 rounded-2xl border border-gray-100 dark:border-slate-800 shadow-sm p-6 space-y-3">
+          <div className="space-y-5">
+            <div className="bg-white dark:bg-slate-900 rounded-2xl border border-gray-100 dark:border-slate-800 shadow-sm p-5 space-y-3">
               <h3 className="text-xs font-black text-gray-500 dark:text-slate-400 uppercase tracking-widest">{t("progression")}</h3>
               <div className="flex justify-between text-xs font-semibold text-gray-400 dark:text-slate-500">
                 <span>0%</span>
@@ -232,7 +236,7 @@ export default function ResultsPage() {
               </div>
             </div>
 
-            <div className="bg-white dark:bg-slate-900 rounded-2xl border border-gray-100 dark:border-slate-800 shadow-sm p-6 space-y-4">
+            <div className="bg-white dark:bg-slate-900 rounded-2xl border border-gray-100 dark:border-slate-800 shadow-sm p-5 space-y-4">
               <h3 className="text-xs font-black text-gray-500 dark:text-slate-400 uppercase tracking-widest">{t("analysis")}</h3>
               {analysisItems.map(({ label, value, bar, color }) => (
                 <div key={label} className="space-y-1.5">
@@ -249,8 +253,8 @@ export default function ResultsPage() {
           </div>
 
           {/* RIGHT */}
-          <div className="space-y-6">
-            <div className={`rounded-2xl border-2 p-6 space-y-3 ${isWinner ? "border-cyan-200 dark:border-cyan-800 bg-cyan-50/50 dark:bg-cyan-900/10" : "border-rose-200 dark:border-rose-800 bg-rose-50/50 dark:bg-rose-900/10"}`}>
+          <div className="space-y-5">
+            <div className={`rounded-2xl border-2 p-5 space-y-3 ${isWinner ? "border-cyan-200 dark:border-cyan-800 bg-cyan-50/50 dark:bg-cyan-900/10" : "border-rose-200 dark:border-rose-800 bg-rose-50/50 dark:bg-rose-900/10"}`}>
               <h3 className={`text-xs font-black uppercase tracking-widest ${isWinner ? "text-teal-600 dark:text-teal-400" : "text-rose-500 dark:text-rose-400"}`}>
                 {isWinner ? t("tipsWinner") : t("tipsLoser")}
               </h3>
@@ -266,28 +270,28 @@ export default function ResultsPage() {
               </ul>
             </div>
 
-            <div className={`rounded-2xl p-6 bg-gradient-to-br text-white shadow-lg ${isWinner ? "from-cyan-500 to-teal-500 shadow-cyan-200/50 dark:shadow-cyan-900/40" : "from-rose-500 to-pink-500 shadow-rose-200/50 dark:shadow-rose-900/40"}`}>
-              <div className="flex items-center justify-between">
-                <div>
+            <div className={`rounded-2xl p-5 bg-gradient-to-br text-white shadow-lg ${isWinner ? "from-cyan-500 to-teal-500 shadow-cyan-200/50 dark:shadow-cyan-900/40" : "from-rose-500 to-pink-500 shadow-rose-200/50 dark:shadow-rose-900/40"}`}>
+              <div className="flex items-center justify-between gap-3">
+                <div className="min-w-0">
                   <p className="text-xs font-bold opacity-80 uppercase tracking-widest mb-1">{t("performance")}</p>
-                  <p className="text-2xl font-black">{isWinner ? t("performanceTop") : t("performanceBetter")}</p>
+                  <p className="text-xl font-black">{isWinner ? t("performanceTop") : t("performanceBetter")}</p>
                   <p className="text-xs opacity-70 mt-1">
                     {isWinner ? t("performanceSubWinner", { name: firstName }) : t("performanceSubLoser", { name: firstName })}
                   </p>
                 </div>
-                <span className="text-6xl opacity-70">{isWinner ? "🌟" : "📚"}</span>
+                <span className="text-5xl opacity-70 shrink-0">{isWinner ? "🌟" : "📚"}</span>
               </div>
             </div>
 
-            <div className="bg-white dark:bg-slate-900 rounded-2xl border border-gray-100 dark:border-slate-800 shadow-sm p-6">
+            <div className="bg-white dark:bg-slate-900 rounded-2xl border border-gray-100 dark:border-slate-800 shadow-sm p-5">
               <h3 className="text-xs font-black text-gray-500 dark:text-slate-400 uppercase tracking-widest mb-4">{t("nextStep")}</h3>
               <div className="space-y-2">
                 <button onClick={() => router.push(`/play-quiz/${id}/play`)}
-                  className={`w-full py-3 rounded-xl font-bold text-white text-sm flex items-center justify-center gap-2 transition-all hover:scale-105 ${isWinner ? "bg-gradient-to-r from-cyan-500 to-teal-400" : "bg-gradient-to-r from-rose-500 to-pink-400"}`}>
+                  className={`w-full py-3 rounded-xl font-bold text-white text-sm flex items-center justify-center gap-2 transition-all hover:scale-105 active:scale-95 ${isWinner ? "bg-gradient-to-r from-cyan-500 to-teal-400" : "bg-gradient-to-r from-rose-500 to-pink-400"}`}>
                   {t("replay")}
                 </button>
                 <button onClick={() => router.push("/browse-quiz")}
-                  className="w-full py-3 rounded-xl font-bold text-sm border-2 border-gray-200 dark:border-slate-700 text-gray-600 dark:text-slate-300 bg-transparent hover:border-gray-300 transition-all hover:scale-105 flex items-center justify-center gap-2">
+                  className="w-full py-3 rounded-xl font-bold text-sm border-2 border-gray-200 dark:border-slate-700 text-gray-600 dark:text-slate-300 bg-transparent hover:border-gray-300 transition-all hover:scale-105 active:scale-95 flex items-center justify-center gap-2">
                   {t("explore")}
                 </button>
               </div>
@@ -295,7 +299,7 @@ export default function ResultsPage() {
           </div>
         </div>
 
-        {/* BOTTOM */}
+        {/* ── BOTTOM ── */}
         <div className="pb-8">
           <button onClick={() => router.push("/dashboard")}
             className="w-full py-4 rounded-2xl font-bold text-sm border-2 border-gray-200 dark:border-slate-700 text-gray-600 dark:text-slate-300 bg-white dark:bg-slate-900 hover:border-gray-300 transition-all hover:scale-[1.01] active:scale-95 flex items-center justify-center gap-2">

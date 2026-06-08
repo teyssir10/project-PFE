@@ -483,7 +483,10 @@
     "changeOrConfirm": "قم بتعديل أو تأكيد إجابتك",
     "quizNotFound": "الاختبار غير موجود.",
     "goBack": "رجوع",
-    "changeOrConfirm": "تغيير أو تأكيد إجابتك"
+    "changeOrConfirm": "تغيير أو تأكيد إجابتك",
+    "go": "انطلق!",
+"getReady": "استعد!",
+"questionsCount": "{count} أسئلة"
   },
   "quizSidebarPlay": {
     "questions": "الأسئلة",
