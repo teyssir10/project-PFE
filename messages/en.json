@@ -12,16 +12,16 @@
     "questionText": "Where do most pandas live in the world?",
     "nextQuestion": "Next Question"
   },
-  "features": {
-    "title": "Powerful Features",
-    "subtitle": "Everything you need to create, manage, and analyze engaging quizzes.",
-    "ai": { "title": "AI-Powered Generation", "description": "Advanced AI creates perfectly tailored quizzes from any content in seconds." },
-    "fast": { "title": "Lightning Fast", "description": "Get results in milliseconds with our optimized processing engine." },
-    "analytics": { "title": "Detailed Analytics", "description": "Track performance and gain insights into learning patterns." },
-    "secure": { "title": "Secure & Private", "description": "Your data is encrypted and never shared with third parties." },
-    "sharing": { "title": "Easy Sharing", "description": "Share quizzes with students or colleagues with a single link." },
-    "design": { "title": "Customizable Design", "description": "Personalize your quizzes with custom themes and branding." }
-  },
+"features": {
+  "title": "Powerful Features",
+  "subtitle": "Everything you need to create, manage, and analyze engaging quizzes.",
+  "ai": { "title": "AI-Powered Generation", "description": "Advanced AI creates perfectly tailored quizzes from any content in seconds." },
+  "analytics": { "title": "Detailed Analytics", "description": "Track performance and gain insights into learning patterns." },
+  "secure": { "title": "Secure & Private", "description": "Your data is encrypted and never shared with third parties." },
+  "sharing": { "title": "Easy Sharing", "description": "Share quizzes with students or colleagues with a single link." },
+  "design": { "title": "Customizable Design", "description": "Personalize your quizzes with custom themes and branding." },
+  "aiValidation": { "title": "AI Validation", "description": "Your quizzes are automatically validated by artificial intelligence to ensure question quality." }
+},
   "steps": {
     "title": "How It Works",
     "subtitle": "Get started in 3 simple steps and begin your learning journey",

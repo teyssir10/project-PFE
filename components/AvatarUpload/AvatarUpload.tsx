@@ -43,7 +43,6 @@ export default function AvatarUpload({
     try {
       const ext = file.name.split(".").pop();
 
-      // ✅ FIX: filePath sans sous-dossier "avatars/" — le bucket s'appelle déjà "avatars"
       const filePath = `${user.id}.${ext}`;
 
       const { error: uploadError } = await supabase.storage
@@ -61,7 +60,6 @@ export default function AvatarUpload({
       });
       if (updateError) throw updateError;
 
-      // ✅ FIX: table "users" au lieu de "profiles"
       await supabase
         .from("users")
         .update({ avatar_url: publicUrl })

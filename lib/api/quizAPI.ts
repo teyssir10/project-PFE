@@ -17,7 +17,7 @@ interface SaveQuizParams {
   aiScore?: number | null;
   aiRemarks?: string[] | null;
   editId?: string | null;
-  draftId?: string | null; // ✅ nouveau — supprime le brouillon après publication
+  draftId?: string | null; 
 }
 
 const capitalizeDifficulty = (s: string): string =>
@@ -52,7 +52,7 @@ function detectQuestionType(questions: Question[]): string {
   return "multiple_choice";
 }
 
-// ✅ Supprime le brouillon si draftId fourni
+
 async function deleteDraftIfExists(draftId?: string | null) {
   if (!draftId) return;
   const { error } = await supabase
@@ -78,7 +78,7 @@ export async function saveQuiz({
   aiScore = null,
   aiRemarks = null,
   editId = null,
-  draftId = null, // ✅
+  draftId = null,
 }: SaveQuizParams): Promise<void> {
 
   const safeDifficulty = capitalizeDifficulty(quizDifficulty);
@@ -128,7 +128,6 @@ export async function saveQuiz({
       if (qError) throw qError;
     }
 
-    // ✅ Supprime le brouillon après édition réussie
     await deleteDraftIfExists(draftId);
     return;
   }
@@ -184,6 +183,5 @@ export async function saveQuiz({
     if (qError) throw qError;
   }
 
-  // ✅ Supprime le brouillon après création réussie
   await deleteDraftIfExists(draftId);
 }

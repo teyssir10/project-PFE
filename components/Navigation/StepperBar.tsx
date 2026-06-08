@@ -83,7 +83,7 @@ export default function StepperBar({
         saved_at:          new Date().toISOString(),
       };
 
-      // ✅ Log du payload pour diagnostiquer
+
       console.log("📦 Draft payload:", JSON.stringify(payload, null, 2));
 
       let draftId = savedDraftId.current;
@@ -95,7 +95,7 @@ export default function StepperBar({
           .eq("user_id", user.id);
 
         if (error) {
-          // ✅ Log détaillé de l'erreur Supabase
+
           console.error("Supabase UPDATE error:", {
             message: error.message,
             details: error.details,
@@ -112,7 +112,7 @@ export default function StepperBar({
           .single();
 
         if (error) {
-          // ✅ Log détaillé de l'erreur Supabase
+
           console.error("Supabase INSERT error:", {
             message: error.message,
             details: error.details,
@@ -131,7 +131,6 @@ export default function StepperBar({
       message.success("Draft saved!");
       setTimeout(() => setDraftSaved(false), 3000);
     } catch (err: any) {
-      // ✅ Affiche l'erreur réelle dans le message utilisateur
       const errMsg = err?.message || err?.details || JSON.stringify(err) || "Unknown error";
       console.error("Save draft error (full):", err);
       message.error(`Failed to save draft: ${errMsg}`);

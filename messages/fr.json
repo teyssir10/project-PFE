@@ -12,16 +12,16 @@
     "questionText": "Où vivent la plupart des pandas dans le monde ?",
     "nextQuestion": "Question suivante"
   },
-  "features": {
-    "title": "Fonctionnalités Puissantes",
-    "subtitle": "Tout ce dont vous avez besoin pour créer, gérer et analyser des quiz engageants.",
-    "ai": { "title": "Génération par IA", "description": "L'IA avancée crée des quiz parfaitement adaptés à partir de n'importe quel contenu en quelques secondes." },
-    "fast": { "title": "Ultra Rapide", "description": "Obtenez des résultats en millisecondes grâce à notre moteur de traitement optimisé." },
-    "analytics": { "title": "Analytiques Détaillées", "description": "Suivez les performances et obtenez des insights sur les schémas d'apprentissage." },
-    "secure": { "title": "Sécurisé et Privé", "description": "Vos données sont chiffrées et jamais partagées avec des tiers." },
-    "sharing": { "title": "Partage Facile", "description": "Partagez des quiz avec étudiants ou collègues avec un seul lien." },
-    "design": { "title": "Design Personnalisable", "description": "Personnalisez vos quiz avec des thèmes et une image de marque sur mesure." }
-  },
+"features": {
+  "title": "Fonctionnalités Puissantes",
+  "subtitle": "Tout ce dont vous avez besoin pour créer, gérer et analyser des quiz engageants.",
+  "ai": { "title": "Génération par IA", "description": "L'IA avancée crée des quiz parfaitement adaptés à partir de n'importe quel contenu en quelques secondes." },
+  "analytics": { "title": "Analytiques Détaillées", "description": "Suivez les performances et obtenez des insights sur les schémas d'apprentissage." },
+  "secure": { "title": "Sécurisé et Privé", "description": "Vos données sont chiffrées et jamais partagées avec des tiers." },
+  "sharing": { "title": "Partage Facile", "description": "Partagez des quiz avec étudiants ou collègues avec un seul lien." },
+  "design": { "title": "Design Personnalisable", "description": "Personnalisez vos quiz avec des thèmes et une image de marque sur mesure." },
+  "aiValidation": { "title": "Validation IA", "description": "Vos quiz sont automatiquement validés par l'intelligence artificielle pour garantir la qualité des questions." }
+},
   "steps": {
     "title": "Comment ça marche",
     "subtitle": "Commencez en 3 étapes simples et débutez votre parcours d'apprentissage",

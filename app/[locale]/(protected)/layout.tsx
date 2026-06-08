@@ -21,14 +21,13 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
   const isPlayPage = pathname?.includes("/play") && !pathname?.includes("/results");
 
-  // ✅ Routes admin → laisser le layout (admin) gérer complètement
-  // Pas de vérification, pas de redirection, pas de sidebar user
+
   const isAdminRoute = pathname?.includes("/admin");
   if (isAdminRoute) {
     return <>{children}</>;
   }
 
-  // Spinner pendant chargement auth
+
   if (isLoading) {
     return (
       <div className="flex justify-center items-center min-h-screen bg-slate-50 dark:bg-slate-900">

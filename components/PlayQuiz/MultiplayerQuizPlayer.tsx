@@ -200,7 +200,6 @@ export default function MultiplayerQuizPlayer({ quiz, roomId }: Props) {
     ]);
   }, [confirmed, selected, currentUser, question, roomId, questionStartTime, questionTotalTime]);
 
-  // ✅ handleNextQuestion — setGameStatus → setGamePhase
   const handleNextQuestion = useCallback(async () => {
     const userId = currentUserRef.current?.id;
     await setGamePhase(roomId, "leaderboard");

@@ -144,7 +144,6 @@ export default function QuizPage() {
     return true;
   });
 
-  // Count per category (for the active tab/search, ignoring category filter)
   const countByCategory = (catId: string) =>
     quizzes.filter((q) => {
       if (!q) return false;

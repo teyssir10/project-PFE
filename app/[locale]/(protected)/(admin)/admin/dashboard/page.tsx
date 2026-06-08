@@ -68,8 +68,8 @@ export default function AdminDashboardPage() {
   }, []);
 
   const statCards = [
-    { label: t("stats.users"),          value: stats?.total_users ?? 0,       icon: UserOutlined,       color: "text-cyan-600 dark:text-cyan-400",    bg: "bg-cyan-50 border-cyan-200 dark:bg-cyan-500/10 dark:border-cyan-500/20",     iconBg: "bg-cyan-100 border-cyan-200 dark:bg-cyan-500/10 dark:border-cyan-500/20" },
-    { label: t("stats.totalQuizzes"),   value: stats?.total_quizzes ?? 0,     icon: AppstoreOutlined,   color: "text-violet-600 dark:text-violet-400", bg: "bg-violet-50 border-violet-200 dark:bg-violet-500/10 dark:border-violet-500/20", iconBg: "bg-violet-100 border-violet-200 dark:bg-violet-500/10 dark:border-violet-500/20" },
+    { label: t("stats.users"), value: stats?.total_users ?? 0, icon: UserOutlined, color: "text-cyan-600 dark:text-cyan-400", bg: "bg-cyan-50 border-cyan-200 dark:bg-cyan-500/10 dark:border-cyan-500/20", iconBg: "bg-cyan-100 border-cyan-200 dark:bg-cyan-500/10 dark:border-cyan-500/20" },
+    { label: t("stats.totalQuizzes"), value: stats?.total_quizzes ?? 0, icon: AppstoreOutlined,   color: "text-violet-600 dark:text-violet-400", bg: "bg-violet-50 border-violet-200 dark:bg-violet-500/10 dark:border-violet-500/20", iconBg: "bg-violet-100 border-violet-200 dark:bg-violet-500/10 dark:border-violet-500/20" },
     { label: t("stats.publishedQuizzes"), value: stats?.published_quizzes ?? 0, icon: TrophyOutlined,   color: "text-amber-600 dark:text-amber-400",  bg: "bg-amber-50 border-amber-200 dark:bg-amber-500/10 dark:border-amber-500/20",   iconBg: "bg-amber-100 border-amber-200 dark:bg-amber-500/10 dark:border-amber-500/20" },
     { label: t("stats.gamesPlayed"),    value: stats?.total_played ?? 0,      icon: PlayCircleOutlined, color: "text-emerald-600 dark:text-emerald-400", bg: "bg-emerald-50 border-emerald-200 dark:bg-emerald-500/10 dark:border-emerald-500/20", iconBg: "bg-emerald-100 border-emerald-200 dark:bg-emerald-500/10 dark:border-emerald-500/20" },
   ];

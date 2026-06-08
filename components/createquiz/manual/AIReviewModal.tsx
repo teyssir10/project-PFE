@@ -127,7 +127,6 @@ export default function AIReviewModal({
           {/* Actions */}
           <div className="flex flex-col gap-2 pt-1">
             {result.decision === "approve" ? (
-              // ✅ Score OK → bouton publie via onApprove (PAS onClose)
               <button
                 onClick={onApprove}
                 className="w-full py-3 rounded-xl bg-emerald-500 text-white font-bold text-sm hover:bg-emerald-400 transition-all"

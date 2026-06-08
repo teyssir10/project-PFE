@@ -2,10 +2,23 @@
 import { Button } from 'antd';
 import React from 'react'
 import { ArrowRightOutlined, ThunderboltOutlined } from '@ant-design/icons';
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
+import { useRouter } from 'next/navigation';
+import { useAuth } from '@/lib/auth';
 
 const Hero: React.FC = () => {
   const t = useTranslations('hero');
+  const locale = useLocale();
+  const router = useRouter();
+  const { user } = useAuth();
+
+  const handleGetStarted = () => {
+    if (user) {
+      router.push(`/${locale}/dashboard`);
+    } else {
+      router.push(`/${locale}/login`);
+    }
+  };
 
   return (
     <section className="relative overflow-hidden py-12 sm:py-20 lg:py-28">
@@ -37,7 +50,11 @@ const Hero: React.FC = () => {
             </div>
 
             <div className="flex flex-col sm:flex-row gap-4">
-              <Button size="large" className="!bg-[#00D4D0] !text-white !rounded-xl !px-8 !font-semibold">
+              <Button
+                size="large"
+                onClick={handleGetStarted}
+                className="!bg-[#00D4D0] !text-white !rounded-xl !px-8 !font-semibold"
+              >
                 {t('getStarted')}
                 <ArrowRightOutlined className="w-5 h-5 ml-2" />
               </Button>

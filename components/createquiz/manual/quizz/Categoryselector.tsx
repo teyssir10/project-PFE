@@ -52,12 +52,12 @@ export default function CategorySelector({
     fetchCategories();
   }, []);
 
-  // ✅ Retourne le nom traduit selon la locale active
+ 
   const getLocalizedName = (cat: Category): string => {
     if (locale === "ar" && cat.name_ar) return cat.name_ar;
     if (locale === "fr" && cat.name_fr) return cat.name_fr;
     if (locale === "en" && cat.name_en) return cat.name_en;
-    // fallback : essaie les autres langues puis le nom par défaut
+
     return cat.name_en ?? cat.name_fr ?? cat.name_ar ?? cat.name;
   };
 

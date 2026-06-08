@@ -55,7 +55,6 @@ export default function SettingsPage() {
   const [activeSection, setActiveSection] = useState<Section>("profile");
   const [saved, setSaved] = useState(false);
 
-  // ✅ États vides — chargés depuis la table `users`
   const [firstName, setFirstName] = useState("");
   const [lastName,  setLastName]  = useState("");
   const [country,   setCountry]   = useState("");
@@ -79,7 +78,6 @@ export default function SettingsPage() {
     draft:         { label: t("myquizzes.statusDraft"),     icon: "📝", color: "bg-gray-100 text-gray-600 dark:bg-slate-700 dark:text-slate-400"              },
   };
 
-  // ✅ Charge depuis la table `users` (même source que ProfilePage)
   useEffect(() => {
     if (!user) return;
     const fetchProfile = async () => {
@@ -141,16 +139,15 @@ export default function SettingsPage() {
     localStorage.setItem("theme", c ? "dark" : "light");
   };
 
-  // ✅ Sauvegarde dans auth metadata ET dans la table `users`
+
   const saveProfile = async () => {
     setLoading(true);
     try {
-      // 1. Auth metadata (optionnel mais cohérent)
+
       await supabase.auth.updateUser({
         data: { firstname: firstName, lastname: lastName, country, region },
       });
 
-      // 2. ✅ Table `users` — lue par ProfilePage
       const { error: dbError } = await supabase
         .from("users")
         .update({ firstname: firstName, lastname: lastName, country, region })

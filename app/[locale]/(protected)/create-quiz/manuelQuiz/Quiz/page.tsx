@@ -288,7 +288,6 @@ export default function QuizSettingsPage() {
                       setCategoryId(null);
                     }}
                     onCustomChange={setCustomCategory}
-                    // ← When custom is confirmed & saved, store the real id
                     onCustomSaved={(name, id) => {
                       setCategory(name);
                       setCategoryId(id);

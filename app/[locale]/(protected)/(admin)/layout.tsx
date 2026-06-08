@@ -32,7 +32,6 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     if (!user) { router.replace("/login"); return; }
     const check = async () => {
       const { data } = await supabase.from("users").select("role").eq("id", user.id).single();
-      // ✅ FIX: .trim() pour ignorer les espaces/retours à la ligne dans la BDD
       if (data?.role?.trim() !== "admin") router.replace("/dashboard");
       else setChecking(false);
     };
@@ -52,7 +51,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       <div className="h-16 px-6 flex items-center gap-3 border-b border-gray-200 dark:border-slate-800">
         <Image src={logo} alt="logo" width={36} height={36} />
         <div>
-          <h1 className="text-sm font-extrabold text-white">
+          <h1 className="text-sm font-extrabold text-black dark:text-white">
             Pando<span className="text-cyan-500">Mind</span>
           </h1>
           <p className="text-[10px] text-red-500 dark:text-red-400 font-semibold uppercase tracking-wider">{t("adminPanel")}</p>

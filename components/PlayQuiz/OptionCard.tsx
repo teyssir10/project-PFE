@@ -1,6 +1,6 @@
 "use client";
 
-type State = "default" | "correct" | "wrong" | "selected" | "reveal"; // ✅ ajouté
+type State = "default" | "correct" | "wrong" | "selected" | "reveal"; 
 
 type Props = {
   label: string;
@@ -29,7 +29,7 @@ const stateStyles: Record<State, { card: string; label: string; icon?: string }>
     label: "bg-gradient-to-br from-red-400 to-rose-500 text-white shadow-sm",
     icon:  "✗",
   },
-  // ✅ NOUVEAU : bonne réponse révélée quand l'utilisateur a choisi la mauvaise
+
   reveal: {
     card:  "border-emerald-300 bg-gradient-to-r from-emerald-50/60 to-teal-50/60 dark:from-emerald-900/10 dark:to-teal-900/10 shadow-sm shadow-emerald-100 dark:shadow-emerald-900/10",
     label: "bg-gradient-to-br from-emerald-300 to-teal-400 text-white shadow-sm",

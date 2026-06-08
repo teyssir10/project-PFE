@@ -7,7 +7,6 @@ import { supabase } from "@/lib/supabase";
 import QRCode from "qrcode";
 import { Spin } from "antd";
 import { LobbyPlayer } from "@/types/quiz";
-// ✅ insertGameState → startGame
 import { fetchPlayersWithNames, leaveRoom, closeRoom, upsertPlayer, startGame } from "@/lib/api/multiplayer";
 
 export default function LobbyPage() {
@@ -41,7 +40,6 @@ export default function LobbyPage() {
 
       if (roomError || !roomData) { router.push("/multiplayerroom"); return; }
 
-      // ✅ room_status au lieu de status
       if (roomData.room_status === "closed" || roomData.game_phase === "playing") {
         router.replace("/dashboard");
         return;
@@ -79,7 +77,6 @@ export default function LobbyPage() {
     return () => { supabase.removeChannel(channel); clearInterval(interval); };
   }, [room]);
 
-  // ✅ écouter rooms au lieu de game_state
   useEffect(() => {
     if (!room) return;
     const channel = supabase
@@ -90,11 +87,11 @@ export default function LobbyPage() {
         table: "rooms",
         filter: `id=eq.${room.id}`,
       }, ({ new: updatedRoom }) => {
-        // ✅ game_phase au lieu de game_state INSERT
+
         if (updatedRoom.game_phase === "playing") {
           router.push(`/play-quiz/${room.quiz_id}/play?roomId=${room.id}`);
         }
-        // ✅ room_status au lieu de status
+
         if (updatedRoom.room_status === "closed") {
           router.replace("/dashboard");
         }
@@ -103,12 +100,11 @@ export default function LobbyPage() {
     return () => { supabase.removeChannel(channel); };
   }, [room]);
 
-  // ✅ suppression du channel room-status séparé — fusionné dans game-start ci-dessus
 
   const handleStartGame = async () => {
     setStarting(true);
     try {
-      // ✅ insertGameState → startGame
+
       await startGame(room.id);
    router.push(`/play-quiz/${room.quiz_id}/play?roomId=${room.id}`);
     } catch (e) {

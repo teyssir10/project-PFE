@@ -18,7 +18,7 @@ import { useLocale } from "next-intl";
 
 export default function ManualQuiz() {
   const searchParams = useSearchParams();
-  const editId = searchParams.get("edit"); // ✅ used to detect edit mode
+  const editId = searchParams.get("edit"); 
   const t = useTranslations("manualQuizEditor");
   const tStepper = useTranslations("stepper");
   const { message } = useAntdApp();
@@ -114,7 +114,7 @@ export default function ManualQuiz() {
         status:    publishResult?.status    ?? "published",
         aiScore:   publishResult?.aiScore   ?? null,
         aiRemarks: publishResult?.aiRemarks ?? null,
-        editId:    editId ?? null, // ✅ passes editId → saveQuiz does UPDATE not INSERT
+        editId:    editId ?? null, 
       });
 
       if (publishResult?.status === "pending_admin") {

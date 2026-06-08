@@ -1,5 +1,5 @@
 import React from 'react'
-import { BulbOutlined, ThunderboltOutlined, BarChartOutlined, LockOutlined, ShareAltOutlined, StarOutlined } from '@ant-design/icons';
+import { BulbOutlined, CheckCircleOutlined, BarChartOutlined, LockOutlined, ShareAltOutlined, StarOutlined } from '@ant-design/icons';
 import { useTranslations } from 'next-intl';
 
 const FeaturesSection = () => {
@@ -7,7 +7,7 @@ const FeaturesSection = () => {
 
   const features = [
     { icon: <BulbOutlined />, key: 'ai', color: 'from-[#00D4D0] to-cyan-400' },
-    { icon: <ThunderboltOutlined />, key: 'fast', color: 'from-cyan-400 to-blue-400' },
+    { icon: <CheckCircleOutlined />, key: 'aiValidation', color: 'from-cyan-400 to-blue-400' },
     { icon: <BarChartOutlined />, key: 'analytics', color: 'from-[#00D4D0] to-teal-400' },
     { icon: <LockOutlined />, key: 'secure', color: 'from-cyan-400 to-cyan-400' },
     { icon: <ShareAltOutlined />, key: 'sharing', color: 'from-[#00D4D0] to-blue-400' },

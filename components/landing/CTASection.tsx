@@ -2,10 +2,23 @@
 import { Button } from 'antd'
 import React from 'react'
 import { ArrowRightOutlined, StarOutlined } from '@ant-design/icons'
-import { useTranslations } from 'next-intl'
+import { useTranslations, useLocale } from 'next-intl'
+import { useRouter } from 'next/navigation'
+import { useAuth } from '@/lib/auth'
 
 const CTASection = () => {
   const t = useTranslations('cta');
+  const locale = useLocale();
+  const router = useRouter();
+  const { user } = useAuth();
+
+  const handleCTA = () => {
+    if (user) {
+      router.push(`/${locale}/create-quiz/aiQuiz`);
+    } else {
+      router.push(`/${locale}/login`);
+    }
+  };
 
   return (
     <section className="py-20 lg:py-28">
@@ -33,7 +46,11 @@ const CTASection = () => {
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
-              <Button size="large" className="bg-white !text-[#00D4D0] hover:bg-white/90 rounded-xl px-8 font-semibold">
+              <Button
+                size="large"
+                onClick={handleCTA}
+                className="bg-white !text-[#00D4D0] hover:bg-white/90 rounded-xl px-8 font-semibold"
+              >
                 {t('button')}
                 <ArrowRightOutlined className="w-5 h-5 ml-2" />
               </Button>

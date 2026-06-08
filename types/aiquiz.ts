@@ -45,7 +45,7 @@ export const DIFFICULTY_CONFIG: Record<Difficulty, { active: string }> = {
   Mixed:  { active: "bg-cyan-500 text-white shadow-cyan-200" },
 };
 
-// ✅ Valeurs statiques uniquement — les labels traduits sont dans SettingsCard.tsx
+
 export const CATEGORY_VALUES = [
   "Technology", "Science", "History", "Math", "Custom",
 ] as const;

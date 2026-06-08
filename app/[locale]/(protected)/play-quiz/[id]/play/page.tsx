@@ -18,7 +18,7 @@ export default function PlayQuizPage() {
   const [quiz, setQuiz] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
-  const [blocked, setBlocked] = useState(false); // ← NOUVEAU
+  const [blocked, setBlocked] = useState(false); 
 
   useEffect(() => {
     const init = async () => {

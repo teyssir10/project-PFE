@@ -16,7 +16,6 @@ interface SettingsCardProps {
 export default function SettingsCard({ form, loading, onUpdate, onGenerate }: SettingsCardProps) {
   const t = useTranslations("aiQuiz");
 
-  // ✅ Catégories traduites
   const CATEGORIES_TRANSLATED = [
     { value: "Technology", label: t("catTechnology") },
     { value: "Science",    label: t("catScience") },
@@ -25,7 +24,6 @@ export default function SettingsCard({ form, loading, onUpdate, onGenerate }: Se
     { value: "Custom",     label: t("catCustom") },
   ];
 
-  // ✅ Langues traduites
   const LANGUAGES_TRANSLATED = [
     { value: "English", label: t("langEnglish") },
     { value: "French",  label: t("langFrench") },
@@ -34,7 +32,7 @@ export default function SettingsCard({ form, loading, onUpdate, onGenerate }: Se
     { value: "Custom",  label: t("langCustom") },
   ];
 
-  // ✅ Types de questions traduits
+
   const QUESTION_TYPES = [
     { value: "multiple_choice", label: t("questionTypeMultiple"), desc: t("questionTypeMultipleDesc"), icon: "≡" },
     { value: "true_false",      label: t("questionTypeTrueFalse"), desc: t("questionTypeTrueFalseDesc"), icon: "⇄" },
@@ -42,7 +40,6 @@ export default function SettingsCard({ form, loading, onUpdate, onGenerate }: Se
     { value: "mixed",           label: t("questionTypeMixed"),     desc: t("questionTypeMixedDesc"),     icon: "⊞" },
   ];
 
-  // ✅ Difficulté traduite
   const DIFFICULTY_LABELS: Record<Difficulty, string> = {
     Easy:   t("difficultyEasy"),
     Medium: t("difficultyMedium"),

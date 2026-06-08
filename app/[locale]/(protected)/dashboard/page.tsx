@@ -133,8 +133,8 @@ export default function Page() {
                       key={i}
                       className="flex items-center gap-3 p-3 rounded-xl bg-cyan-50/50 dark:bg-slate-700/40 hover:bg-cyan-50 dark:hover:bg-slate-700 transition-all border border-transparent hover:border-cyan-100"
                     >
-                      <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-cyan-400 to-teal-400 flex items-center justify-center flex-shrink-0 shadow-sm">
-                        <TrophyOutlined className="text-white text-sm" />
+                      <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-cyan-400 to-teal-400 flex items-center justify-center flex-shrink-0 shadow-sm text-lg">
+                        🏆
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center justify-between mb-1">
@@ -215,7 +215,6 @@ export default function Page() {
                         <Tag className={`!rounded-full !text-xs !font-bold ${difficultyColor[quiz.difficulty] ?? ""}`}>
                           {quiz.difficulty}
                         </Tag>
-                        {/* ✅ Bouton play corrigé */}
                         <Button
                           size="small"
                           icon={<CaretRightOutlined />}

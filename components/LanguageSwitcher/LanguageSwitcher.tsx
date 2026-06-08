@@ -29,7 +29,7 @@ export default function LanguageSwitcher() {
 
   const switchLanguage = (newLocale: string) => {
     const newPath = pathname.replace(`/${currentLocale}`, `/${newLocale}`);
-    const search = window.location.search; // ✅ garde ?edit=ID, ?draft=ID, etc.
+    const search = window.location.search; 
     router.push(newPath + search);
     setOpen(false);
   };

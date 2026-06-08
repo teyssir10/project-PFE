@@ -11,7 +11,6 @@ export interface GeneratedQuestion {
   type: string;
 }
 
-// ✅ Normalise la difficulté : "medium" → "Medium"
 const capitalizeDifficulty = (s: string): string =>
   s ? s.charAt(0).toUpperCase() + s.slice(1).toLowerCase() : "Medium";
 
@@ -24,7 +23,6 @@ export function useQuizForm() {
   const [categoryId, setCategoryId] = useState<string | null>(null);
   const { message } = App.useApp();
 
-  // ✅ Normalise difficulty automatiquement à chaque update
   const update = (fields: Partial<QuizFormState>) =>
     setForm((prev) => ({
       ...prev,

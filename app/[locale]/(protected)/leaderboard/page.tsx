@@ -87,7 +87,6 @@ export default function LeaderboardPage() {
         {/* ── TABS + FILTRES PAYS EN HAUT ── */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 mb-10">
 
-          {/* Tabs Score / Précision / Quiz joués */}
           <div className="inline-flex gap-1 p-1 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-xl shadow-sm">
             {(["score", "accuracy", "quizzes"] as FilterType[]).map((f) => (
               <button

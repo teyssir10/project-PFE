@@ -22,7 +22,7 @@ export default function MultiplayerPage() {
 
     const { data } = await supabase
       .from('rooms')
-      .select('id, room_status')   // ✅ status → room_status
+      .select('id, room_status')   
       .eq('code', code.toUpperCase())
       .single()
 
@@ -32,7 +32,6 @@ export default function MultiplayerPage() {
       return
     }
 
-    // ✅ status → room_status
     if (data.room_status !== 'waiting') {
       setError(t('join.errorStarted'))
       setLoading(false)

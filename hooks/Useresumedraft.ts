@@ -62,19 +62,15 @@ export function useResumeDraft({
             const restoredQuestions: Question[] = data.questions.map((q: any) => ({
               id:   q.id ?? crypto.randomUUID(),
 
-              // Supporte les deux formats : "text" et "question_text"
               text: q.text ?? q.question_text ?? "",
 
-              // ✅ FIX : normalise "multiple_choice" → "multiple", etc.
               type: normalizeType(q.type),
 
-              // Supporte les deux formats d'options
               options: q.options?.map((o: any) => ({
                 id:   o.id   ?? crypto.randomUUID(),
                 text: o.text ?? o.option_text ?? "",
               })) ?? [],
 
-              // Supporte les deux formats de bonne réponse
               correctOptionId:
                 q.correctOptionId ??
                 q.options?.find((o: any) => o.is_correct)?.id ??

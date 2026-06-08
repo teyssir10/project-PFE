@@ -25,7 +25,7 @@ export async function POST(req: NextRequest) {
       correct = q.correctAnswer;
     }
 
-    // ✅ Affiche clairement le type pour que l'IA comprenne
+
     const typeLabel = q.type === "short" || q.type === "short_answer"
       ? "short_answer (free text — no options required)"
       : q.type || "multiple_choice";

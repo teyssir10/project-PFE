@@ -38,9 +38,6 @@ export default function AIQuiz() {
     { id: 3, label: tStepper("aiStep3") },
   ];
 
-  // ✅ FIX 1 : Convertit les questions IA → format interne avant de sauvegarder le brouillon.
-  // Sans cette conversion, le brouillon sauvegarde { question: "...", options: ["A","B"] }
-  // mais useResumeDraft attend { text: "...", options: [{ id, text }], correctOptionId }.
   const buildDraftQuestions = () =>
     generatedQuestions.map((q) => {
       const isTrueFalse   = q.type === "true_false";
@@ -59,11 +56,11 @@ export default function AIQuiz() {
 
       return {
         id:              crypto.randomUUID(),
-        text:            q.question,        // ✅ "question" → "text"
+        text:            q.question,        
         type:            isTrueFalse   ? "truefalse"
                        : isShortAnswer ? "short"
-                       : "multiple",        // ✅ type normalisé pour useResumeDraft
-        options,                            // ✅ format [{ id, text, is_correct }]
+                       : "multiple",        
+        options,                            
         correctOptionId: correctOption?.id ?? null,
         correctAnswer:   isShortAnswer ? q.correct_answer : "",
         indice:          q.indice ?? "",
@@ -78,13 +75,11 @@ export default function AIQuiz() {
 
     setPublishing(true);
     try {
-      // ✅ FIX 2 : La BDD attend "Easy" | "Medium" | "Hard" | "Mixed" (avec majuscule).
-      // On utilise form.difficulty directement — pas de toLowerCase().
       const { data: quiz, error: quizError } = await supabase
         .from("quizzes")
         .insert({
           title:             form.title,
-          difficulty:        form.difficulty,   // ✅ "Easy" | "Medium" | "Hard" | "Mixed"
+          difficulty:        form.difficulty,  
           question_count:    generatedQuestions.length,
           time_per_question: timerValue,
           is_published:      true,
@@ -124,7 +119,7 @@ export default function AIQuiz() {
           type:              q.type ?? "multiple_choice",
           time_limit:        String(timerValue),
           points:            "Standard (1x)",
-          difficulty:        form.difficulty,   // ✅ idem, pas de toLowerCase()
+          difficulty:        form.difficulty,   
           options:           optionsJsonb,
           correct_option_id: correctOption?.id ?? null,
           correct_answer:    isShortAnswer ? q.correct_answer : null,

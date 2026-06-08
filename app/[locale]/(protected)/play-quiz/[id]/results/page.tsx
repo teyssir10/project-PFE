@@ -27,24 +27,19 @@ export default function ResultsPage() {
   const [displayScore, setDisplayScore] = useState(0);
   const [displayPct, setDisplayPct]     = useState(0);
   const [visible, setVisible]           = useState(false);
-
-  // ── Ref pour éviter double appel en StrictMode ─────────────────────────
   const saved = useRef(false);
 
-  // ── Sauvegarder résultat + incrémenter players ─────────────────────────
  useEffect(() => {
   if (!user || !id) return;
 
-  // Clé unique pour ce quiz + user + session
   const lockKey = `quiz_saved_${id}_${user.id}_${score}_${total}`;
   
-  // Si déjà sauvegardé dans cette session → stop
   if (sessionStorage.getItem(lockKey)) return;
   sessionStorage.setItem(lockKey, "1");
 
   const saveResult = async () => {
     try {
-      // 1. Ajouter dans quiz_history
+
       await supabase.from("quiz_history").insert({
         user_id:   user.id,
         quiz_id:   id,
@@ -52,10 +47,8 @@ export default function ResultsPage() {
         played_at: new Date().toISOString(),
       });
 
-      // 2. Incrémenter players du quiz
       await supabase.rpc("increment_players", { quiz_id: id });
 
-      // 3. Mettre à jour stats du user
       const xpGained = score * 10;
       const { data: userData } = await supabase
         .from("users")
@@ -78,7 +71,6 @@ export default function ResultsPage() {
       }
     } catch (err) {
       console.error("Erreur sauvegarde résultat:", err);
-      // En cas d'erreur, retirer le verrou pour permettre retry
       sessionStorage.removeItem(lockKey);
     }
   };
@@ -86,7 +78,6 @@ export default function ResultsPage() {
   saveResult();
 }, [user, id, score, total]);
 
-  // ── Animation compteur ─────────────────────────────────────────────────
   useEffect(() => {
     setTimeout(() => setVisible(true), 100);
     let cur = 0;

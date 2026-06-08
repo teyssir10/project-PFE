@@ -48,9 +48,9 @@ export default function LeaderboardSection() {
   useEffect(() => {
     const fetchLeaderboard = async () => {
       setLoading(true);
-      const { data, error } = await supabase
-        .from('users')
-        .select('id, firstname, lastname, country, region, total_score, quizzes_played, avatar_url')
+    const { data, error } = await supabase
+      .from('public_leaderboard')
+      .select('*')
         .order('total_score', { ascending: false })
         .limit(10);
 
