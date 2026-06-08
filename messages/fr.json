@@ -474,7 +474,10 @@
     "changeOrConfirm": "Modifiez ou confirmez votre réponse",
     "quizNotFound": "Quiz introuvable.",
     "goBack": "Retour",
-     "changeOrConfirm": "Changer ou confirmer votre réponse"
+     "changeOrConfirm": "Changer ou confirmer votre réponse",
+     "go": "C'est parti !",
+"getReady": "Préparez-vous !",
+"questionsCount": "{count} questions"
   },
   "quizSidebarPlay": {
     "questions": "Questions",

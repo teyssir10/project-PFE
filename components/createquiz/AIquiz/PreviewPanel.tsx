@@ -61,10 +61,11 @@ export default function PreviewPanel({ loading, questions, onReset, quizTitle, o
   };
 
   return (
-    <div className="bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 shadow-sm min-h-[600px] flex flex-col h-full transition-colors duration-300">
+    // ✅ min-h garde la taille originale, max-h + overflow-hidden active le scroll quand ça déborde
+    <div className="bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 shadow-sm min-h-[1143px] max-h-[calc(100vh-120px)] flex flex-col overflow-hidden transition-colors duration-300">
 
       {/* Header */}
-      <div className="px-6 py-5 border-b border-gray-50 dark:border-slate-700 flex items-center justify-between">
+      <div className="px-6 py-5 border-b border-gray-50 dark:border-slate-700 flex items-center justify-between flex-shrink-0">
         <div className="flex items-center gap-3">
           <div className="w-9 h-9 rounded-xl bg-violet-50 dark:bg-violet-900/30 border border-violet-100 dark:border-violet-800 flex items-center justify-center text-base">
             <EyeOutlined className="text-violet-500" />
@@ -102,7 +103,7 @@ export default function PreviewPanel({ loading, questions, onReset, quizTitle, o
         </div>
       </div>
 
-      {/* Body */}
+      {/* Body — scrollable */}
       <div className="flex-1 p-6 overflow-y-auto">
 
         {/* Empty state */}
@@ -155,11 +156,8 @@ export default function PreviewPanel({ loading, questions, onReset, quizTitle, o
             {/* Image section */}
             <div className="rounded-2xl border border-dashed border-gray-200 dark:border-slate-600 overflow-hidden">
               {!imageUrl && !imageLoading && !retrySeconds && !imageError && (
-                <button
-                  onClick={generateImage}
-                  disabled={!quizTitle}
-                  className="w-full h-40 flex flex-col items-center justify-center gap-3 text-gray-400 dark:text-slate-500 hover:text-cyan-500 hover:bg-cyan-50/30 dark:hover:bg-cyan-900/10 transition-all duration-200 group"
-                >
+                <button onClick={generateImage} disabled={!quizTitle}
+                  className="w-full h-40 flex flex-col items-center justify-center gap-3 text-gray-400 dark:text-slate-500 hover:text-cyan-500 hover:bg-cyan-50/30 dark:hover:bg-cyan-900/10 transition-all duration-200 group">
                   <div className="w-12 h-12 rounded-xl bg-gray-100 dark:bg-slate-700 group-hover:bg-cyan-100 dark:group-hover:bg-cyan-900/30 flex items-center justify-center transition-all">
                     <PictureOutlined className="text-2xl" />
                   </div>
@@ -200,24 +198,14 @@ export default function PreviewPanel({ loading, questions, onReset, quizTitle, o
                       <LoadingOutlined className="text-cyan-500 text-2xl animate-spin" />
                     </div>
                   )}
-                  <img
-                    src={imageUrl}
-                    alt="Quiz cover"
-                    className="w-full h-full object-cover rounded-2xl"
+                  <img src={imageUrl} alt="Quiz cover" className="w-full h-full object-cover rounded-2xl"
                     onLoad={() => setImgRendering(false)}
-                    onError={() => {
-                      setImgRendering(false);
-                      setImageUrl(null);
-                      setImageError("Impossible d'afficher l'image. Réessayez.");
-                    }}
+                    onError={() => { setImgRendering(false); setImageUrl(null); setImageError("Impossible d'afficher l'image. Réessayez."); }}
                   />
                   {!imgRendering && (
-                    <button
-                      onClick={generateImage}
-                      className="absolute bottom-2 right-2 flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg bg-white/90 dark:bg-slate-800/90 text-gray-700 dark:text-white shadow-md hover:scale-105 transition-all"
-                    >
-                      <ReloadOutlined className="text-xs" />
-                      Régénérer
+                    <button onClick={generateImage}
+                      className="absolute bottom-2 right-2 flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg bg-white/90 dark:bg-slate-800/90 text-gray-700 dark:text-white shadow-md hover:scale-105 transition-all">
+                      <ReloadOutlined className="text-xs" /> Régénérer
                     </button>
                   )}
                 </div>
@@ -232,11 +220,7 @@ export default function PreviewPanel({ loading, questions, onReset, quizTitle, o
               const letters       = ["A", "B", "C", "D"];
 
               return (
-                <div
-                  key={index}
-                  className="p-5 rounded-xl border border-gray-100 dark:border-slate-700 bg-gray-50 dark:bg-slate-700/50 hover:border-cyan-200 dark:hover:border-cyan-700 transition-all duration-200"
-                >
-                  {/* Numéro + badge type + question */}
+                <div key={index} className="p-5 rounded-xl border border-gray-100 dark:border-slate-700 bg-gray-50 dark:bg-slate-700/50 hover:border-cyan-200 dark:hover:border-cyan-700 transition-all duration-200">
                   <div className="flex items-start gap-3 mb-4">
                     <span className="w-7 h-7 rounded-lg bg-cyan-500 text-white text-xs font-bold flex items-center justify-center flex-shrink-0 mt-0.5">
                       {index + 1}
@@ -259,33 +243,23 @@ export default function PreviewPanel({ loading, questions, onReset, quizTitle, o
                           </span>
                         )}
                       </div>
-                      <p className="text-sm font-semibold text-gray-800 dark:text-white leading-relaxed">
-                        {q.question}
-                      </p>
+                      <p className="text-sm font-semibold text-gray-800 dark:text-white leading-relaxed">{q.question}</p>
                     </div>
                   </div>
 
-                  {/* ── MCQ : grille 2×2 ── */}
                   {isMCQ && (
                     <div className="grid grid-cols-2 gap-2 mb-3">
                       {q.options.map((option, optIndex) => {
                         const isCorrect = option === q.correct_answer;
                         return (
-                          <div
-                            key={optIndex}
-                            className={`flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium border transition-all ${
-                              isCorrect
-                                ? "bg-emerald-50 dark:bg-emerald-900/20 border-emerald-200 dark:border-emerald-700 text-emerald-700 dark:text-emerald-400"
-                                : "bg-white dark:bg-slate-600 border-gray-200 dark:border-slate-500 text-gray-600 dark:text-slate-300"
-                            }`}
-                          >
+                          <div key={optIndex} className={`flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium border transition-all ${
+                            isCorrect
+                              ? "bg-emerald-50 dark:bg-emerald-900/20 border-emerald-200 dark:border-emerald-700 text-emerald-700 dark:text-emerald-400"
+                              : "bg-white dark:bg-slate-600 border-gray-200 dark:border-slate-500 text-gray-600 dark:text-slate-300"
+                          }`}>
                             <span className={`w-5 h-5 rounded-md flex items-center justify-center text-[10px] font-bold flex-shrink-0 ${
-                              isCorrect
-                                ? "bg-emerald-500 text-white"
-                                : "bg-gray-200 dark:bg-slate-500 text-gray-500 dark:text-slate-300"
-                            }`}>
-                              {letters[optIndex]}
-                            </span>
+                              isCorrect ? "bg-emerald-500 text-white" : "bg-gray-200 dark:bg-slate-500 text-gray-500 dark:text-slate-300"
+                            }`}>{letters[optIndex]}</span>
                             {option}
                           </div>
                         );
@@ -293,52 +267,40 @@ export default function PreviewPanel({ loading, questions, onReset, quizTitle, o
                     </div>
                   )}
 
-                  {/* ── Vrai / Faux : 2 boutons côte à côte ── */}
                   {isTrueFalse && (
                     <div className="flex gap-2 mb-3">
                       {["True", "False"].map((opt) => {
                         const isCorrect = opt === q.correct_answer;
                         const isTrue    = opt === "True";
                         return (
-                          <div
-                            key={opt}
-                            className={`flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold border transition-all ${
-                              isCorrect
-                                ? isTrue
-                                  ? "bg-emerald-50 dark:bg-emerald-900/20 border-emerald-300 dark:border-emerald-700 text-emerald-700 dark:text-emerald-400"
-                                  : "bg-red-50 dark:bg-red-900/20 border-red-300 dark:border-red-700 text-red-600 dark:text-red-400"
-                                : "bg-white dark:bg-slate-600 border-gray-200 dark:border-slate-500 text-gray-400 dark:text-slate-400"
-                            }`}
-                          >
+                          <div key={opt} className={`flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold border transition-all ${
+                            isCorrect
+                              ? isTrue
+                                ? "bg-emerald-50 dark:bg-emerald-900/20 border-emerald-300 dark:border-emerald-700 text-emerald-700 dark:text-emerald-400"
+                                : "bg-red-50 dark:bg-red-900/20 border-red-300 dark:border-red-700 text-red-600 dark:text-red-400"
+                              : "bg-white dark:bg-slate-600 border-gray-200 dark:border-slate-500 text-gray-400 dark:text-slate-400"
+                          }`}>
                             <span>{isTrue ? "✓" : "✗"}</span>
                             {isTrue ? "Vrai" : "Faux"}
-                            {isCorrect && (
-                              <span className="ml-1 text-[9px] font-bold uppercase opacity-70">✔ correct</span>
-                            )}
+                            {isCorrect && <span className="ml-1 text-[9px] font-bold uppercase opacity-70">✔ correct</span>}
                           </div>
                         );
                       })}
                     </div>
                   )}
 
-                  {/* ── Réponse courte : champ simulé + bonne réponse ── */}
                   {isShortAnswer && (
                     <div className="mb-3 space-y-2">
                       <div className="w-full px-3 py-2.5 rounded-xl border border-dashed border-gray-300 dark:border-slate-500 bg-white dark:bg-slate-600 text-xs text-gray-400 dark:text-slate-500 italic">
                         Le joueur saisit sa réponse ici...
                       </div>
                       <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-700">
-                        <span className="w-5 h-5 rounded-md bg-emerald-500 text-white text-[10px] font-bold flex items-center justify-center flex-shrink-0">
-                          ✓
-                        </span>
-                        <span className="text-xs text-emerald-700 dark:text-emerald-400 font-medium">
-                          {q.correct_answer}
-                        </span>
+                        <span className="w-5 h-5 rounded-md bg-emerald-500 text-white text-[10px] font-bold flex items-center justify-center flex-shrink-0">✓</span>
+                        <span className="text-xs text-emerald-700 dark:text-emerald-400 font-medium">{q.correct_answer}</span>
                       </div>
                     </div>
                   )}
 
-                  {/* Hint */}
                   {q.indice && (
                     <div className="flex items-start gap-2 px-3 py-2 bg-amber-50 dark:bg-amber-900/20 rounded-lg border border-amber-100 dark:border-amber-800">
                       <span className="text-amber-500 text-sm flex-shrink-0">💡</span>
@@ -350,7 +312,6 @@ export default function PreviewPanel({ loading, questions, onReset, quizTitle, o
                 </div>
               );
             })}
-
           </div>
         )}
       </div>

@@ -225,11 +225,6 @@ const LoginPage = () => {
                 {t('noAccount')}
               </Button>
 
-              <Text className="text-gray-500 text-sm block text-center mt-4">
-                {t('demo')}<br />
-                Email: demo@pandabrain.ai<br />
-                Password: 123456
-              </Text>
             </Card>
           </div>
         </div>
